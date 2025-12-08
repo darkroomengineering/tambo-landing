@@ -10,15 +10,33 @@
 
   --color-*: initial;
 	--color-primary: #ffffff;
-	--color-secondary: #000000;
+	--color-secondary: #0F1A17;
 	--color-contrast: #e30613;
-  --color-black: #000000;
-	--color-white: #ffffff;
-	--color-red: #e30613;
+  --color-red: #e30613;
 	--color-blue: #0070f3;
 	--color-green: #00ff88;
 	--color-purple: #7928ca;
 	--color-pink: #ff0080;
+	--color-ghost-mint: #D6FFEC;
+	--color-mint: #B6FFDD;
+	--color-teal: #7FFFC3;
+	--color-dark-teal: #80C1A2;
+	--color-off-white: #F2F8F6;
+	--color-light-gray: #E5F0ED;
+	--color-grey: #D8E9E4;
+	--color-dark-grey: #CBE2DB;
+	--color-white: #ffffff;
+	--color-white-80: #ffffffcc;
+	--color-white-60: #ffffff99;
+	--color-white-50: #ffffff80;
+	--color-black: #0F1A17;
+	--color-black-70: #0f1a17b3;
+	--color-black-50: #0f1a1780;
+	--color-forest: #008346;
+	--color-forest-50: #00834680;
+	--color-forest-30: #0083464d;
+	--color-forest-20: #00834633;
+	--color-forest-10: #0083461a;
     
   --spacing-*: initial;
 	--spacing-0: 0;
@@ -57,17 +75,17 @@
 /** Custom theme overwrites **/
 [data-theme=light] {
   --color-primary: #ffffff;
-	--color-secondary: #000000;
+	--color-secondary: #0F1A17;
 	--color-contrast: #e30613;
 }
 [data-theme=dark] {
-  --color-primary: #000000;
+  --color-primary: #0F1A17;
 	--color-secondary: #ffffff;
 	--color-contrast: #e30613;
 }
 [data-theme=red] {
   --color-primary: #e30613;
-	--color-secondary: #000000;
+	--color-secondary: #0F1A17;
 	--color-contrast: #ffffff;
 }
   
