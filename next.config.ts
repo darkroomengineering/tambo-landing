@@ -79,6 +79,7 @@ const nextConfig: NextConfig = {
     browserDebugInfoInTerminal: true,
     // isolatedDevBuild: true,
     optimizePackageImports: [
+      '@phosphor-icons/react',
       '@react-three/drei',
       '@react-three/fiber',
       'gsap',

@@ -29,6 +29,7 @@
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-rc.0",
     "@hubspot/api-client": "^13.4.0",
+    "@phosphor-icons/react": "^2.1.10",
     "@portabletext/react": "^5.0.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",
