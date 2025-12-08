@@ -80,7 +80,7 @@ export function BackgroundItem({
 
 export default function Background() {
   return (
-    <div className="fixed inset-0">
+    <div className="fixed inset-0 -z-1">
       <div className="absolute inset-0">
         <BackgroundItem
           opacity={0.4}
