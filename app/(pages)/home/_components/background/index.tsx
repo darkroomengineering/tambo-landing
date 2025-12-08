@@ -16,9 +16,9 @@ function BoxShadow({
     <div
       className={cn('absolute inset-0 rounded-[inherit]', s.boxShadow)}
       style={{
-        transform: `translate(${x}%, ${y}%)`,
+        transform: `translate(${x}%, ${y * 2}%)`,
         filter: `blur(${blur}px)`,
-        opacity: opacity,
+        opacity: opacity * 2,
         backgroundColor: `rgba(127, 255, 195, 1)`,
       }}
     />
@@ -29,10 +29,12 @@ export function BackgroundItem({
   opacity,
   hashed,
   style,
+  borderOpacity,
 }: {
   opacity?: number
   hashed?: boolean
   style?: React.CSSProperties
+  borderOpacity?: number
 }) {
   return (
     <div
@@ -56,13 +58,21 @@ export function BackgroundItem({
         style={{ opacity: opacity }}
       />
       {hashed && (
-        <div className={cn('absolute inset-0 rounded-[inherit]', s.hashed)} />
+        <div
+          className={cn(
+            'absolute inset-0 rounded-[inherit] opacity-50',
+            s.hashed
+          )}
+        />
       )}
       <div
         className={cn(
-          'absolute inset-0 rounded-[inherit] border-dashed border-[#00834633] border-1',
+          'absolute inset-0 rounded-[inherit] border-dashed border-[#008346] border-1',
           s.border
         )}
+        style={{
+          opacity: borderOpacity,
+        }}
       />
     </div>
   )
@@ -72,10 +82,28 @@ export default function Background() {
   return (
     <div className="fixed inset-0">
       <div className="absolute inset-0">
-        <BackgroundItem opacity={0.4} hashed={true} style={{ height: '80%' }} />
-        <BackgroundItem opacity={0.6} style={{ height: '70%' }} />
-        <BackgroundItem opacity={0.8} hashed={true} style={{ height: '60%' }} />
-        <BackgroundItem opacity={1} style={{ height: '50%' }} />
+        <BackgroundItem
+          opacity={0.4}
+          borderOpacity={0.1}
+          hashed={true}
+          style={{ height: '80%' }}
+        />
+        <BackgroundItem
+          opacity={0.6}
+          borderOpacity={0.2}
+          style={{ height: '70%' }}
+        />
+        <BackgroundItem
+          opacity={0.8}
+          borderOpacity={0.3}
+          hashed={true}
+          style={{ height: '60%' }}
+        />
+        <BackgroundItem
+          opacity={1}
+          borderOpacity={0.5}
+          style={{ height: '50%' }}
+        />
 
         {/* <BackgroundItem />
         <BackgroundItem />

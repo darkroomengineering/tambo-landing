@@ -1,4 +1,5 @@
 import { useMediaQuery } from 'hamo'
+import { useEffect, useState } from 'react'
 import { breakpoints } from '~/styles/config'
 
 export function useDeviceDetection() {
@@ -8,11 +9,16 @@ export function useDeviceDetection() {
   const isDesktop = useMediaQuery(`(min-width: ${breakpoint}px)`)
   const isReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
   const isWebGL = isDesktop && !isReducedMotion
+  const [dpr, setDpr] = useState(1)
 
   // Check for low power mode with fallback for unsupported browsers
   const isLowPowerMode = useMediaQuery(
     '(any-pointer: coarse) and (hover: none)'
   )
 
-  return { isMobile, isDesktop, isReducedMotion, isWebGL, isLowPowerMode }
+  useEffect(() => {
+    setDpr(window.devicePixelRatio)
+  }, [])
+
+  return { isMobile, isDesktop, isReducedMotion, isWebGL, isLowPowerMode, dpr }
 }
