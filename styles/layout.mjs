@@ -5,13 +5,13 @@ const breakpoints = {
 
 const screens = {
   mobile: { width: 375, height: 650 },
-  desktop: { width: 1440, height: 816 },
+  desktop: { width: 1440, height: 900 },
 }
 
 const layout = {
   columns: { mobile: 4, desktop: 12 },
-  gap: { mobile: 16, desktop: 16 },
-  safe: { mobile: 16, desktop: 16 },
+  gap: { mobile: 16, desktop: 24 },
+  safe: { mobile: 16, desktop: 40 },
 }
 
 const customSizes = {
