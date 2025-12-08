@@ -36,6 +36,44 @@
       }
     }
   }
+
+  &.isBlack {
+    background-color: var(--color-black);
+    border-color: var(--color-teal);
+    color: var(--color-teal);
+
+    svg {
+      path {
+        transition: stroke 300ms ease;
+      }
+    }
+
+    @media (--hover) {
+      &:hover {
+        background-color: var(--color-teal);
+        border-color: var(--color-dark-teal);
+        color: var(--color-black);
+
+        .arrow {
+          background-color: var(--color-black);
+
+          svg {
+            path {
+              stroke: var(--color-teal);
+            }
+          }
+
+          &::before {
+            background-color: var(--color-black);
+          }
+
+          &::after {
+            background-color: var(--color-black);
+          }
+        }
+      }
+    }
+  }
 }
 
 .arrow {

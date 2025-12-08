@@ -8,6 +8,7 @@ type ButtonProps = {
   href?: string
   as?: React.ElementType
   type?: 'primary' | 'secondary'
+  color?: 'white' | 'black'
   disabled?: boolean
   children: React.ReactNode
 }
@@ -47,6 +48,7 @@ export function CTA({
   as,
   children,
   type = 'primary',
+  color = 'white',
   ...props
 }: ButtonProps) {
   return (
@@ -54,6 +56,7 @@ export function CTA({
       className={cn(
         'dt:dr-rounded-16 flex items-center dt:dr-pl-16 dt:dr-pr-8 dt:dr-py-8 dt:dr-h-52',
         s.button,
+        color === 'black' && s.isBlack,
         className
       )}
       href={href}

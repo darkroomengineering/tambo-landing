@@ -82,8 +82,9 @@ export default function StyleGuide() {
           </div>
         </div>
       </div>
-      <div className="px-safe">
-        <CTA>Primary Button</CTA>
+      <div className="px-safe flex">
+        <CTA>White CTA</CTA>
+        <CTA color="black">Black CTA</CTA>
       </div>
     </Wrapper>
   )
