@@ -5,9 +5,10 @@ import { Section1 } from './_sections/section-1'
 export default function Home() {
   return (
     <Wrapper theme="light" lenis={{}}>
-      <Section1 />
-      <div className="h-[300vh]" />
-      <Background />
+      <Background>
+        <Section1 />
+        <div className="h-[300vh]" />
+      </Background>
     </Wrapper>
   )
 }
