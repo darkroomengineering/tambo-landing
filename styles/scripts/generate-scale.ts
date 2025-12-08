@@ -29,6 +29,7 @@ const columnUtilityMap = {
   h: 'height',
   'min-h': 'min-height',
   'max-h': 'max-height',
+  size: ['width', 'height'],
   // Gap
   gap: 'gap',
   'gap-x': 'column-gap',

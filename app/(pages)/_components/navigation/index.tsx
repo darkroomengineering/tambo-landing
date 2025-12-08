@@ -1,44 +1,183 @@
 'use client'
 
 import cn from 'clsx'
-import { usePathname } from 'next/navigation'
+import gsap from 'gsap'
+import { useLenis } from 'lenis/react'
+import { useEffect, useEffectEvent, useRef, useState } from 'react'
+import DiscordIcon from '~/assets/svgs/discord.svg'
+import GithubIcon from '~/assets/svgs/github.svg'
+import TamboLogo from '~/assets/svgs/tambo.svg'
 import { Link } from '~/components/link'
 
-const LINKS = [
-  { href: '/', label: 'home' },
-  { href: '/r3f', label: 'r3f' },
-  { href: '/sanity', label: 'sanity' },
-  { href: '/shopify', label: 'shopify' },
-  { href: '/hubspot', label: 'hubspot' },
-]
+const LEFT_LINKS = [
+  { href: '/docs', label: 'Docs', external: true },
+  { href: '/mcp', label: 'MCP' },
+  { href: '/pricing', label: 'sanity' },
+] as const
+
+const RIGHT_LINKS = [
+  { href: '/blog', label: 'Blog', external: true },
+  { href: '/ask', label: 'Ask Tambo' },
+] as const
 
 export function Navigation() {
-  const pathname = usePathname()
+  const [isVisible, setIsVisible] = useState(true)
+  const centerRef = useRef<HTMLDivElement>(null)
+  const leftRef = useRef<HTMLUListElement>(null)
+  const rightRef = useRef<HTMLUListElement>(null)
+  const logoRef = useRef<SVGSVGElement>(null)
+  const githubRef = useRef<HTMLAnchorElement>(null)
+  const discordRef = useRef<HTMLAnchorElement>(null)
+
+  useLenis(({ lastVelocity }) => {
+    setIsVisible(lastVelocity < 0)
+  })
+
+  const hideNavigation = useEffectEvent(() => {
+    // the center should skring to 100px width and the left and right should translate in and fade out
+    gsap.to(centerRef.current, {
+      width: '11.1vw',
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+    gsap.to(logoRef.current, {
+      scale: 0.8,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+    gsap.to(leftRef.current, {
+      x: 100,
+      opacity: 0,
+      duration: 0.5,
+    })
+    gsap.to(rightRef.current, {
+      x: -100,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+    gsap.to(githubRef.current, {
+      x: '100%',
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+    gsap.to(discordRef.current, {
+      x: '-100%',
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+  })
+
+  const showNavigation = useEffectEvent(() => {
+    gsap.to(centerRef.current, {
+      width: '100%',
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+    gsap.to(leftRef.current, {
+      x: 0,
+      opacity: 1,
+      duration: 0.5,
+    })
+    gsap.to(rightRef.current, {
+      x: 0,
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+    gsap.to(logoRef.current, {
+      scale: 1,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+    gsap.to(githubRef.current, {
+      x: 0,
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+    gsap.to(discordRef.current, {
+      x: 0,
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    })
+  })
+
+  useEffect(() => {
+    if (isVisible) {
+      showNavigation()
+    } else {
+      hideNavigation()
+    }
+  }, [isVisible])
 
   return (
-    <nav className="fixed top-safe left-safe z-2 flex flex-col uppercase font-mono">
-      <div className="inline-flex">
-        <h1>Satūs</h1>
-        <span>{pathname}</span>
-      </div>
+    <nav
+      className={cn(
+        'fixed top-0 left-0 z-2 dr-layout-grid-inner pt-gap pb-safe bg-red uppercase',
+        isVisible && 'opacity-100'
+      )}
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
+    >
+      <Link
+        href="/"
+        className="dr-size-48 rounded-full border border-black grid place-items-center"
+        ref={githubRef}
+      >
+        <div className="dr-w-32 aspect-square grid place-items-center">
+          <GithubIcon className="dr-w-16" />
+        </div>
+      </Link>
 
-      <ul className="pl-[24px]">
-        {LINKS.map((link) => (
-          <li key={link.href}>
-            <Link
-              href={link.href}
-              className={cn(
-                'link',
-                'relative',
-                pathname === link.href &&
-                  "before:content-['■'] before:absolute before:left-[-16px]"
-              )}
-            >
-              {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <section className="col-start-3 col-end-11 flex justify-center">
+        <div
+          ref={centerRef}
+          className="w-full origin-center flex justify-between items-center border border-blue pl-gap dr-pr-8 rounded-full overflow-hidden dr-h-48"
+        >
+          <ul ref={leftRef} className="flex dr-gap-20">
+            {LEFT_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href}>{link.label}</Link>
+              </li>
+            ))}
+          </ul>
+          <div className="absolute left-1/2 -translate-x-1/2 grid place-items-center">
+            <TamboLogo className="dr-h-24" ref={logoRef} />
+          </div>
+          <ul
+            ref={rightRef}
+            className="flex items-center justify-end dr-gap-20"
+          >
+            {RIGHT_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href}>{link.label}</Link>
+              </li>
+            ))}
+            <li>
+              <Link
+                href="/login"
+                className="block dr-px-16 dr-h-32 rounded-full bg-black"
+              >
+                Log in
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <Link
+        href="/"
+        className="col-start-12 dr-size-48 rounded-full border border-black grid place-items-center"
+        ref={discordRef}
+      >
+        <div className="dr-w-32 aspect-square grid place-items-center">
+          <DiscordIcon className="dr-w-16" />
+        </div>
+      </Link>
     </nav>
   )
 }
