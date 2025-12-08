@@ -34,76 +34,131 @@ export function Navigation() {
   })
 
   const hideNavigation = useEffectEvent(() => {
-    // the center should skring to 100px width and the left and right should translate in and fade out
-    gsap.to(centerRef.current, {
+    const tl = gsap.timeline()
+
+    tl.to(centerRef.current, {
       width: '11.1vw',
       duration: 0.5,
       ease: 'power2.inOut',
     })
-    gsap.to(logoRef.current, {
-      scale: 0.8,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    })
-    gsap.to(leftRef.current, {
-      x: 100,
-      opacity: 0,
-      duration: 0.5,
-    })
-    gsap.to(rightRef.current, {
-      x: -100,
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    })
-    gsap.to(githubRef.current, {
-      x: '100%',
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    })
-    gsap.to(discordRef.current, {
-      x: '-100%',
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    })
+
+    tl.to(
+      leftRef.current,
+      {
+        x: 100,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
+
+    tl.to(
+      rightRef.current,
+      {
+        x: -100,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
+
+    tl.to(
+      githubRef.current,
+      {
+        x: '100%',
+        opacity: 0,
+        duration: 0.4,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
+
+    tl.to(
+      discordRef.current,
+      {
+        x: '-100%',
+        opacity: 0,
+        duration: 0.4,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
+
+    tl.to(
+      logoRef.current,
+      {
+        scale: 0.8,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      },
+      '-=.3'
+    )
   })
 
   const showNavigation = useEffectEvent(() => {
-    gsap.to(centerRef.current, {
+    const tl = gsap.timeline()
+
+    tl.to(centerRef.current, {
       width: '100%',
       duration: 0.5,
       ease: 'power2.inOut',
     })
-    gsap.to(leftRef.current, {
-      x: 0,
-      opacity: 1,
-      duration: 0.5,
-    })
-    gsap.to(rightRef.current, {
-      x: 0,
-      opacity: 1,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    })
-    gsap.to(logoRef.current, {
-      scale: 1,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    })
-    gsap.to(githubRef.current, {
-      x: 0,
-      opacity: 1,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    })
-    gsap.to(discordRef.current, {
-      x: 0,
-      opacity: 1,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    })
+
+    tl.to(
+      logoRef.current,
+      {
+        scale: 1,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
+
+    tl.to(
+      leftRef.current,
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      },
+      '-=.4'
+    )
+
+    tl.to(
+      rightRef.current,
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
+
+    tl.to(
+      githubRef.current,
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
+
+    tl.to(
+      discordRef.current,
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
   })
 
   useEffect(() => {
