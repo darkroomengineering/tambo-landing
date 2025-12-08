@@ -1,4 +1,16 @@
+'use client'
+
+import { useContext, useEffect } from 'react'
+import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
+
 export function Section1() {
+  const { getItems } = useContext(BackgroundContext)
+
+  useEffect(() => {
+    const items = getItems()
+    console.log(items)
+  }, [getItems])
+
   return (
     <section className="flex flex-col items-center justify-center h-screen">
       <div className="dr-w-col-6 flex flex-col dr-gap-8 text-center">

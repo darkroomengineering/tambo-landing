@@ -1,6 +1,7 @@
 'use client'
 
 import cn from 'clsx'
+import { useImperativeHandle, useRef } from 'react'
 import s from './background.module.css'
 import { BackgroundContext } from './context'
 
@@ -28,19 +29,35 @@ function BoxShadow({
   )
 }
 
+export type BackgroundItemRef = {
+  getElement: () => HTMLDivElement | null
+  getBoxShadow: () => HTMLDivElement | null
+}
+
 export function BackgroundItem({
   opacity,
   hashed,
   style,
   borderOpacity,
   outerBorder,
+  ref,
 }: {
   opacity?: number
   hashed?: boolean
   style?: React.CSSProperties
   borderOpacity?: number
   outerBorder?: boolean
+  ref?: React.Ref<BackgroundItemRef>
 }) {
+  const elementRef = useRef<HTMLDivElement>(null)
+  const boxShadowRef = useRef<HTMLDivElement>(null)
+  //   const backgroundItemRef = useRef<BackgroundItemRef>()
+
+  useImperativeHandle(ref, () => ({
+    getElement: () => elementRef.current,
+    getBoxShadow: () => boxShadowRef.current,
+  }))
+
   return (
     <div
       className={cn(
@@ -48,8 +65,9 @@ export function BackgroundItem({
         s.item
       )}
       style={style}
+      ref={elementRef}
     >
-      <div className="absolute inset-0 rounded-[inherit]">
+      <div className="absolute inset-0 rounded-[inherit]" ref={boxShadowRef}>
         <BoxShadow y={36} blur={231} opacity={0.02} />
         <BoxShadow y={20} blur={195} opacity={0.07} />
         <BoxShadow y={9} blur={145} opacity={0.12} />
@@ -96,8 +114,14 @@ export default function Background({
 }: {
   children?: React.ReactNode
 }) {
+  const itemsRef = useRef<BackgroundItemRef[] | null[]>([])
+
   return (
-    <BackgroundContext value={{}}>
+    <BackgroundContext
+      value={{
+        getItems: () => itemsRef.current,
+      }}
+    >
       <div className="fixed inset-0 -z-1">
         <div className="absolute inset-0">
           <BackgroundItem
@@ -105,23 +129,35 @@ export default function Background({
             borderOpacity={0.1}
             hashed={true}
             style={{ height: '80%' }}
+            ref={(node) => {
+              itemsRef.current[0] = node
+            }}
           />
           <BackgroundItem
             opacity={0.6}
             borderOpacity={0.2}
             style={{ height: '70%' }}
+            ref={(node) => {
+              itemsRef.current[1] = node
+            }}
           />
           <BackgroundItem
             opacity={0.8}
             borderOpacity={0.3}
             hashed={true}
             style={{ height: '60%' }}
+            ref={(node) => {
+              itemsRef.current[2] = node
+            }}
           />
           <BackgroundItem
             opacity={1}
             outerBorder
             borderOpacity={0.5}
             style={{ height: '50%' }}
+            ref={(node) => {
+              itemsRef.current[3] = node
+            }}
           />
 
           {/* <BackgroundItem />
