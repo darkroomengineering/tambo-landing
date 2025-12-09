@@ -182,7 +182,7 @@ export function Navigation() {
   return (
     <nav
       className={cn(
-        'fixed top-0 left-0 z-100 dr-layout-grid-inner pt-gap pb-safe uppercase typo-button',
+        'fixed top-0 z-100 dr-layout-grid-inner pt-gap pb-safe uppercase typo-button max-w-[1500px] left-1/2 -translate-x-1/2',
         isVisible && 'opacity-100'
       )}
       onMouseEnter={() => toggleNavigation('show')}
@@ -222,7 +222,9 @@ export function Navigation() {
           >
             {RIGHT_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href}>{link.label}</Link>
+                <Link href={link.href} className="link">
+                  {link.label}
+                </Link>
               </li>
             ))}
             <li>

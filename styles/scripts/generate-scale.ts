@@ -66,7 +66,7 @@ function scaleUtility(name: string, properties: string | string[]) {
 	${propertiesArray
     .map(
       (property) =>
-        `${property}: calc((--value(integer) * 100) / var(--device-width) * 1vw);`
+        `${property}: min(calc((--value(integer) * 100) / var(--device-width) * 1vw), calc(((--value(integer) * var(--max-width)) / var(--device-width)) * 1px));`
     )
     .join('\n')}
 }`

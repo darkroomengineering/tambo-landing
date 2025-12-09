@@ -1,6 +1,12 @@
 import { colors, themeNames, themes } from './colors'
 import { easings } from './easings'
-import { breakpoints, customSizes, layout, screens } from './layout.mjs'
+import {
+  breakpoints,
+  customSizes,
+  layout,
+  maxWidth,
+  screens,
+} from './layout.mjs'
 import { fonts, typography } from './typography'
 
 const config = {
@@ -14,6 +20,7 @@ const config = {
   layout,
   screens,
   typography,
+  maxWidth,
 } as const
 
 export {
@@ -27,6 +34,7 @@ export {
   themeNames,
   themes,
   typography,
+  maxWidth,
 }
 export type ThemeName = keyof typeof themes
 export type Config = typeof config

@@ -1,5 +1,5 @@
 export function scalingCalc(value: number) {
-  return `calc(((${value} * 100) / var(--device-width)) * 1vw)`
+  return `min(calc(((${value} * 100) / var(--device-width)) * 1vw), calc(((${value} * var(--max-width)) / var(--device-width)) * 1px))`
 }
 
 /**

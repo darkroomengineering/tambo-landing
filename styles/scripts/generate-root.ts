@@ -7,10 +7,17 @@ export function generateRoot({
   customSizes,
   easings,
   layout,
+  maxWidth,
   screens,
 }: Pick<
   Config,
-  'breakpoints' | 'colors' | 'customSizes' | 'easings' | 'layout' | 'screens'
+  | 'breakpoints'
+  | 'colors'
+  | 'customSizes'
+  | 'easings'
+  | 'layout'
+  | 'maxWidth'
+  | 'screens'
 >) {
   return `@custom-media --hover (hover: hover);
 @custom-media --mobile (width <= ${breakpoints.dt - 0.02}px);
@@ -20,6 +27,7 @@ export function generateRoot({
 :root {
 	--device-width: ${screens.mobile.width};
 	--device-height: ${screens.mobile.height};
+	--max-width: ${maxWidth};
 	
 	${formatObject(layout, ([name, { mobile }]) => {
     if (name === 'columns') return `--columns: ${mobile};`

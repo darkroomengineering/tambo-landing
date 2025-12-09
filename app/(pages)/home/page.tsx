@@ -5,7 +5,7 @@ import { Section2 } from './_sections/section-2'
 
 export default function Home() {
   return (
-    <Wrapper theme="light" lenis={{}}>
+    <Wrapper theme="light" lenis={{}} className="max-w-[1500px] mx-auto">
       <Background>
         <Section1 />
         <Section2 />

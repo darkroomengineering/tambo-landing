@@ -14,8 +14,10 @@ const layout = {
   safe: { mobile: 16, desktop: 40 },
 }
 
+const maxWidth = 1500
+
 const customSizes = {
   'header-height': { mobile: 58, desktop: 98 },
 }
 
-export { breakpoints, customSizes, layout, screens }
+export { breakpoints, customSizes, layout, screens, maxWidth }
