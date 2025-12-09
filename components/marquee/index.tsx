@@ -44,7 +44,7 @@ export function Marquee({
   useTempus((_, deltaTime) => {
     const entry = getEntry()
 
-    if (!intersection.isIntersecting) return
+    if (!intersection?.isIntersecting) return
     if (pauseOnHover && isHovered.current) return
 
     if (!entry?.borderBoxSize[0]?.inlineSize) return
