@@ -182,7 +182,7 @@ export function Navigation() {
   return (
     <nav
       className={cn(
-        'fixed top-0 z-100 dr-layout-grid-inner pt-gap pb-safe uppercase typo-button max-w-[1500px] left-1/2 -translate-x-1/2',
+        'fixed top-0 z-100 dr-layout-grid-inner pt-gap pb-safe uppercase typo-button max-w-(--max-width) left-1/2 -translate-x-1/2',
         isVisible && 'opacity-100'
       )}
       onMouseEnter={() => toggleNavigation('show')}
