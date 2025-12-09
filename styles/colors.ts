@@ -19,6 +19,7 @@ const colors = {
   'white-80': '#ffffffcc',
   'white-60': '#ffffff99',
   'white-50': '#ffffff80',
+  'white-10': '#ffffff1a',
   // BLACK & SHADES
   black: '#0F1A17',
   'black-70': '#0f1a17b3',

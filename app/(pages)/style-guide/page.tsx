@@ -82,12 +82,10 @@ export default function StyleGuide() {
           </div>
         </div>
       </div>
-      <div className="px-safe flex items-center w-full justify-center dr-gap-20 border-1">
+      <div className="px-safe flex items-center w-full justify-center dr-gap-20">
         <CTA>White CTA</CTA>
         <CTA color="black">Black CTA</CTA>
-        <div className="h-fit dr-pt-3 bg-black">
-          <CTA type="secondary">Secondary CTA</CTA>
-        </div>
+        <CTA type="secondary">Secondary CTA</CTA>
         <CTA snippet>Snippet CTA</CTA>
       </div>
     </Wrapper>

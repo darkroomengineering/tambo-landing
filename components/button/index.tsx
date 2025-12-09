@@ -1,8 +1,8 @@
 'use client'
 
 import cn from 'clsx'
-import { useState } from 'react'
 import ArrowSVG from '~/assets/svgs/arrow.svg'
+import ClipboardSVG from '~/assets/svgs/clipboard.svg'
 import { Link } from '~/components/link'
 import s from './button.module.css'
 
@@ -14,6 +14,7 @@ type ButtonProps = {
   color?: 'white' | 'black'
   snippet?: boolean
   disabled?: boolean
+  onClick?: () => void
   onMouseEnter?: () => void
   onMouseLeave?: () => void
   children: React.ReactNode
@@ -24,6 +25,7 @@ export function Button({
   href,
   as,
   children,
+  onClick,
   onMouseEnter,
   onMouseLeave,
   ...props
@@ -39,6 +41,7 @@ export function Button({
       ...props,
       onMouseEnter,
       onMouseLeave,
+      onClick,
     })
   }
 
@@ -47,6 +50,7 @@ export function Button({
       className={baseClassName}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
       {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
     >
       {children}
@@ -64,10 +68,8 @@ export function CTA({
   snippet = false,
   ...props
 }: ButtonProps) {
-  const [isHovered, setIsHovered] = useState(false)
-
   return (
-    <div className="relative">
+    <div className={cn('relative', s.wrapper)}>
       <Button
         className={cn(
           'dt:dr-rounded-16 flex items-center dt:dr-pl-16 dt:dr-pr-8 dt:dr-py-8 dt:dr-h-52',
@@ -80,12 +82,6 @@ export function CTA({
         href={href}
         as={as}
         {...props}
-        onMouseEnter={() => {
-          setIsHovered(true)
-        }}
-        onMouseLeave={() => {
-          setIsHovered(false)
-        }}
       >
         <span className={cn(s.text, 'typo-button')}>{children}</span>
         <span
@@ -100,13 +96,18 @@ export function CTA({
       {snippet && (
         <button
           className={cn(
-            'dr-rounded-16 absolute w-full top-full left-0 dr-mt-4 dr-pl-16 dr-pr-8 dr-pb-16 dr-pt-8 border-2 border-solid border-dark-grey transition-opacity duration-300 ease-in-out',
-            isHovered
-              ? 'opacity-100 pointer-events-auto'
-              : 'opacity-0 pointer-events-none'
+            'dr-rounded-16 absolute w-full top-full left-0 dr-mt-4 dr-pl-16 dr-pr-8 dr-pb-16 dr-pt-8 border-2 border-solid border-dark-grey',
+            s.snippet
           )}
           type="button"
         >
+          <span className="flex items-center justify-between dt:dr-mb-24">
+            <span className="typo-label-s text-white">JSX</span>
+            <span className="flex items-center justify-center dt:dr-w-32 dt:dr-h-32 dr-rounded-10 bg-white-10">
+              <ClipboardSVG className="dt:dr-w-16 dt:dr-h-16" />
+            </span>
+          </span>
+
           <p className="typo-code-snippet">testing</p>
         </button>
       )}
