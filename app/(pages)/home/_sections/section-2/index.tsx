@@ -39,7 +39,7 @@ export function Section2() {
         </TitleBlock.Title>
         <TitleBlock.Button>Read Documentation</TitleBlock.Button>
       </TitleBlock>
-      <ul className="col-start-2 col-end-12 flex gap-gap">
+      <ul className="col-start-2 col-end-12 flex gap-gap justify-center">
         {cards.map((card) => (
           <Card key={card.title} data={card} />
         ))}
@@ -54,7 +54,7 @@ type CardProps = {
 
 function Card({ data }: CardProps) {
   return (
-    <li className="dr-h-420 flex-1 dr-p-8 dr-rounded-20 overflow-hidden bg-off-white border border-dark-grey flex flex-col group transition-all duration-200 hover:flex-[1.35] hover:border-mint hover:bg-black hover:text-mint relative">
+    <li className="dr-h-420 shrink-0 aspect-[264/420] dr-p-8 dr-rounded-20 overflow-hidden bg-off-white border border-dark-grey flex flex-col group transition-all duration-200 hover:aspect-[3/4] hover:border-mint hover:bg-black hover:text-mint relative">
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 dark-teal-pattern" />
       <div className="w-full dr-h-206 bg-white border border-dark-grey dr-rounded-12 dr-p-16 flex flex-col items-center overflow-hidden transition-all duration-300 group-hover:dr-h-50 group-hover:bg-black group-hover:border-mint relative z-10">
         <p className="typo-h4">{data.title}</p>

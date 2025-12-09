@@ -2,6 +2,7 @@
 
 import cn from 'clsx'
 import { useImperativeHandle, useRef } from 'react'
+import { useTempus } from 'tempus/react'
 import { useDeviceDetection } from '~/hooks/use-device-detection'
 import s from './background.module.css'
 import { BackgroundContext } from './context'
@@ -62,6 +63,15 @@ export function BackgroundItem({
     getElement: () => elementRef.current,
     getBoxShadow: () => boxShadowRef.current,
   }))
+
+  const svgRectRef = useRef<SVGRectElement>(null)
+
+  useTempus((_, __, frameCount) => {
+    svgRectRef.current?.setAttribute(
+      'stroke-dashoffset',
+      `${frameCount * 0.25}`
+    )
+  })
 
   return (
     <div
@@ -138,6 +148,7 @@ export function BackgroundItem({
         }}
       >
         <rect
+          ref={svgRectRef}
           width="100%"
           height="100%"
           fill="none"
