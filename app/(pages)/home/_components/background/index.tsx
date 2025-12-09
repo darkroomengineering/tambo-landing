@@ -56,7 +56,7 @@ export function BackgroundItem({
   const elementRef = useRef<HTMLDivElement>(null)
   const boxShadowRef = useRef<HTMLDivElement>(null)
 
-  const { dpr } = useDeviceDetection()
+  const { dpr, isSafari } = useDeviceDetection()
   //   const backgroundItemRef = useRef<BackgroundItemRef>()
 
   useImperativeHandle(ref, () => ({
@@ -67,10 +67,12 @@ export function BackgroundItem({
   const svgRectRef = useRef<SVGRectElement>(null)
 
   useTempus((_, __, frameCount) => {
-    svgRectRef.current?.setAttribute(
-      'stroke-dashoffset',
-      `${frameCount * 0.25}`
-    )
+    if (isSafari === false) {
+      svgRectRef.current?.setAttribute(
+        'stroke-dashoffset',
+        `${frameCount * 0.25}`
+      )
+    }
   })
 
   return (
