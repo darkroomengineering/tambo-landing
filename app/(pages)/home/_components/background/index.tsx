@@ -61,17 +61,19 @@ export function BackgroundItem({
   return (
     <div
       className={cn(
-        'absolute aspect-[1/1] rounded-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%]',
+        'absolute aspect-[1/1] rounded-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] will-change-transform',
         s.item
       )}
       style={style}
       ref={elementRef}
     >
       <div className="absolute inset-0 rounded-[inherit]" ref={boxShadowRef}>
-        <BoxShadow y={36} blur={231} opacity={0.02} />
+        {/* <BoxShadow y={36} blur={231} opacity={0.02} />
         <BoxShadow y={20} blur={195} opacity={0.07} />
         <BoxShadow y={9} blur={145} opacity={0.12} />
-        <BoxShadow y={2} blur={79} opacity={0.14} />
+        <BoxShadow y={2} blur={79} opacity={0.14} /> */}
+
+        <BoxShadow y={4} blur={56} opacity={0.25} />
       </div>
       <div
         className={cn(
@@ -128,7 +130,7 @@ export default function Background({
             opacity={0.4}
             borderOpacity={0.1}
             hashed={true}
-            style={{ height: '80%' }}
+            // style={{ height: '80%' }}
             ref={(node) => {
               itemsRef.current[0] = node
             }}
@@ -136,7 +138,7 @@ export default function Background({
           <BackgroundItem
             opacity={0.6}
             borderOpacity={0.2}
-            style={{ height: '70%' }}
+            // style={{ height: '70%' }}
             ref={(node) => {
               itemsRef.current[1] = node
             }}
@@ -145,7 +147,7 @@ export default function Background({
             opacity={0.8}
             borderOpacity={0.3}
             hashed={true}
-            style={{ height: '60%' }}
+            // style={{ height: '60%' }}
             ref={(node) => {
               itemsRef.current[2] = node
             }}
@@ -154,7 +156,7 @@ export default function Background({
             opacity={1}
             outerBorder
             borderOpacity={0.5}
-            style={{ height: '50%' }}
+            // style={{ height: '50%' }}
             ref={(node) => {
               itemsRef.current[3] = node
             }}
