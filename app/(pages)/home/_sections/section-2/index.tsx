@@ -5,6 +5,7 @@ import cn from 'clsx'
 import { useRect } from 'hamo'
 import { useContext, useEffect } from 'react'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
+import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import PlusIcon from '~/assets/svgs/plus.svg'
 import { cards } from './data'
 import s from './section-2.module.css'
@@ -30,16 +31,16 @@ export function Section2() {
 
   return (
     <section ref={setRectRef} className="dr-layout-grid-inner h-screen">
-      <div className="col-start-4 col-end-10 flex flex-col items-center h-min">
-        <p className="typo-surtitle uppercase dr-mb-24">
+      <TitleBlock className="col-start-4 col-end-10">
+        <TitleBlock.LeadIn>
           {'<'} Meet tambo {'>'}
-        </p>
-        <h2 className="typo-h1 text-center dr-mb-40">
+        </TitleBlock.LeadIn>
+        <TitleBlock.Title level="h2">
           Tambo is the React SDK that lets users control your app through
           natural language.
-        </h2>
-        {/* TODO: Add Button here */}
-      </div>
+        </TitleBlock.Title>
+        <TitleBlock.Button>Read Documentation</TitleBlock.Button>
+      </TitleBlock>
       <ul className="col-start-2 col-end-12 flex gap-gap">
         {cards.map((card) => (
           <Card key={card.title} data={card} />
