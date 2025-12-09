@@ -66,7 +66,9 @@ export function Section1() {
           Turn any React app into an AI-powered experience in minutes
         </p>
       </div>
-      <div className="flex dr-gap-16 dr-mt-40">{/* Add Buttons here */}</div>
+      <div className="flex dr-gap-16 dr-mt-40">
+        {/* TODO: Add Buttons here */}
+      </div>
     </section>
   )
 }
