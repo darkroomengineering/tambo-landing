@@ -61,7 +61,7 @@ export function BackgroundItem({
   return (
     <div
       className={cn(
-        'absolute aspect-[1/1] rounded-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] will-change-transform',
+        'absolute aspect-[1/1] rounded-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%]',
         s.item
       )}
       style={style}
@@ -100,7 +100,7 @@ export function BackgroundItem({
       )}
       <div
         className={cn(
-          'absolute inset-0 rounded-[inherit] border-dashed border-[#008346] border-1',
+          'absolute inset-0 rounded-[inherit] border border-[#008346] border-1',
           s.border
         )}
         style={{
