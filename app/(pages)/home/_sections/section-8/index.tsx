@@ -35,7 +35,7 @@ export function Section8() {
                 htmlFor={demo.id}
                 className="flex dr-gap-16 items-center justify-center dr-h-60"
               >
-                <div className="dr-size-32 grid place-items-center rounded-full bg-mint">
+                <div className="dr-size-32 grid place-items-center rounded-full">
                   <demo.icon className="dr-size-16 icon text-black" />
                 </div>
                 <span className="block">{demo.label}</span>

@@ -47,7 +47,7 @@
   width: desktop-vw(290);
   cursor: pointer;
   text-align: center;
-  transition: background, color;
+  transition: background, color, opacity;
   transition-duration: 0.25s;
   transition-timing-function: var(--ease, ease);
   color: color-mix(
@@ -56,6 +56,21 @@
     var(--color-black)
   );
   opacity: var(--highlight, 0.5);
+
+  div {
+    transition: background-color;
+    transition-duration: 0.25s;
+    transition-timing-function: var(--ease, ease);
+    background-color: color-mix(
+      in srgb,
+      var(--color-teal) calc(var(--highlight, 0) * 100%),
+      var(--color-mint)
+    );
+  }
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .tabs::after {
