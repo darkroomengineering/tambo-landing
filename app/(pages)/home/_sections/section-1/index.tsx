@@ -5,6 +5,8 @@ import gsap from 'gsap'
 import { useRect } from 'hamo'
 import { useContext, useEffect, useRef } from 'react'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
+import { DashedBorder } from '~/app/(pages)/home/_components/dashed-border'
+import ArrowDownSVG from '~/assets/svgs/arrow-down.svg'
 import TamboLetters from '~/assets/svgs/tambo-letters.svg'
 import { CTA } from '~/components/button'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
@@ -99,7 +101,7 @@ export function Section1() {
             },
             {
               width: (index) => 125 - index * 15,
-              y: (index) => -25 - (elements.length - index) * 1.8,
+              y: (index) => -15 - (elements.length - index) * 1.8,
             },
             proxy.progress2,
             {
@@ -165,7 +167,7 @@ export function Section1() {
           elements,
           {
             width: (index) => 125 - index * 15,
-            y: (index) => -25 - (elements.length - index) * 1.8,
+            y: (index) => -15 - (elements.length - index) * 1.8,
           },
           {
             y: 0,
@@ -225,7 +227,7 @@ export function Section1() {
           <h1 className="typo-hero-title">
             You shouldn&apos;t need a PhD
             <br />
-            to add AI to your app
+            to add AI to your app.
           </h1>
           <p className="typo-p-l text-black-70">
             Turn any React app into an AI-powered experience in minutes
@@ -248,6 +250,10 @@ export function Section1() {
             <CTA>Try Live Demo</CTA>
           </div>
         </div>
+      </div>
+      <div className="dr-w-136 aspect-square bg-white absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[50%] rounded-full">
+        <DashedBorder className="absolute inset-0" />
+        <ArrowDownSVG className="dr-w-32 absolute left-[50%] translate-x-[-50%] dr-top-24" />
       </div>
     </section>
   )

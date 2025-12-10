@@ -259,7 +259,7 @@ export function Navigation() {
 
       <Link
         href="/"
-        className="col-start-12 dr-size-48 rounded-full border border-dark-grey grid place-items-center bg-white/50 backdrop-blur-[30px]"
+        className="col-start-12 dr-size-48 rounded-full border border-dark-grey grid place-items-center bg-white/50 backdrop-blur-[30px] justify-self-end"
         ref={discordRef}
       >
         <div className="group dr-w-32 aspect-square grid place-items-center bg-teal hover:bg-black hover:text-teal rounded-full hover:scale-110 transition-all duration-300">

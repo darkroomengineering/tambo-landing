@@ -3,6 +3,7 @@
 import cn from 'clsx'
 import { useImperativeHandle, useRef } from 'react'
 import { useDeviceDetection } from '~/hooks/use-device-detection'
+import { DashedBorder } from '../dashed-border'
 import s from './background.module.css'
 import { BackgroundContext } from './context'
 
@@ -125,41 +126,13 @@ export function BackgroundItem({
           borderRadius: '100%',
         }}
       /> */}
-      <svg
-        aria-hidden="true"
+
+      <DashedBorder
         className={cn('absolute inset-0', s.border)}
-        width="100%"
-        height="100%"
-        // viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
-        overflow="visible"
         style={{
           opacity: borderOpacity,
         }}
-      >
-        <rect
-          width="100%"
-          height="100%"
-          fill="none"
-          rx="100%"
-          ry="100%"
-          stroke="#008346"
-          strokeWidth="1"
-          strokeDasharray="6, 6"
-          strokeDashoffset="0"
-          strokeLinecap="square"
-          style={{
-            animation: 'dashoffset-move 0.4s linear infinite',
-          }}
-        />
-        <style>
-          {`@keyframes dashoffset-move {
-          to {
-            stroke-dashoffset: +12;
-          }
-        }`}
-        </style>
-      </svg>
+      />
     </div>
   )
 }
