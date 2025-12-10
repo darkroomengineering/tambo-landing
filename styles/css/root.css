@@ -56,18 +56,8 @@
 	--color-grey: #D8E9E4;
 	--color-dark-grey: #CBE2DB;
 	--color-white: #ffffff;
-	--color-white-80: #ffffffcc;
-	--color-white-60: #ffffff99;
-	--color-white-50: #ffffff80;
-	--color-white-10: #ffffff1a;
 	--color-black: #0F1A17;
-	--color-black-70: #0f1a17b3;
-	--color-black-50: #0f1a1780;
 	--color-forest: #008346;
-	--color-forest-50: #00834680;
-	--color-forest-30: #0083464d;
-	--color-forest-20: #00834633;
-	--color-forest-10: #0083461a;
 	
 	@variant dt {
     --device-width: 1440;
