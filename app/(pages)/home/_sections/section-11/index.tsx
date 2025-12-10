@@ -5,6 +5,7 @@ import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import ArrowSVG from '~/assets/svgs/arrow.svg'
 import PlusSVG from '~/assets/svgs/plus.svg'
 import { Button } from '~/components/button'
+import { Image } from '~/components/image'
 import { showcaseCards } from './data'
 import s from './section-11.module.css'
 
@@ -46,10 +47,23 @@ export function Section11() {
               {/* IMAGE WIP */}
               <div
                 className={cn(
-                  'dt:dr-w-337 dt:dr-h-189 border-2 border-dark-grey dr-rounded-8 aspect-16/9 dt:dr-mb-12 relative z-1',
+                  'dt:dr-w-337 dt:dr-h-189 border-2 border-dark-grey dr-rounded-8 aspect-16/9 dt:dr-mb-12 relative z-1 bg-white',
                   s.cardImage
                 )}
-              />
+              >
+                {card?.image.includes('.png') ? (
+                  <Image src={card?.image} alt={card?.title} fill />
+                ) : (
+                  <video
+                    className="w-full h-full"
+                    src={card?.image}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  />
+                )}
+              </div>
 
               <div className="dt:dr-mb-16 dt:dr-ml-12 relative z-1 flex items-center justify-between">
                 <p className={cn('typo-h4 w-fit', s.title)}>{card?.title}</p>

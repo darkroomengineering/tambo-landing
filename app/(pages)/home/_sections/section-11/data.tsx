@@ -5,7 +5,7 @@ export const showcaseCards = [
       'Database design through conversation. Create schemas, generate ERDs, get optimization tips, export SQL.',
     user: '@akinloluwami',
     href: '/',
-    // image: '/images/app-1.png',
+    image: '/assets/showcases/showcase-1.png',
   },
   {
     title: 'CheatSheet',
@@ -13,7 +13,8 @@ export const showcaseCards = [
       'Database design through conversation. Create schemas, generate ERDs, get optimization tips, export SQL.',
     user: '@akinloluwami',
     href: '/',
-    // image: '/images/app-1.png',
+    // image: '/assets/showcases/showcase-2.png',
+    image: '/videos/Octo-Juggle.webm',
   },
   {
     title: 'db-thing',
@@ -21,6 +22,6 @@ export const showcaseCards = [
       'Database design through conversation. Create schemas, generate ERDs, get optimization tips, export SQL.',
     user: '@akinloluwami',
     href: '/',
-    // image: '/images/app-1.png',
+    image: '/assets/showcases/showcase-1.png',
   },
 ]
