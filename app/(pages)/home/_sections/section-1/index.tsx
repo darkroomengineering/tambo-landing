@@ -177,7 +177,20 @@ export function Section1() {
         </p>
       </div>
       <div className="flex dr-gap-16 dr-mt-40">
-        <CTA color="black">START BUILDING</CTA>
+        <CTA snippet className="bg-black! text-teal border-teal">
+          START BUILDING
+          <span className="typo-code-snippet">
+            <span className="text-pink">{'<TamboProvider'} </span>
+            <span className="text-teal">
+              {'components='}
+              <span className="text-pink">{'{components}'}</span>
+            </span>
+            <br />
+            <span className="text-white dt:dr-ml-16">{'<YourApp />'}</span>
+            <br />
+            <span className="text-pink">{'</TamboProvider>'}</span>
+          </span>
+        </CTA>
         <CTA>Try Live Demo</CTA>
       </div>
     </section>
