@@ -1,11 +1,13 @@
 'use client'
 
 import cn from 'clsx'
+import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import ArrowSVG from '~/assets/svgs/arrow.svg'
 import PlusSVG from '~/assets/svgs/plus.svg'
 import { Button } from '~/components/button'
 import { Image } from '~/components/image'
+import { Video } from '~/components/video'
 import { showcaseCards } from './data'
 import s from './section-11.module.css'
 
@@ -37,11 +39,8 @@ export function Section11() {
                 s.card
               )}
             >
-              <div
-                className={cn(
-                  'absolute inset-0 dark-teal-pattern pointer-events-none',
-                  s.pattern
-                )}
+              <HashPattern
+                className={cn('absolute inset-0 text-dark-teal/50', s.pattern)}
               />
 
               <div
@@ -53,14 +52,9 @@ export function Section11() {
                 {card?.image.includes('.png') ? (
                   <Image src={card?.image} alt={card?.title} fill />
                 ) : (
-                  <video
-                    className="w-full h-full object-cover block"
-                    src={card?.image}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                  />
+                  <Video autoPlay>
+                    <source src={card?.image} type="video/webm" />
+                  </Video>
                 )}
               </div>
 
