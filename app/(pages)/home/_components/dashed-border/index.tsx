@@ -31,13 +31,15 @@ export function DashedBorder({
           animation: 'dashoffset-move 0.4s linear infinite',
         }}
       />
-      <style>
-        {`@keyframes dashoffset-move {
+      {!process.env.NEXT_PUBLIC_DISABLE_STROKE_ANIMATION && (
+        <style>
+          {`@keyframes dashoffset-move {
             to {
                 stroke-dashoffset: +12;
             }
         }`}
-      </style>
+        </style>
+      )}
     </svg>
   )
 }
