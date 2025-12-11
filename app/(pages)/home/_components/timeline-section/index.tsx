@@ -48,7 +48,7 @@ export function TimelineSection({
   })
 
   return (
-    <section ref={rectRef} className="h-[300svh] bg-light-gray">
+    <section ref={rectRef} className="h-[200svh] bg-light-gray">
       <div className="sticky top-0 dr-layout-grid-inner h-screen overflow-clip">
         <div className="col-span-4 flex flex-col dr-mt-112">
           <h3 className="typo-h2">{title}</h3>
@@ -75,7 +75,9 @@ export function TimelineSection({
               ))}
             </ul>
           </div>
-          <CTA wrapperRef={buttonRef}>Get Started</CTA>
+          <CTA wrapperRef={buttonRef} color="black">
+            Start building
+          </CTA>
         </div>
       </div>
     </section>
@@ -183,12 +185,7 @@ function TimelineItem({
     }
   })
 
-  useEffect(() => {
-    if (visible) {
-      return showItem()
-    }
-    return hideItem()
-  }, [visible])
+  useEffect(() => (visible ? showItem() : hideItem()), [visible])
 
   return (
     <li className="relative dr-h-84 dr-p-8 flex dr-gap-4">
