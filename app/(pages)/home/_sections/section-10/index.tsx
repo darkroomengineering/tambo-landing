@@ -55,10 +55,10 @@ export function Section10() {
             className="w-full h-full object-cover"
           >
             <source
-              src="/videos/Octo-Juggle-compressed.mov"
+              src="/videos/Octo-Wave-compressed.mov"
               type='video/mp4; codecs="hvc1"'
             />
-            <source src="/videos/Octo-Juggle.webm" type="video/webm" />
+            <source src="/videos/Octo-Wave.webm" type="video/webm" />
           </video>
         </div>
         <h3 className="typo-surtitle">{'< features >'}</h3>
