@@ -1,6 +1,6 @@
 'use client'
 
-import { useRect } from 'hamo'
+import { useRect, useWindowSize } from 'hamo'
 import { useContext } from 'react'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
@@ -33,6 +33,37 @@ export function Section10() {
           render: (element, { width }) => {
             if (element instanceof HTMLElement) {
               element.style.width = `${width}%`
+            }
+          },
+        }
+      )
+    },
+  })
+
+  const { height: windowHeight = 0 } = useWindowSize()
+
+  useScrollTrigger({
+    rect,
+    start: 'top top',
+    end: `${rect?.top === undefined || rect?.height === undefined ? 'bottom' : rect?.top + rect?.height + windowHeight * 0.5} top`,
+    onProgress: ({ progress, height }) => {
+      const elements = getItems()
+        .map((item) => item?.getElement())
+        .filter(Boolean)
+      fromTo(
+        elements,
+        {
+          y: 0,
+        },
+        {
+          y: -height,
+        },
+        progress,
+        {
+          ease: 'linear',
+          render: (element, { y }) => {
+            if (element instanceof HTMLElement) {
+              element.style.transform = `translateY(${y}px)`
             }
           },
         }
