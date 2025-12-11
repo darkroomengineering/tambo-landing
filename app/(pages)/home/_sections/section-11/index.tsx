@@ -54,7 +54,7 @@ export function Section11() {
                   <Image src={card?.image} alt={card?.title} fill />
                 ) : (
                   <video
-                    className="w-full h-full"
+                    className="w-full h-full object-cover block"
                     src={card?.image}
                     autoPlay
                     muted

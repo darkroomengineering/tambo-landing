@@ -9,6 +9,8 @@ import { DashedBorder } from '~/app/(pages)/home/_components/dashed-border'
 import ArrowDownSVG from '~/assets/svgs/arrow-down.svg'
 import TamboLetters from '~/assets/svgs/tambo-letters.svg'
 import { CTA } from '~/components/button'
+import { Image } from '~/components/image'
+import { Video } from '~/components/video'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
 import { fromTo } from '~/libs/utils'
 import s from './section1.module.css'
@@ -194,26 +196,33 @@ export function Section1() {
       ref={setRectRef}
       className="flex flex-col items-center justify-center h-screen relative"
     >
-      <div className="dr-w-480 aspect-[1/1] border-1 border-[red] rounded-full absolute left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%]" />
+      <div className="dr-w-480 aspect-square border-1 border-[red] rounded-full absolute left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%]" />
       <div className="dr-w-col-8 flex flex-col dr-gap-8 text-center items-center">
         <div className="relative">
           <div
-            className={cn('-dr-mb-90 dr-w-416 scale-[0.25]', s.video)}
+            className={cn(
+              '-dr-mb-90 dr-w-416 aspect-square scale-[0.25]',
+              s.video
+            )}
             ref={videoRef}
           >
-            <video
+            <Video
               autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover"
+              priority
+              fallback={
+                <Image
+                  src="/videos/Octo-Juggle.png"
+                  alt="Octo Juggle"
+                  unoptimized
+                />
+              }
             >
               <source
                 src="/videos/Octo-Juggle-compressed.mov"
                 type='video/mp4; codecs="hvc1"'
               />
               <source src="/videos/Octo-Juggle.webm" type="video/webm" />
-            </video>
+            </Video>
           </div>
           <div
             className="absolute left-[50%] translate-x-[-50%] top-[100%]"

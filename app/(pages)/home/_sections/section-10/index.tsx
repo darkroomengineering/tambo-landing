@@ -4,6 +4,8 @@ import { useRect, useWindowSize } from 'hamo'
 import { useContext, useRef } from 'react'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { CTA } from '~/components/button'
+import { Image } from '~/components/image'
+import { Video } from '~/components/video'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
 import { fromTo } from '~/libs/utils'
 
@@ -118,19 +120,18 @@ export function Section10() {
     >
       <div className="text-center flex flex-col items-center relative -dr-top-48">
         <div className="dr-w-172 aspect-square">
-          <video
+          <Video
             autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
+            fallback={
+              <Image src="/videos/Octo-Wave.png" alt="Octo Wave" unoptimized />
+            }
           >
             <source
               src="/videos/Octo-Wave-compressed.mov"
               type='video/mp4; codecs="hvc1"'
             />
             <source src="/videos/Octo-Wave.webm" type="video/webm" />
-          </video>
+          </Video>
         </div>
         <div className="text-center flex flex-col items-center dr-gap-24">
           <h3 className="typo-surtitle text-black/70">{'< features >'}</h3>
