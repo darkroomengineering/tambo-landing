@@ -76,7 +76,7 @@ export function Section10() {
       ref={setRectRef}
       className="h-screen flex flex-col items-center justify-center"
     >
-      <div className="text-center flex flex-col items-center dr-gap-24">
+      <div className="text-center flex flex-col items-center relative -dr-top-48">
         <div className="dr-w-172 aspect-square">
           <video
             autoPlay
@@ -92,12 +92,14 @@ export function Section10() {
             <source src="/videos/Octo-Wave.webm" type="video/webm" />
           </video>
         </div>
-        <h3 className="typo-surtitle">{'< features >'}</h3>
-        <h2 className="typo-h1">
-          One SDK,
-          <br />
-          orchestrating <br /> everything
-        </h2>
+        <div className="text-center flex flex-col items-center dr-gap-24">
+          <h3 className="typo-surtitle">{'< features >'}</h3>
+          <h2 className="typo-h1">
+            One SDK,
+            <br />
+            orchestrating <br /> everything
+          </h2>
+        </div>
       </div>
     </section>
   )
