@@ -221,7 +221,10 @@ export function Section1() {
                 src="/videos/Octo-Juggle-compressed.mov"
                 type='video/mp4; codecs="hvc1"'
               />
-              <source src="/videos/Octo-Juggle.webm" type="video/webm" />
+              <source
+                src="/videos/Octo-Juggle-compressed.webm"
+                type="video/webm"
+              />
             </Video>
           </div>
           <div

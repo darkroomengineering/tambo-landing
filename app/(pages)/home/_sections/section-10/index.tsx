@@ -130,7 +130,7 @@ export function Section10() {
               src="/videos/Octo-Wave-compressed.mov"
               type='video/mp4; codecs="hvc1"'
             />
-            <source src="/videos/Octo-Wave.webm" type="video/webm" />
+            <source src="/videos/Octo-Wave-compressed.webm" type="video/webm" />
           </Video>
         </div>
         <div className="text-center flex flex-col items-center dr-gap-24">
