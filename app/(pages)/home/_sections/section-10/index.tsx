@@ -1,7 +1,7 @@
 'use client'
 
 import { useRect, useWindowSize } from 'hamo'
-import { useContext } from 'react'
+import { useContext, useRef } from 'react'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { CTA } from '~/components/button'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
@@ -23,6 +23,8 @@ const BUTTONS = [
 ]
 
 export function Section10() {
+  const buttonsRef = useRef<HTMLDivElement>(null)
+
   const [setRectRef, rect] = useRect()
 
   const { getItems } = useContext(BackgroundContext)
@@ -32,6 +34,28 @@ export function Section10() {
     start: 'top center',
     end: 'top top',
     onProgress: ({ progress }) => {
+      fromTo(
+        buttonsRef.current,
+        {
+          opacity: 0,
+          scale: 1.2,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+        },
+        progress,
+        {
+          ease: 'linear',
+          render: (element, { opacity, scale }) => {
+            if (element instanceof HTMLElement) {
+              element.style.opacity = `${opacity}`
+              element.style.transform = `scale(${scale})`
+            }
+          },
+        }
+      )
+
       const elements = getItems()
         .map((item) => item?.getElement())
         .filter(Boolean)
@@ -90,7 +114,7 @@ export function Section10() {
   return (
     <section
       ref={setRectRef}
-      className="h-screen flex flex-col items-center justify-center relative"
+      className="h-screen flex flex-col items-center justify-center relative overflow-x-clip"
     >
       <div className="text-center flex flex-col items-center relative -dr-top-48">
         <div className="dr-w-172 aspect-square">
@@ -117,7 +141,7 @@ export function Section10() {
           </h2>
         </div>
       </div>
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none" ref={buttonsRef}>
         {BUTTONS.map((button) => (
           <div
             className="absolute pointer-events-auto"
