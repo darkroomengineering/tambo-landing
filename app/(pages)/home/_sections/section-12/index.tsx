@@ -54,11 +54,11 @@ export function Section12() {
         {/* BANNER */}
         <div
           className={cn(
-            'w-full dt:dr-p-8 border border-dark-grey dr-rounded-20',
+            'w-full dt:dr-p-8 border border-dark-grey  dr-rounded-20',
             s.banner
           )}
         >
-          <div className="border bg-black w-full dr-rounded-12 dr-p-24 relative overflow-hidden flex  justify-between">
+          <div className="bg-black w-full dr-rounded-12 dr-p-24 relative overflow-hidden flex  justify-between">
             <div className="absolute inset-0 dark-teal-pattern z-0" />
             <div className="relative text-teal">
               <h3 className="typo-h3 dt:dr-mb-8">{banner?.title}</h3>
