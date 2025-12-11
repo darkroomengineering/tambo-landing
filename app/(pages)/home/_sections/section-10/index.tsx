@@ -124,7 +124,9 @@ export function Section10() {
             style={{ top: `${button.top}%`, left: `${button.left}%` }}
             key={button.title}
           >
-            <CTA href={button.href}>{button.title}</CTA>
+            <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+              <CTA href={button.href}>{button.title}</CTA>
+            </div>
           </div>
         ))}
       </div>

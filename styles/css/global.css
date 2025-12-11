@@ -32,7 +32,7 @@ body {
 /* Selection styling */
 *::selection {
   background-color: var(--color-contrast);
-  color: var(--color-primary);
+  color: var(--color-secondary);
 }
 
 /* SVG icon colors */

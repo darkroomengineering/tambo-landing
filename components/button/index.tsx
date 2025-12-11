@@ -103,10 +103,12 @@ export function CTA({
         as={as}
         {...props}
       >
-        <span className={cn(s.text, 'typo-button')}>{buttonText}</span>
+        <span className={cn(s.text, 'typo-button text-nowrap')}>
+          {buttonText}
+        </span>
         <span
           className={cn(
-            'dt:dr-w-32 dt:dr-h-32 bg-mint flex items-center justify-center dr-rounded-10',
+            'dt:dr-w-32 dt:dr-h-32 bg-mint flex items-center justify-center dr-rounded-10 shrink-0',
             s.arrow
           )}
         >
