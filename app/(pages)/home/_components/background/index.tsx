@@ -2,6 +2,7 @@
 
 import cn from 'clsx'
 import { useImperativeHandle, useRef } from 'react'
+import { Kinesis } from '~/components/kinesis'
 import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { DashedBorder } from '../dashed-border'
 import s from './background.module.css'
@@ -44,6 +45,7 @@ export function BackgroundItem({
   style,
   borderOpacity,
   outerBorder,
+  index,
   ref,
 }: {
   opacity?: number
@@ -51,13 +53,13 @@ export function BackgroundItem({
   style?: React.CSSProperties
   borderOpacity?: number
   outerBorder?: boolean
+  index?: number
   ref?: React.Ref<BackgroundItemRef>
 }) {
   const elementRef = useRef<HTMLDivElement>(null)
   const boxShadowRef = useRef<HTMLDivElement>(null)
 
   const { dpr } = useDeviceDetection()
-  //   const backgroundItemRef = useRef<BackgroundItemRef>()
 
   useImperativeHandle(ref, () => ({
     getElement: () => elementRef.current,
@@ -73,40 +75,41 @@ export function BackgroundItem({
       style={style}
       ref={elementRef}
     >
-      <div className="absolute inset-0 rounded-[inherit]" ref={boxShadowRef}>
-        {/* <BoxShadow y={36} blur={231} opacity={0.02} />
+      <Kinesis className="absolute inset-0 rounded-[inherit]" index={index}>
+        <div className="absolute inset-0 rounded-[inherit]" ref={boxShadowRef}>
+          {/* <BoxShadow y={36} blur={231} opacity={0.02} />
         <BoxShadow y={20} blur={195} opacity={0.07} />
         <BoxShadow y={9} blur={145} opacity={0.12} />
         <BoxShadow y={2} blur={79} opacity={0.14} /> */}
 
-        <BoxShadow y={4} blur={56} opacity={0.25} />
-      </div>
-      <div
-        className={cn(
-          'absolute inset-0 rounded-[inherit] bg-[white]',
-          s.opacity
-        )}
-        style={{ opacity: opacity }}
-      />
-      {hashed && (
+          <BoxShadow y={4} blur={56} opacity={0.25} />
+        </div>
         <div
           className={cn(
-            'absolute inset-0 rounded-[inherit] opacity-50',
-            s.hashed,
-            dpr === 1 && s.dpr1
+            'absolute inset-0 rounded-[inherit] bg-[white]',
+            s.opacity
           )}
-          style={{ opacity: `${opacity * 0.5}` }}
+          style={{ opacity: opacity }}
         />
-      )}
-      {outerBorder && (
-        <div
-          className="absolute inset-[-10] rounded-[inherit] border-solid border-white border-10"
-          style={{
-            opacity: borderOpacity,
-          }}
-        />
-      )}
-      {/* <div
+        {hashed && (
+          <div
+            className={cn(
+              'absolute inset-0 rounded-[inherit] opacity-50',
+              s.hashed,
+              dpr === 1 && s.dpr1
+            )}
+            style={{ opacity: `${opacity * 0.5}` }}
+          />
+        )}
+        {outerBorder && (
+          <div
+            className="absolute inset-[-10] rounded-[inherit] border-solid border-white border-10"
+            style={{
+              opacity: borderOpacity,
+            }}
+          />
+        )}
+        {/* <div
         className={cn(
           'absolute inset-0 rounded-[inherit] border border-[#008346] border-1',
           s.border
@@ -115,7 +118,7 @@ export function BackgroundItem({
           opacity: borderOpacity,
         }}
       /> */}
-      {/* <div
+        {/* <div
         className={cn(
           'absolute inset-0 rounded-[inherit] translate-z-0',
           s.border
@@ -127,12 +130,13 @@ export function BackgroundItem({
         }}
       /> */}
 
-      <DashedBorder
-        className={cn('absolute inset-0', s.border)}
-        style={{
-          opacity: borderOpacity,
-        }}
-      />
+        <DashedBorder
+          className={cn('absolute inset-0', s.border)}
+          style={{
+            opacity: borderOpacity,
+          }}
+        />
+      </Kinesis>
     </div>
   )
 }
@@ -156,41 +160,37 @@ export default function Background({
             opacity={0.4}
             borderOpacity={0.1}
             hashed={true}
-            // style={{ height: '80%' }}
             ref={(node) => {
               itemsRef.current[0] = node
             }}
+            index={6}
           />
           <BackgroundItem
             opacity={0.6}
             borderOpacity={0.2}
-            // style={{ height: '70%' }}
             ref={(node) => {
               itemsRef.current[1] = node
             }}
+            index={12.5}
           />
           <BackgroundItem
             opacity={0.8}
             borderOpacity={0.3}
             hashed={true}
-            // style={{ height: '60%' }}
             ref={(node) => {
               itemsRef.current[2] = node
             }}
+            index={25}
           />
           <BackgroundItem
             opacity={1}
             outerBorder
             borderOpacity={0.5}
-            // style={{ height: '50%' }}
             ref={(node) => {
               itemsRef.current[3] = node
             }}
+            index={50}
           />
-
-          {/* <BackgroundItem />
-        <BackgroundItem />
-        <BackgroundItem /> */}
         </div>
       </div>
       <div className="relative">{children}</div>
