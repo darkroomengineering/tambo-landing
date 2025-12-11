@@ -2,6 +2,7 @@
 
 import cn from 'clsx'
 import React from 'react'
+import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import ArrowSVG from '~/assets/svgs/arrow.svg'
 import ClipboardSVG from '~/assets/svgs/clipboard.svg'
 import DiscordSVG from '~/assets/svgs/discord.svg'
@@ -97,7 +98,7 @@ export function CTA({
     <div ref={wrapperRef} className={cn('relative', s.wrapper)}>
       <Button
         className={cn(
-          'dt:dr-rounded-16 flex items-center dt:dr-pl-16 dt:dr-pr-8 dt:dr-py-8 dt:dr-h-52',
+          'dt:dr-rounded-16 flex items-center dt:dr-pl-16 dt:dr-pr-8 dt:dr-py-8 dt:dr-h-52 relative overflow-hidden',
           s.button,
           color === 'black' && s.isBlack,
           type === 'secondary' && s.isSecondary,
@@ -108,17 +109,20 @@ export function CTA({
         as={as}
         {...props}
       >
-        <span className={cn(s.text, 'typo-button text-nowrap')}>
+        <span className={cn(s.text, 'typo-button text-nowrap z-1')}>
           {buttonText}
         </span>
         <span
           className={cn(
-            'dt:dr-w-32 dt:dr-h-32 bg-mint flex items-center justify-center dr-rounded-10 shrink-0',
+            'dt:dr-w-32 dt:dr-h-32 bg-mint flex items-center justify-center dr-rounded-10 shrink-0 z-1',
             s.arrow
           )}
         >
           <ButtonIcon icon={icon} />
         </span>
+        <HashPattern
+          className={cn('absolute inset-0 text-dark-teal/50', s.hashPattern)}
+        />
       </Button>
       {snippet && (
         <button

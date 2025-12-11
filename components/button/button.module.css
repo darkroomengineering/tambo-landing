@@ -5,6 +5,11 @@
   --glow: 0 0 24px 8px rgba(127, 255, 195, 0.8);
 }
 
+.hashPattern {
+  transition: opacity var(--duration) var(--ease);
+  opacity: 0;
+}
+
 .button {
   background-color: var(--color-white);
   border: 2px solid var(--color-dark-grey);
@@ -33,6 +38,10 @@
         &::after {
           transform: scale(1.5);
         }
+      }
+
+      .hashPattern {
+        opacity: 1;
       }
     }
   }
@@ -193,13 +202,9 @@
 
       /* Controls the button box */
       &:has(.snippet:hover) .isSnippet {
-        border-color: var(--color-dark-grey);
-        color: var(--color-white);
         box-shadow: none;
 
         .arrow {
-          background-color: var(--color-white);
-
           &::before,
           &::after {
             background-color: transparent;
