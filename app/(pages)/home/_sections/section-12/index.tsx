@@ -1,7 +1,9 @@
+import cn from 'clsx'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import CheckSVG from '~/assets/svgs/check.svg'
 import { CTA } from '~/components/button'
 import { banner, pricingCards } from './data'
+import s from './section-12.module.css'
 
 export function Section12() {
   return (
@@ -50,7 +52,12 @@ export function Section12() {
           ))}
         </div>
         {/* BANNER */}
-        <div className="w-full dt:dr-p-8 border border-dark-grey dr-rounded-20">
+        <div
+          className={cn(
+            'w-full dt:dr-p-8 border border-dark-grey dr-rounded-20',
+            s.banner
+          )}
+        >
           <div className="border bg-black w-full dr-rounded-12 dr-p-24 relative overflow-hidden flex  justify-between">
             <div className="absolute inset-0 dark-teal-pattern z-0" />
             <div className="relative text-teal">
