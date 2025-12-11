@@ -140,11 +140,14 @@
     clip-path var(--duration) var(--ease),
     box-shadow var(--duration) var(--ease);
   background-color: var(--color-black);
-  color: var(--color-teal);
 
   & > * {
     transform: translateY(desktop-vw(20px));
     transition: transform var(--duration) var(--ease);
+  }
+
+  svg path {
+    stroke: var(--color-teal);
   }
 }
 
@@ -171,9 +174,6 @@
               desktop-vw(-50px) round desktop-vw(16px)
           );
           box-shadow: var(--glow);
-          svg path {
-            stroke: var(--color-teal);
-          }
         }
 
         & > * {

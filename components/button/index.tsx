@@ -134,7 +134,7 @@ export function CTA({
           onClick={handleCopy}
         >
           <span className="flex items-center justify-between dt:dr-mb-24">
-            <span className="typo-label-s text-white">JSX</span>
+            <span className="typo-label-s text-teal">JSX</span>
             <span className="flex items-center justify-center dt:dr-w-32 dt:dr-h-32 dr-rounded-10 bg-white/10">
               <ClipboardSVG className="dt:dr-w-16 dt:dr-h-16" />
             </span>
