@@ -246,6 +246,7 @@ export function Section1() {
                   {'components='}
                   <span className="text-pink">{'{components}'}</span>
                 </span>
+                <span className="text-pink">{'>'}</span>
                 <br />
                 <span className="text-white dt:dr-ml-16">{'<YourApp />'}</span>
                 <br />

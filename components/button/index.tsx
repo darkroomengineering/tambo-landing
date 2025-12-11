@@ -131,7 +131,7 @@ export function CTA({
             </span>
           </span>
 
-          <span ref={contentRef} className="block text-nowrap">
+          <span ref={contentRef} className="block text-nowrap text-left">
             {snippetContent}
           </span>
         </button>
