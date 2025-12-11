@@ -22,7 +22,7 @@ export function Section10() {
       fromTo(
         elements,
         {
-          width: (index) => 125 - index * 15,
+          width: (index) => 125 + (elements.length - 1 - index) * 5,
         },
         {
           width: (index) => 35 + (elements.length - 1 - index) * 20,
