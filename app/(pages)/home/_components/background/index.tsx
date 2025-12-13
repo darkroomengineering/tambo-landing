@@ -20,17 +20,27 @@ function BoxShadow({
   opacity?: number
 }) {
   return (
-    <div
-      className={cn('absolute inset-[-5%] rounded-[inherit]', s.boxShadow)}
-      style={{
-        transform: `translate(${x}%, ${y}%)`,
-        // filter: `blur(${blur}px)`,
-        // filter: `blur(${blur}px)`,
-        // opacity: opacity * 2,
-        // backgroundColor: `rgba(127, 255, 195, 1)`,
-        backgroundImage: `radial-gradient(circle at center, rgba(127, 255, 195, 1) 50%, rgba(127, 255, 195, 0) 70%)`,
-      }}
-    />
+    <>
+      <div
+        className={cn('absolute inset-[-5%] rounded-[inherit]', s.boxShadow)}
+        style={{
+          transform: `translate(${x}%, ${y}%)`,
+          // filter: `blur(${blur}px)`,
+          // filter: `blur(${blur}px)`,
+          // opacity: opacity * 2,
+          // backgroundColor: `rgba(127, 255, 195, 1)`,
+          backgroundImage: `radial-gradient(circle at center, rgba(127, 255, 195, 1) 50%, rgba(127, 255, 195, 0) 70%)`,
+        }}
+      />
+      {/* <div
+        className={cn('absolute inset-[-5%] rounded-[inherit]')}
+        style={{
+          transform: `translate(${x}%, ${y}%)`,
+          // filter: `blur(${50}px)`,
+          backgroundImage: `linear-gradient(to top, rgba(127, 255, 195, 1) 50%, rgba(127, 255, 195, 0) 70%)`,
+        }}
+      /> */}
+    </>
   )
 }
 
@@ -61,7 +71,7 @@ export function BackgroundItem({
   const boxShadowRef = useRef<HTMLDivElement>(null)
   const dashedBorderRef = useRef<SVGRectElement>(null)
 
-  const { dpr } = useDeviceDetection()
+  const { dpr, isWindows } = useDeviceDetection()
 
   useImperativeHandle(ref, () => ({
     getElement: () => elementRef.current,
@@ -79,21 +89,21 @@ export function BackgroundItem({
 
   return (
     <div
-      className={cn(
-        'absolute rounded-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%]',
-        s.item
-      )}
+      className={cn('absolute rounded-full left-[50%]top-[50%]', s.item)}
       style={style}
       ref={elementRef}
     >
-      <Kinesis className="absolute inset-0 rounded-[inherit]" index={index}>
-        <div className="absolute inset-0 rounded-[inherit]" ref={boxShadowRef}>
+      <Kinesis className="absolute inset-0 rounded-[inherit] " index={index}>
+        <div
+          className="absolute inset-0 rounded-[inherit] shadow-m"
+          ref={boxShadowRef}
+        >
           {/* <BoxShadow y={36} blur={231} opacity={0.02} />
         <BoxShadow y={20} blur={195} opacity={0.07} />
         <BoxShadow y={9} blur={145} opacity={0.12} />
         <BoxShadow y={2} blur={79} opacity={0.14} /> */}
 
-          <BoxShadow y={4} blur={56} opacity={0.25} />
+          {/* <BoxShadow y={4} blur={56} opacity={0.25} /> */}
         </div>
         <div
           className={cn(
@@ -120,15 +130,26 @@ export function BackgroundItem({
             }}
           />
         )}
-        {/* <div
-        className={cn(
-          'absolute inset-0 rounded-[inherit] border border-[#008346] border-1',
-          s.border
+        {isWindows ? (
+          <DashedBorder
+            ref={dashedBorderRef}
+            className={cn('absolute inset-0', s.border)}
+            style={{
+              opacity: borderOpacity,
+            }}
+          />
+        ) : (
+          <div
+            className={cn(
+              'absolute inset-0 rounded-[inherit] border-dashed border-[#008346] border',
+              s.border
+            )}
+            style={{
+              opacity: borderOpacity,
+            }}
+          />
         )}
-        style={{
-          opacity: borderOpacity,
-        }}
-      /> */}
+
         {/* <div
         className={cn(
           'absolute inset-0 rounded-[inherit] translate-z-0',
@@ -140,14 +161,6 @@ export function BackgroundItem({
           borderRadius: '100%',
         }}
       /> */}
-
-        <DashedBorder
-          ref={dashedBorderRef}
-          className={cn('absolute inset-0', s.border)}
-          style={{
-            opacity: borderOpacity,
-          }}
-        />
       </Kinesis>
     </div>
   )

@@ -11,6 +11,7 @@ export function useDeviceDetection() {
   const isWebGL = isDesktop && !isReducedMotion
   const [dpr, setDpr] = useState(1)
   const [isSafari, setIsSafari] = useState<boolean | undefined>(undefined)
+  const [isWindows, setIsWindows] = useState<boolean | undefined>(undefined)
 
   // Check for low power mode with fallback for unsupported browsers
   const isLowPowerMode = useMediaQuery(
@@ -20,6 +21,7 @@ export function useDeviceDetection() {
   useEffect(() => {
     setDpr(window.devicePixelRatio)
     setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent))
+    setIsWindows(navigator.userAgent.includes('Windows'))
   }, [])
 
   return {
@@ -30,5 +32,6 @@ export function useDeviceDetection() {
     isLowPowerMode,
     dpr,
     isSafari,
+    isWindows,
   }
 }
