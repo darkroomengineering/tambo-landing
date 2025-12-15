@@ -1,0 +1,19 @@
+.container {
+  transform: rotate(calc(var(--highlight-progress, 0) * 5deg))
+    skewX(calc(var(--highlight-progress, 0) * -10deg));
+}
+
+.map {
+  height: calc(desktop-vw(342) * var(--intro-progress, 0));
+  margin-bottom: calc(desktop-vw(22) * var(--intro-progress, 0));
+}
+
+.chat {
+  height: calc(desktop-vw(470) - desktop-vw(170) * var(--intro-progress, 0));
+}
+
+.chatMessages {
+  transform: translateY(
+    calc(desktop-vw(268) - var(--chat-translate-y, 0) * desktop-vw(1))
+  );
+}
