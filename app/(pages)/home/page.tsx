@@ -1,5 +1,6 @@
 import { Wrapper } from '../_components/wrapper'
 import Background from './_components/background'
+import { Footer } from './_sections/footer'
 import { Section1 } from './_sections/section-1'
 import { Section2 } from './_sections/section-2'
 import { Section4 } from './_sections/section-4'
@@ -28,7 +29,7 @@ export default function Home() {
         <Section10 />
         <Section11 />
         <Section12 />
-        <div className="h-[300vh]" />
+        <Footer />
       </Background>
     </Wrapper>
   )

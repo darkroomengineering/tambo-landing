@@ -7,7 +7,6 @@ import type { ComponentProps } from 'react'
 import { TransformProvider } from '~/hooks/use-transform'
 import type { ThemeName } from '~/styles/config'
 import { Canvas } from '~/webgl/components/canvas'
-import { Footer } from '../footer'
 import { Lenis } from '../lenis'
 import { Navigation } from '../navigation'
 import { Theme } from '../theme'
@@ -44,7 +43,6 @@ export function Wrapper({
       >
         {children}
       </main>
-      <Footer />
       {lenis && <Lenis root options={typeof lenis === 'object' ? lenis : {}} />}
     </>
   )

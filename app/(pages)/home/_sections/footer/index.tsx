@@ -1,0 +1,157 @@
+'use client'
+
+import { useRect, useWindowSize } from 'hamo'
+import { useContext } from 'react'
+import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
+import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
+import { CTA } from '~/components/button'
+import { Image } from '~/components/image'
+import { Link } from '~/components/link'
+import { Video } from '~/components/video'
+import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
+import { desktopVW, fromTo } from '~/libs/utils'
+
+const BOTTOM_LINKS = [
+  {
+    label: 'Documentation',
+    href: 'https://docs.tambo.ai',
+  },
+  {
+    label: 'License',
+    href: 'https://docs.tambo.ai',
+  },
+  {
+    label: 'Privacy notice',
+    href: 'https://docs.tambo.ai',
+  },
+  {
+    label: 'Terms of use',
+    href: 'https://docs.tambo.ai',
+  },
+]
+
+export function Footer() {
+  const [setRectRef, rect] = useRect()
+
+  const { getItems } = useContext(BackgroundContext)
+
+  const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize()
+
+  useScrollTrigger(
+    {
+      rect,
+      start: 'top center',
+      end: 'top top',
+      onProgress: ({ progress }) => {
+        const items = getItems()
+        fromTo(
+          items,
+          {
+            y: 0,
+            width: (index) =>
+              desktopVW(
+                windowWidth,
+                windowWidth * 1.5 + (items.length - 1 - index) * 100,
+                true
+              ),
+          },
+          {
+            y: 0,
+            width: (index) =>
+              desktopVW(
+                windowWidth,
+                496 + (items.length - 1 - index) * 260,
+                true
+              ),
+          },
+          progress,
+          {
+            ease: 'linear',
+            render: (item, { width, y }) => {
+              // @ts-expect-error
+              const element = item?.getElement()
+              // @ts-expect-error
+              item?.setBorderRadius(`${width * 2}px`)
+
+              if (element instanceof HTMLElement) {
+                element.style.width = `${width}px`
+                element.style.height = `${width}px`
+                element.style.transform = `translateY(${y}px)`
+              }
+            },
+          }
+        )
+      },
+    },
+    [windowWidth]
+  )
+
+  return (
+    <section
+      ref={setRectRef}
+      className="relative flex flex-col items-center justify-center overflow-x-clip h-screen"
+    >
+      <div className="text-center flex flex-col items-center relative -dr-top-48">
+        <div className="dr-w-172 aspect-square">
+          <Video
+            autoPlay
+            fallback={
+              <Image src="/videos/Octo-Wave.png" alt="Octo Wave" unoptimized />
+            }
+          >
+            <source
+              src="/videos/Octo-Wave-compressed.mov"
+              type='video/mp4; codecs="hvc1"'
+            />
+            <source src="/videos/Octo-Wave-compressed.webm" type="video/webm" />
+          </Video>
+        </div>
+
+        <TitleBlock>
+          <TitleBlock.Title level="h2" className="dt:dr-mb-8!">
+            Ready to get started?
+          </TitleBlock.Title>
+          <TitleBlock.Subtitle>
+            Ship an ai assistant with generative ui in minutes.
+          </TitleBlock.Subtitle>
+          <div className="flex dr-gap-8 dr-mt-40">
+            <CTA snippet className="bg-black! text-teal border-teal">
+              START BUILDING
+              <span className="typo-code-snippet">
+                <span className="text-pink">{'<TamboProvider'} </span>
+                <span className="text-teal">
+                  {'components='}
+                  <span className="text-pink">{'{components}'}</span>
+                </span>
+                <span className="text-pink">{'>'}</span>
+                <br />
+                <span className="text-white dt:dr-ml-16">{'<YourApp />'}</span>
+                <br />
+                <span className="text-pink">{'</TamboProvider>'}</span>
+              </span>
+            </CTA>
+            <CTA>Try Live Demo</CTA>
+          </div>
+        </TitleBlock>
+      </div>
+      <div className="absolute dr-layout-grid-inner w-full dr-bottom-16 typo-label-m">
+        <span className="col-span-2">
+          Fractal Dynamics Inc © {new Date().getFullYear()}
+        </span>
+        <div className="col-[3/-3] flex items-center justify-center dr-gap-24">
+          {BOTTOM_LINKS.map((link) => (
+            <Link key={link.href} href={link.href}>
+              {link.label}
+            </Link>
+          ))}
+        </div>
+        <Link
+          href="https://x.com/tambo_ai"
+          className="col-span-2 justify-self-end"
+        >
+          Twitter
+        </Link>
+      </div>
+    </section>
+  )
+}
