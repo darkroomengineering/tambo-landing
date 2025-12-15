@@ -1,7 +1,7 @@
 'use client'
 
 import { useRect, useWindowSize } from 'hamo'
-import { useContext } from 'react'
+import { useContext, useRef } from 'react'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import { CTA } from '~/components/button'
@@ -32,9 +32,25 @@ const BOTTOM_LINKS = [
 export function Footer() {
   const [setRectRef, rect] = useRect()
 
-  const { getItems } = useContext(BackgroundContext)
+  const innerRef = useRef<HTMLDivElement>(null)
+
+  const { getItems, getBackground } = useContext(BackgroundContext)
 
   const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize()
+
+  useScrollTrigger({
+    rect,
+    start: 'top bottom',
+    end: 'bottom bottom',
+    onProgress: ({ progress }) => {
+      const background = getBackground()
+
+      if (innerRef.current && background) {
+        innerRef.current.style.transform =
+          background.style.transform = `translateY(${-windowHeight * 0.5 * (1 - progress)}px)`
+      }
+    },
+  })
 
   useScrollTrigger(
     {
@@ -82,17 +98,18 @@ export function Footer() {
         )
       },
     },
-    [windowWidth]
+    [windowWidth, windowHeight]
   )
 
   return (
-    <section
-      ref={setRectRef}
-      className="relative flex flex-col items-center justify-center overflow-x-clip h-screen"
-    >
-      <div className="text-center flex flex-col items-center relative -dr-top-48">
-        <div className="dr-w-172 aspect-square">
-          {/* <Video
+    <section ref={setRectRef} className="overflow-clip">
+      <div
+        className="relative flex flex-col items-center justify-center h-screen"
+        ref={innerRef}
+      >
+        <div className="text-center flex flex-col items-center relative -dr-top-48">
+          <div className="dr-w-172 aspect-square">
+            {/* <Video
             autoPlay
             fallback={
               <Image src="/videos/Octo-Wave.png" alt="Octo Wave" unoptimized />
@@ -104,53 +121,56 @@ export function Footer() {
             />
             <source src="/videos/Octo-Wave-compressed.webm" type="video/webm" />
           </Video> */}
-          <Image src="/images/Octo-Sight.png" alt="Octo Sight" unoptimized />
-        </div>
-
-        <TitleBlock>
-          <TitleBlock.Title level="h2" className="dt:dr-mb-8!">
-            Ready to get started?
-          </TitleBlock.Title>
-          <TitleBlock.Subtitle>
-            Ship an ai assistant with generative ui in minutes.
-          </TitleBlock.Subtitle>
-          <div className="flex dr-gap-8 dr-mt-40">
-            <CTA snippet className="bg-black! text-teal border-teal">
-              START BUILDING
-              <span className="typo-code-snippet">
-                <span className="text-pink">{'<TamboProvider'} </span>
-                <span className="text-teal">
-                  {'components='}
-                  <span className="text-pink">{'{components}'}</span>
-                </span>
-                <span className="text-pink">{'>'}</span>
-                <br />
-                <span className="text-white dt:dr-ml-16">{'<YourApp />'}</span>
-                <br />
-                <span className="text-pink">{'</TamboProvider>'}</span>
-              </span>
-            </CTA>
-            <CTA>Try Live Demo</CTA>
+            <Image src="/images/Octo-Sight.png" alt="Octo Sight" unoptimized />
           </div>
-        </TitleBlock>
-      </div>
-      <div className="absolute dr-layout-grid-inner w-full dr-bottom-16 typo-label-m">
-        <span className="col-span-2">
-          Fractal Dynamics Inc © {new Date().getFullYear()}
-        </span>
-        <div className="col-[3/-3] flex items-center justify-center dr-gap-24">
-          {BOTTOM_LINKS.map((link) => (
-            <Link key={link.href} href={link.href}>
-              {link.label}
-            </Link>
-          ))}
+
+          <TitleBlock>
+            <TitleBlock.Title level="h2" className="dt:dr-mb-8!">
+              Ready to get started?
+            </TitleBlock.Title>
+            <TitleBlock.Subtitle>
+              Ship an ai assistant with generative ui in minutes.
+            </TitleBlock.Subtitle>
+            <div className="flex dr-gap-8 dr-mt-40">
+              <CTA snippet className="bg-black! text-teal border-teal">
+                START BUILDING
+                <span className="typo-code-snippet">
+                  <span className="text-pink">{'<TamboProvider'} </span>
+                  <span className="text-teal">
+                    {'components='}
+                    <span className="text-pink">{'{components}'}</span>
+                  </span>
+                  <span className="text-pink">{'>'}</span>
+                  <br />
+                  <span className="text-white dt:dr-ml-16">
+                    {'<YourApp />'}
+                  </span>
+                  <br />
+                  <span className="text-pink">{'</TamboProvider>'}</span>
+                </span>
+              </CTA>
+              <CTA>Try Live Demo</CTA>
+            </div>
+          </TitleBlock>
         </div>
-        <Link
-          href="https://x.com/tambo_ai"
-          className="col-span-2 justify-self-end"
-        >
-          Twitter
-        </Link>
+        <div className="absolute dr-layout-grid-inner w-full dr-bottom-16 typo-label-m">
+          <span className="col-span-2">
+            Fractal Dynamics Inc © {new Date().getFullYear()}
+          </span>
+          <div className="col-[3/-3] flex items-center justify-center dr-gap-24">
+            {BOTTOM_LINKS.map((link) => (
+              <Link key={link.href} href={link.href}>
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <Link
+            href="https://x.com/tambo_ai"
+            className="col-span-2 justify-self-end"
+          >
+            Twitter
+          </Link>
+        </div>
       </div>
     </section>
   )

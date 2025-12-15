@@ -6,7 +6,9 @@ import type { BackgroundItemRef } from '.'
 export const BackgroundContext = createContext<{
   getItems: () => BackgroundItemRef[] | null[]
   getSolidBackground: () => HTMLDivElement | null
+  getBackground: () => HTMLDivElement | null
 }>({
   getItems: () => [],
   getSolidBackground: () => null,
+  getBackground: () => null,
 })

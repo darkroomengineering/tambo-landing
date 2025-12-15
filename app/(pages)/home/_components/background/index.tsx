@@ -176,16 +176,21 @@ export default function Background({
 }) {
   const itemsRef = useRef<BackgroundItemRef[] | null[]>([])
   const solidBackgroundRef = useRef<HTMLDivElement>(null)
+  const backgroundRef = useRef<HTMLDivElement>(null)
 
   return (
     <BackgroundContext
       value={{
         getItems: () => itemsRef.current,
         getSolidBackground: () => solidBackgroundRef.current,
+        getBackground: () => backgroundRef.current,
       }}
     >
       <div className="fixed inset-0">
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center"
+          ref={backgroundRef}
+        >
           <BackgroundItem
             opacity={0.4}
             borderOpacity={0.1}
@@ -222,10 +227,7 @@ export default function Background({
             index={50}
           />
         </div>
-        <div
-          className={cn('absolute inset-0 bg-black')}
-          ref={solidBackgroundRef}
-        />
+        <div className={cn('absolute inset-0')} ref={solidBackgroundRef} />
       </div>
 
       <div className="relative">{children}</div>

@@ -42,7 +42,7 @@ export function Section12() {
             desktopVW(windowWidth, 20, true)
           )
 
-          solidBackground.style.clipPath = `inset(0 ${inset}px ${inset}px ${inset}px round ${radius}px)`
+          solidBackground.style.clipPath = `inset(0 ${inset}px 0px ${inset}px round ${radius}px)`
 
           solidBackground.style.transform = `translateY(${-height * progress}px)`
         }
