@@ -1,10 +1,11 @@
 'use client'
 
-import { TamboContextHelpersProvider, TamboProvider, useTamboThread } from '@tambo-ai/react'
+import { TamboProvider, useTamboContextHelpers } from '@tambo-ai/react'
+import { useEffect } from 'react'
 import { mapExampleContext, seatExampleContext } from './(components)/context'
-import { SeatSelector, SeatSelectorSchema } from './(components)/seat-selector'
-import { MessageThreadFull } from './(components)/ui-tambo/message-thread-full'
 import { MessageThreadCollapsible } from './(components)/ui-tambo/message-thread-collapsible'
+import { MessageThreadFull } from './(components)/ui-tambo/message-thread-full'
+import { SeatSelector, SeatSelectorSchema } from './(components)/seat-selector'
 
 const components = [
   {
@@ -27,31 +28,43 @@ export function TamboIntegration({children}: {children: React.ReactNode}) {
 }
 
 export function TravelAssistant({ selectedDemo }: { selectedDemo: 'travel' | 'map' }) {
-  if(selectedDemo === 'map') return null
+  const { addContextHelper, removeContextHelper } = useTamboContextHelpers()
 
-  return (
-    <TamboContextHelpersProvider
-      contextHelpers={{
-        instructions: () => seatExampleContext,
-      }}
-  >
-    <MessageThreadFull contextKey={selectedDemo} variant="compact" />
-  </TamboContextHelpersProvider>
-  )
+  useEffect(() => {
+    if (selectedDemo === 'travel') {
+      addContextHelper('assistantBehavior', () => 
+        `## Role\n${seatExampleContext.objective}\n\n## Instructions\n${seatExampleContext.instructions}`
+      )
+    }
+    return () => removeContextHelper('assistantBehavior')
+  }, [selectedDemo, addContextHelper, removeContextHelper])
+
+  if (selectedDemo === 'map') return null
+  return <MessageThreadFull contextKey={selectedDemo} variant="compact" />
 }
 
 export function MapAssistant({ selectedDemo }: { selectedDemo: 'travel' | 'map' }) {
-  if(selectedDemo === 'travel') return null
+  const { addContextHelper, removeContextHelper } = useTamboContextHelpers()
 
+  useEffect(() => {
+    if (selectedDemo === 'map') {
+      addContextHelper('assistantBehavior', () => 
+        `## Role\n${mapExampleContext.objective}\n\n## Instructions\n${mapExampleContext.instructions}`
+      )
+    }
+    return () => removeContextHelper('assistantBehavior')
+  }, [selectedDemo, addContextHelper, removeContextHelper])
+
+  if (selectedDemo === 'travel') return null
   return (
-    <TamboContextHelpersProvider
-      contextHelpers={{
-        instructions: () => mapExampleContext,
-      }}
-  >
-    <MessageThreadCollapsible  contextKey={selectedDemo} variant="compact" defaultOpen={true}
-     className="absolute dr-bottom-6 dr-right-4" />
-  </TamboContextHelpersProvider>
+    <MessageThreadCollapsible
+      contextKey={selectedDemo}
+      variant="compact"
+      defaultOpen={true}
+      className="absolute dr-bottom-6 dr-right-4"
+    />
   )
 }
+
+
 

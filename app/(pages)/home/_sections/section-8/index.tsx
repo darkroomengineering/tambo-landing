@@ -79,7 +79,7 @@ export function Section8() {
   )
 
   return (
-    <TamboIntegration>
+    <TamboIntegration selectedDemo={selectedDemo}>
       <section
         className="h-screen flex flex-col items-center justify-end"
         ref={setRectRef}
