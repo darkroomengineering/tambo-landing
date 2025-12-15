@@ -23,6 +23,7 @@ const RIGHT_LINKS = [
 export function Navigation() {
   const [isVisible, setIsVisible] = useState(true)
   const [isHovered, setIsHovered] = useState(false)
+
   const centerRef = useRef<HTMLDivElement>(null)
   const leftRef = useRef<HTMLUListElement>(null)
   const rightRef = useRef<HTMLUListElement>(null)
@@ -30,9 +31,9 @@ export function Navigation() {
   const githubRef = useRef<HTMLAnchorElement>(null)
   const discordRef = useRef<HTMLAnchorElement>(null)
 
-  const lenis = useLenis(({ lastVelocity }) => {
+  const lenis = useLenis(({ lastVelocity, progress }) => {
     if (lastVelocity === 0) return
-    toggleNavigation(lastVelocity > 0 ? 'hide' : 'show')
+    toggleNavigation(lastVelocity > 0 && progress < 0.99 ? 'hide' : 'show')
   })
 
   function toggleNavigation(action: 'show' | 'hide') {
