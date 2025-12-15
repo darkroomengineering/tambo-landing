@@ -49,6 +49,14 @@ const typography: TypeStyles = {
     'font-size': { mobile: 32, desktop: 32 },
   },
   h4: {
+    'font-family': `var(${fonts.sentient})`,
+    'font-style': 'normal',
+    'font-weight': 300,
+    'line-height': '110%',
+    'letter-spacing': '-0.05em',
+    'font-size': { mobile: 24, desktop: 24 },
+  },
+  h5: {
     'font-family': `var(${fonts.geistMono})`,
     'font-style': 'normal',
     'font-weight': 500,
@@ -110,6 +118,22 @@ const typography: TypeStyles = {
     'line-height': '110%',
     'letter-spacing': '0em',
     'font-size': { mobile: 20, desktop: 20 },
+  },
+  'p-sentient': {
+    'font-family': `var(${fonts.sentient})`,
+    'font-style': 'normal',
+    'font-weight': 300,
+    'line-height': '110%',
+    'letter-spacing': '-0.04em',
+    'font-size': { mobile: 16, desktop: 16 },
+  },
+  'p-bold': {
+    'font-family': `var(${fonts.geist})`,
+    'font-style': 'normal',
+    'font-weight': 500,
+    'line-height': '120%',
+    'letter-spacing': '0em',
+    'font-size': { mobile: 16, desktop: 16 },
   },
   p: {
     'font-family': `var(${fonts.geist})`,

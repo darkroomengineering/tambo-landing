@@ -36,3 +36,21 @@ export const cards = [
     },
   },
 ] as const
+
+export const persons = [
+  {
+    name: 'Eric Wittman',
+    roles: ['ceo', 'vsco'],
+    image: '/assets/leads/Lead-2.png',
+  },
+  {
+    name: 'Daniel Lewis',
+    roles: ['cvp', 'microsoft ai'],
+    image: '/assets/leads/Lead-1.png',
+  },
+  {
+    name: 'Drew Houston',
+    roles: ['Dropbox'],
+    image: '/assets/leads/Lead-3.png',
+  },
+] as const
