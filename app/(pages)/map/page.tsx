@@ -15,7 +15,7 @@ export default function Page() {
       }}
     >
       <div className="dt:dr-w-682 dt:dr-h-356 dr-p-14  overflow-hidden dr-rounded-28  bg-white flex items-center justify-center">
-        <div className="w-full h-full border-dashed border-dark-grey dr-border-1 dr-rounded-20 overflow-hidden">
+        <div className="w-full h-full border-dashed border-dark-grey dr-border-2 dr-rounded-20 overflow-hidden">
           <AreaSelectMap
             height={356}
             onBBoxSelected={(bbox) => console.log('bbox:', bbox)}

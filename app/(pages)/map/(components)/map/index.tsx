@@ -280,6 +280,15 @@ export function AreaSelectMap({
         if (!isLoaded) return
         if (e.originalEvent.button !== 0) return
 
+        // don't start drawing if clicking on a cafe pin
+        const features = map!.queryRenderedFeatures(e.point, {
+          layers: ['cafes-points', 'cafes-points-selected', 'cafes-labels'],
+        })
+        if (features.length > 0) {
+          // let the click handler on cafes handle this
+          return
+        }
+
         if (
           e.originalEvent.metaKey ||
           e.originalEvent.ctrlKey ||
@@ -297,6 +306,12 @@ export function AreaSelectMap({
           | mapboxgl.GeoJSONSource
           | undefined
         src?.setData({ type: 'FeatureCollection', features: [] })
+
+        // clear cafes when starting a new draw
+        const cafeSrc = map!.getSource('cafes') as
+          | mapboxgl.GeoJSONSource
+          | undefined
+        cafeSrc?.setData({ type: 'FeatureCollection', features: [] })
 
         map!.dragPan.disable()
         map!.getCanvas().style.cursor = 'crosshair'
