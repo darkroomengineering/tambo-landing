@@ -2,7 +2,6 @@ import { Wrapper } from '../_components/wrapper'
 import Background from './_components/background'
 import { Section1 } from './_sections/section-1'
 import { Section2 } from './_sections/section-2'
-import { Section3 } from './_sections/section-3'
 import { Section4 } from './_sections/section-4'
 import { Section5 } from './_sections/section-5'
 import { Section8 } from './_sections/section-8'
@@ -23,7 +22,6 @@ export default function Home() {
       <Background>
         <Section1 />
         <Section2 />
-        <Section3 />
         <Section4 />
         <Section5 />
         <Section8 />
