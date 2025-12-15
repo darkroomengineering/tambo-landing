@@ -32,3 +32,8 @@
 .card:nth-of-type(4) {
   --index: 1;
 }
+
+.seatMap {
+  width: calc(desktop-vw(222) + (desktop-vw(118) * var(--size-progress, 0)));
+  height: calc(desktop-vw(226) + (desktop-vw(118) * var(--size-progress, 0)));
+}

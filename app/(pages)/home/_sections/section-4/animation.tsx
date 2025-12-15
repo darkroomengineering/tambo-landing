@@ -1,4 +1,5 @@
 import cn from 'clsx'
+import gsap from 'gsap'
 import {
   type ComponentProps,
   use,
@@ -11,7 +12,9 @@ import {
   TimelineSectionContext,
 } from '~/app/(pages)/home/_components/timeline-section'
 import { mapRange } from '~/libs/utils'
+import { colors } from '~/styles/colors'
 import s from './animation.module.css'
+import Cursor from './cursor.svg'
 import Selection from './selection.svg'
 
 export function Animation() {
@@ -28,95 +31,120 @@ export function Animation() {
   const seatMapRef = useRef<HTMLDivElement>(null)
   const seatMapTitleRef = useRef<HTMLParagraphElement>(null)
   const selectionRef = useRef<SVGSVGElement>(null)
+  const availableSeatsRef = useRef<HTMLParagraphElement>(null)
+  const bookingConfirmedRef = useRef<HTMLParagraphElement>(null)
+  const cursorRef = useRef<SVGSVGElement>(null)
 
-  const scrollAnimation = useEffectEvent<TimelineCallback>(
-    ({ progress, steps, currentStep }) => {
-      // Elements
-      const container = containerRef.current
-      const introCard = introCardRef.current
-      const seatsQuestion = seatsQuestionRef.current
-      const seatsThinking = seatsThinkingRef.current
-      const selectionCard = selectionCardRef.current
-      const yourApp = yourAppRef.current
-      const emptyCard = emptyCardRef.current
-      const backgroundCard = backgroundCardRef.current
-      const seatMap = seatMapRef.current
-      const seatMapTitle = seatMapTitleRef.current
-      const selection = selectionRef.current
-      if (
-        !(
-          container &&
-          introCard &&
-          seatsQuestion &&
-          seatsThinking &&
-          selectionCard &&
-          yourApp &&
-          emptyCard &&
-          backgroundCard &&
-          seatMap &&
-          seatMapTitle &&
-          selection
-        )
+  const scrollAnimation = useEffectEvent<TimelineCallback>(({ steps }) => {
+    // Elements
+    const container = containerRef.current
+    const introCard = introCardRef.current
+    const seatsQuestion = seatsQuestionRef.current
+    const seatsThinking = seatsThinkingRef.current
+    const selectionCard = selectionCardRef.current
+    const yourApp = yourAppRef.current
+    const emptyCard = emptyCardRef.current
+    const backgroundCard = backgroundCardRef.current
+    const seatMap = seatMapRef.current
+    const seatMapTitle = seatMapTitleRef.current
+    const selection = selectionRef.current
+    const availableSeats = availableSeatsRef.current
+    const bookingConfirmed = bookingConfirmedRef.current
+    const cursor = cursorRef.current
+
+    if (
+      !(
+        container &&
+        introCard &&
+        seatsQuestion &&
+        seatsThinking &&
+        selectionCard &&
+        yourApp &&
+        emptyCard &&
+        backgroundCard &&
+        seatMap &&
+        seatMapTitle &&
+        selection &&
+        availableSeats &&
+        bookingConfirmed &&
+        cursor
       )
-        return
-      const seatsQuestionProgress = mapRange(0, 0.98, steps[0], 0, 1, true)
-      const seatsThinkingProgress = mapRange(0.02, 0.5, steps[1], 0, 1, true)
-      const skewProgress = mapRange(0.6, 1, steps[1], 0, 1, true)
-      const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
-      const swapProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
+    )
+      return
+    const seatsQuestionProgress = mapRange(0, 0.98, steps[0], 0, 1, true)
+    const seatsThinkingProgress = mapRange(0.02, 0.5, steps[1], 0, 1, true)
+    const skewProgress = mapRange(0.6, 1, steps[1], 0, 1, true)
+    const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
+    const swapProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
+    const selectProgress = mapRange(0.3, 1, steps[3], 0, 1, true)
 
-      if (seatsQuestionProgress < 1) {
-        seatsQuestion.style.transform = `translateY(${mapRange(0, 1, seatsQuestionProgress, 150, 0)}%)`
-        seatsQuestion.style.opacity = `${mapRange(0, 1, seatsQuestionProgress, 0, 1)}`
-        return
-      }
-
-      if (seatsThinkingProgress < 1) {
-        seatsThinking.style.transform = `translateY(${mapRange(0, 1, seatsThinkingProgress, 150, 0)}%)`
-        seatsThinking.style.opacity = `${mapRange(0, 1, seatsThinkingProgress, 0, 1)}`
-        seatsQuestion.style.transform = `translateY(${mapRange(0, 1, seatsThinkingProgress, 0, -100)}%)`
-        return
-      }
-
-      if (skewProgress < 1) {
-        container.style.setProperty('--skew-progress', `${skewProgress}`)
-        container.style.setProperty('--deg', `${skewProgress * -10}deg`)
-        yourApp.style.transform = `translateY(${mapRange(0, 1, skewProgress, 100, 25)}%)`
-        yourApp.style.opacity = `${mapRange(0, 1, skewProgress, 0, 1)}`
-        introCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
-        emptyCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
-        backgroundCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
-        return
-      }
-
-      if (highlightProgress < 1) {
-        selectionCard.style.setProperty(
-          '--highlight-progress',
-          `${highlightProgress}`
-        )
-        seatMap.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
-        seatMapTitle.style.transform = `translateY(${mapRange(0, 1, highlightProgress, 50, 0)}%)`
-        seatMapTitle.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
-        return
-      }
-
-      if (swapProgress < 1) {
-        container.style.setProperty('--skew-progress', `${1 - swapProgress}`)
-        selectionCard.style.setProperty(
-          '--highlight-progress',
-          `${1 - swapProgress}`
-        )
-        container.style.setProperty('--deg', `${(1 - swapProgress) * -10}deg`)
-        introCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
-        emptyCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
-        selection.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
-        seatMap.style.transform = `scale(${mapRange(0, 1, swapProgress, 1, 1.7)}) translateY(${mapRange(0, 1, swapProgress, 0, 14)}%)`
-        seatMap.style.outlineWidth = `${mapRange(0, 1, swapProgress, 4, 0)}px`
-        yourApp.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
-        return
-      }
+    if (seatsQuestionProgress < 1) {
+      seatsQuestion.style.transform = `translateY(${mapRange(0, 1, seatsQuestionProgress, 150, 0)}%)`
+      seatsQuestion.style.opacity = `${mapRange(0, 1, seatsQuestionProgress, 0, 1)}`
+      return
     }
-  )
+
+    if (seatsThinkingProgress < 1) {
+      seatsThinking.style.transform = `translateY(${mapRange(0, 1, seatsThinkingProgress, 150, 0)}%)`
+      seatsThinking.style.opacity = `${mapRange(0, 1, seatsThinkingProgress, 0, 1)}`
+      seatsQuestion.style.transform = `translateY(${mapRange(0, 1, seatsThinkingProgress, 0, -100)}%)`
+      seatsQuestion.style.backgroundColor = gsap.utils.interpolate(
+        colors['ghost-mint'],
+        colors['off-white'],
+        seatsThinkingProgress
+      )
+      return
+    }
+
+    if (skewProgress < 1) {
+      container.style.setProperty('--skew-progress', `${skewProgress}`)
+      container.style.setProperty('--deg', `${skewProgress * -10}deg`)
+      yourApp.style.transform = `translateY(${mapRange(0, 1, skewProgress, 100, 25)}%)`
+      yourApp.style.opacity = `${mapRange(0, 1, skewProgress, 0, 1)}`
+      introCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
+      emptyCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
+      backgroundCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
+      return
+    }
+
+    if (highlightProgress < 1) {
+      selectionCard.style.setProperty(
+        '--highlight-progress',
+        `${highlightProgress}`
+      )
+      seatMap.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
+      seatMapTitle.style.transform = `translateY(${mapRange(0, 1, highlightProgress, 50, 0)}%)`
+      seatMapTitle.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
+      return
+    }
+
+    if (swapProgress < 1) {
+      container.style.setProperty('--skew-progress', `${1 - swapProgress}`)
+      selectionCard.style.setProperty(
+        '--highlight-progress',
+        `${1 - swapProgress}`
+      )
+      container.style.setProperty('--deg', `${(1 - swapProgress) * -10}deg`)
+      introCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
+      emptyCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
+      selection.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
+      seatMap.style.transform = `translateY(${mapRange(0, 1, swapProgress, 0, 24)}%)`
+      seatMap.style.outlineWidth = `${mapRange(0, 1, swapProgress, 4, 0)}px`
+      seatMap.style.setProperty('--size-progress', `${swapProgress}`)
+      yourApp.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
+      availableSeats.style.opacity = `${mapRange(0.6, 1, swapProgress, 0, 1)}`
+      return
+    }
+
+    if (selectProgress < 1) {
+      cursor.style.transform = `translate(${mapRange(0, 0.5, selectProgress, 300, 0, true)}px, ${mapRange(0, 0.5, selectProgress, 300, 0, true)}px)`
+      cursor.style.opacity = `${mapRange(0, 0.5, selectProgress, 0, 1)}`
+      seatMap.style.transform = `translateY(${mapRange(0.6, 1, selectProgress, 24, 0, true)}%)`
+      bookingConfirmed.style.opacity = `${mapRange(0.6, 1, selectProgress, 0, 1)}`
+      availableSeats.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
+      return
+    }
+  })
 
   useEffect(() => {
     addCallback(scrollAnimation)
@@ -125,7 +153,7 @@ export function Animation() {
   return (
     <div
       ref={containerRef}
-      className="w-full aspect-668/470 dr-rounded-20 typo-p grid grid-cols-1 grid-rows-1 scale-90"
+      className="w-full aspect-668/470 dr-rounded-20 typo-p grid grid-cols-1 grid-rows-1"
     >
       <Card
         ref={introCardRef}
@@ -157,18 +185,38 @@ export function Animation() {
           ref={yourAppRef}
           className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-3/4 dr-w-190 dr-h-25 rounded-full bg-white shadow-xs opacity-0"
         />
+
         <Selection ref={selectionRef} />
         <div
           ref={seatMapRef}
-          className="absolute dr-left-16 dr-top-16 dr-rounded-8 dr-w-222 dr-h-226 outline-4 outline-mint bg-red shadow-xs opacity-0 origin-top-left"
+          className={cn(
+            'absolute dr-left-16 dr-top-16 dr-rounded-8 outline-4 outline-mint bg-red shadow-xs opacity-0 origin-top-left',
+            s.seatMap
+          )}
         >
           <p
+            ref={availableSeatsRef}
+            className="absolute left-0 -translate-y-full -dr-top-20 typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey opacity-0"
+          >
+            Here are the available seats on your flight!
+          </p>
+          <p
             ref={seatMapTitleRef}
-            className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 typo-p-s bg-mint dr-px-16 dr-py-6 rounded-full shadow-xs translate-full"
+            className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 typo-p-s bg-mint dr-px-10 dr-py-2 rounded-full shadow-xs translate-full"
           >
             {'<'}SeatMap{'>'}
           </p>
           <div className="size-full dr-p-24" />
+          <Cursor
+            ref={cursorRef}
+            className="absolute dr-size-24 dr-right-6 dr-top-223 opacity-0"
+          />
+          <p
+            ref={bookingConfirmedRef}
+            className="absolute left-0 -dr-bottom-20 translate-y-full typo-p-sentient bg-ghost-mint dr-rounded-12 dr-p-24 border border-dark-grey opacity-0"
+          >
+            Window seat confirmed. Booking 12F!
+          </p>
         </div>
       </Card>
 
