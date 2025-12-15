@@ -64,8 +64,11 @@ export function Section2() {
           <div className="flex dt:dr-gap-x-24 dr-mr-24">
             {persons.map((person) => (
               <div
-                key={person.name}
-                className="flex items-center dt:dr-gap-x-32 dt:dr-w-322 border w-fit dt:dr-py-8 dt:dr-pl-8 bg-white border-dark-grey dt:dr-rounded-20"
+                key={person?.name}
+                className={cn(
+                  'flex items-center dt:dr-gap-x-32 dt:dr-w-322 border w-fit dt:dr-py-8 dt:dr-pl-8 bg-white border-dark-grey dt:dr-rounded-20',
+                  s.person
+                )}
               >
                 <div className="dt:dr-w-80 dt:dr-h-80 dr-rounded-12 relative overflow-hidden border border-dark-grey">
                   <Image src={person?.image} alt={person?.name} fill />
@@ -73,7 +76,12 @@ export function Section2() {
 
                 <div className="flex flex-col dt:dr-gap-y-4 text-left">
                   <p className="typo-p-bold">{person?.name}</p>
-                  <span className="dt:dr-py-4 dt:dr-px-8 bg-off-white dt:dr-rounded-16 w-fit">
+                  <span
+                    className={cn(
+                      'dt:dr-py-4 dt:dr-px-8 bg-off-white dt:dr-rounded-16 w-fit',
+                      s.role
+                    )}
+                  >
                     <p className="typo-label-s">{person?.roles?.join(', ')}</p>
                   </span>
                 </div>
