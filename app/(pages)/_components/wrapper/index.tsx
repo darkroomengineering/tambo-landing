@@ -20,7 +20,7 @@ interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Wrapper({
   children,
-  theme = 'dark',
+  theme = 'light',
   className,
   lenis = true,
   webgl,
@@ -38,7 +38,10 @@ export function Wrapper({
         />
       )}
       <Navigation />
-      <main className={cn('relative flex flex-col grow', className)} {...props}>
+      <main
+        className={cn('relative flex flex-col grow w-full', className)}
+        {...props}
+      >
         {children}
       </main>
       <Footer />
