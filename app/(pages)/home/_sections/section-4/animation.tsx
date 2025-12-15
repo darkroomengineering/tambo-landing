@@ -128,7 +128,7 @@ export function Animation() {
       introCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
       emptyCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
       selection.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
-      seatMap.style.transform = `translateY(${mapRange(0, 1, swapProgress, 0, 24)}%)`
+      seatMap.style.transform = `translateY(${mapRange(0, 1, swapProgress, 0, 26)}%)`
       seatMap.style.outlineWidth = `${mapRange(0, 1, swapProgress, 4, 0)}px`
       seatMap.style.setProperty('--size-progress', `${swapProgress}`)
       yourApp.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
@@ -137,11 +137,14 @@ export function Animation() {
     }
 
     if (selectProgress < 1) {
-      cursor.style.transform = `translate(${mapRange(0, 0.5, selectProgress, 300, 0, true)}px, ${mapRange(0, 0.5, selectProgress, 300, 0, true)}px)`
+      cursor.style.transform = `translate(${mapRange(0, 0.5, selectProgress, 150, 0, true)}px, ${mapRange(0, 0.5, selectProgress, 150, 0, true)}px)`
       cursor.style.opacity = `${mapRange(0, 0.5, selectProgress, 0, 1)}`
-      seatMap.style.transform = `translateY(${mapRange(0.6, 1, selectProgress, 24, 0, true)}%)`
+      seatMap.style.transform = `translateY(${mapRange(0.6, 1, selectProgress, 26, 0, true)}%)`
+      if (selectProgress < 0.6) return
       bookingConfirmed.style.opacity = `${mapRange(0.6, 1, selectProgress, 0, 1)}`
       availableSeats.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
+      cursor.style.transform = `translate(${mapRange(0.6, 1, selectProgress, 0, 150, true)}px, ${mapRange(0.6, 1, selectProgress, 0, 150, true)}px)`
+      cursor.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
       return
     }
   })
@@ -183,9 +186,11 @@ export function Animation() {
       >
         <div
           ref={yourAppRef}
-          className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-3/4 dr-w-190 dr-h-25 rounded-full bg-white shadow-xs opacity-0"
-        />
-
+          className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-3/4 rounded-full bg-white shadow-xs opacity-0 flex dr-p-2 dr-pr-24 dr-gap-8 items-center"
+        >
+          <div className="dr-size-24 bg-black rounded-full" />
+          <p className="typo-p-s uppercase">your app/components</p>
+        </div>
         <Selection ref={selectionRef} />
         <div
           ref={seatMapRef}
