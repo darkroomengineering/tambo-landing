@@ -95,11 +95,11 @@ export function Image({
   ref,
   aspectRatio,
   placeholder = 'blur',
-  priority = false,
+  preload = false,
   ...props
 }: ImageProps) {
   // Determine loading strategy
-  const finalLoading = loading ?? (priority ? 'eager' : 'lazy')
+  const finalLoading = loading ?? (preload ? 'eager' : 'lazy')
 
   // Generate responsive sizes if not provided
   const finalSizes =
@@ -148,7 +148,7 @@ export function Image({
       onDragStart={(e) => e.preventDefault()}
       placeholder={finalPlaceholder}
       blurDataURL={blurDataURL}
-      priority={priority}
+      priority={preload}
       {...props}
     />
   )

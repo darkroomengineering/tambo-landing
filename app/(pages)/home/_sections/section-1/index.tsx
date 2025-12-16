@@ -305,6 +305,7 @@ export function Section1() {
                   src="/videos/Octo-Juggle.png"
                   alt="Octo Juggle"
                   unoptimized
+                  preload
                 />
               }
             >
@@ -329,7 +330,7 @@ export function Section1() {
           </div>
         </div>
         <div
-          className="dr-w-col-8 flex flex-col dr-gap-8 text-center items-center"
+          className="dr-w-col-8 flex flex-col dr-gap-8 text-center items-center opacity-0"
           ref={titleRef}
         >
           <h1 className="typo-h1">
