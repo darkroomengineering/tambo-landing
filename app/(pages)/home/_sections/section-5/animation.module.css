@@ -17,3 +17,7 @@
     calc(desktop-vw(268) - var(--chat-translate-y, 0) * desktop-vw(1))
   );
 }
+
+.section45Trans {
+  left: calc(100vw - var(--max-width) + desktop-vw(616));
+}

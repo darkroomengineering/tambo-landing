@@ -25,7 +25,7 @@ export const functions = {
   },
   'desktop-vw': (pixels) => {
     const numPixels = validatePixels(pixels, 'desktop')
-    return `${(numPixels * 100) / screens.desktop.width}vw`
+    return `min(${(numPixels * 100) / screens.desktop.width}vw, ${numPixels}px)`
   },
   'desktop-vh': (pixels) => {
     const numPixels = validatePixels(pixels, 'desktop')

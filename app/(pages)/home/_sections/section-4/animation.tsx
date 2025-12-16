@@ -71,20 +71,22 @@ export function Animation() {
       )
     )
       return
-    const seatsQuestionProgress = mapRange(0, 0.98, steps[0], 0, 1, true)
+
+    const introProgress = mapRange(0, 0.1, steps[0], 0, 1, true)
+    const seatsQuestionProgress = mapRange(0.1, 0.98, steps[0], 0, 1, true)
     const seatsThinkingProgress = mapRange(0.02, 0.5, steps[1], 0, 1, true)
     const skewProgress = mapRange(0.6, 1, steps[1], 0, 1, true)
     const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
     const swapProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
     const selectProgress = mapRange(0.3, 1, steps[3], 0, 1, true)
+    const transitionProgress = mapRange(0.5, 1, steps[4], 0, 1, true)
 
-    if (seatsQuestionProgress < 1) {
+    if (introProgress === 1) {
       seatsQuestion.style.transform = `translateY(${mapRange(0, 1, seatsQuestionProgress, 150, 0)}%)`
       seatsQuestion.style.opacity = `${mapRange(0, 1, seatsQuestionProgress, 0, 1)}`
-      return
     }
 
-    if (seatsThinkingProgress < 1) {
+    if (seatsQuestionProgress === 1) {
       seatsThinking.style.transform = `translateY(${mapRange(0, 1, seatsThinkingProgress, 150, 0)}%)`
       seatsThinking.style.opacity = `${mapRange(0, 1, seatsThinkingProgress, 0, 1)}`
       seatsQuestion.style.transform = `translateY(${mapRange(0, 1, seatsThinkingProgress, 0, -100)}%)`
@@ -93,10 +95,9 @@ export function Animation() {
         colors['off-white'],
         seatsThinkingProgress
       )
-      return
     }
 
-    if (skewProgress < 1) {
+    if (seatsThinkingProgress === 1) {
       container.style.setProperty('--skew-progress', `${skewProgress}`)
       container.style.setProperty('--deg', `${skewProgress * -10}deg`)
       yourApp.style.transform = `translateY(${mapRange(0, 1, skewProgress, 100, 25)}%)`
@@ -104,10 +105,9 @@ export function Animation() {
       introCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
       emptyCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
       backgroundCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
-      return
     }
 
-    if (highlightProgress < 1) {
+    if (skewProgress === 1) {
       selectionCard.style.setProperty(
         '--highlight-progress',
         `${highlightProgress}`
@@ -115,10 +115,9 @@ export function Animation() {
       seatMap.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
       seatMapTitle.style.transform = `translateY(${mapRange(0, 1, highlightProgress, 50, 0)}%)`
       seatMapTitle.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
-      return
     }
 
-    if (swapProgress < 1) {
+    if (highlightProgress === 1) {
       container.style.setProperty('--skew-progress', `${1 - swapProgress}`)
       selectionCard.style.setProperty(
         '--highlight-progress',
@@ -133,10 +132,9 @@ export function Animation() {
       seatMap.style.setProperty('--size-progress', `${swapProgress}`)
       yourApp.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
       availableSeats.style.opacity = `${mapRange(0.6, 1, swapProgress, 0, 1)}`
-      return
     }
 
-    if (selectProgress < 1) {
+    if (swapProgress === 1) {
       cursor.style.transform = `translate(${mapRange(0, 0.5, selectProgress, 150, 0, true)}px, ${mapRange(0, 0.5, selectProgress, 150, 0, true)}px)`
       cursor.style.opacity = `${mapRange(0, 0.5, selectProgress, 0, 1)}`
       seatMap.style.transform = `translateY(${mapRange(0.6, 1, selectProgress, 26, 0, true)}%)`
@@ -145,7 +143,15 @@ export function Animation() {
       availableSeats.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
       cursor.style.transform = `translate(${mapRange(0.6, 1, selectProgress, 0, 150, true)}px, ${mapRange(0.6, 1, selectProgress, 0, 150, true)}px)`
       cursor.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
-      return
+    }
+
+    if (selectProgress === 1) {
+      // Transition to section 5
+      const section45Trans = document.getElementById('section-4-5-trans')
+      if (section45Trans) {
+        section45Trans.style.opacity = `${transitionProgress}`
+        container.style.opacity = `${1 - transitionProgress}`
+      }
     }
   })
 
