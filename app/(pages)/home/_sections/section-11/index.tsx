@@ -134,7 +134,11 @@ export function Section11() {
           </p>
         </div>
 
-        <Marquee repeat={2} speed={0.3} className="dt:dr-mb-56 ">
+        <Marquee
+          repeat={2}
+          speed={0.3}
+          className={cn(s.marquee, 'dt:dr-mb-56')}
+        >
           <div className="flex dr-gap-x-24 dr-mr-24">
             {persons?.map((person) => (
               <Button

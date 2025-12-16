@@ -2,7 +2,7 @@
 
 import cn from 'clsx'
 import { useRect } from 'hamo'
-import { useContext, useImperativeHandle, useRef } from 'react'
+import { useContext, useEffect, useImperativeHandle, useRef } from 'react'
 import { Kinesis } from '~/components/kinesis'
 import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
@@ -237,8 +237,17 @@ export default function Background({
 
 export function SolidBackground({ children }: { children?: React.ReactNode }) {
   const [setRectRef, rect] = useRect()
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const { getSolidBackground } = useContext(BackgroundContext)
+
+  // Initialize CSS custom property with transparent background
+  useEffect(() => {
+    const wrapper = wrapperRef.current
+    if (wrapper) {
+      wrapper.style.setProperty('--solid-bg-color', 'rgba(15, 26, 23, 0)')
+    }
+  }, [])
 
   useScrollTrigger({
     rect,
@@ -246,8 +255,13 @@ export function SolidBackground({ children }: { children?: React.ReactNode }) {
     end: 'top center',
     onProgress: ({ progress }) => {
       const solidBackground = getSolidBackground()
+      const wrapper = wrapperRef.current
       if (solidBackground) {
-        solidBackground.style.backgroundColor = `rgba(15, 26, 23, ${progress})`
+        const bgColor = `rgba(15, 26, 23, ${progress})`
+        solidBackground.style.backgroundColor = bgColor
+        if (wrapper) {
+          wrapper.style.setProperty('--solid-bg-color', bgColor)
+        }
       }
     },
   })
@@ -258,17 +272,28 @@ export function SolidBackground({ children }: { children?: React.ReactNode }) {
     end: 'bottom center',
     onProgress: ({ progress }) => {
       const solidBackground = getSolidBackground()
+      const wrapper = wrapperRef.current
       if (solidBackground) {
         const r = mapRange(0, 1, progress, 15, 255)
         const g = mapRange(0, 1, progress, 26, 255)
         const b = mapRange(0, 1, progress, 23, 255)
-        solidBackground.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${1})`
+        const bgColor = `rgba(${r}, ${g}, ${b}, ${1})`
+        solidBackground.style.backgroundColor = bgColor
+        if (wrapper) {
+          wrapper.style.setProperty('--solid-bg-color', bgColor)
+        }
       }
     },
   })
 
   return (
-    <div className="relative" ref={setRectRef}>
+    <div
+      className="relative"
+      ref={(el) => {
+        setRectRef(el)
+        wrapperRef.current = el
+      }}
+    >
       {children}
     </div>
   )
