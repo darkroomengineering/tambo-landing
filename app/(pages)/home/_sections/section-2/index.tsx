@@ -60,7 +60,7 @@ export function Section2() {
           </p>
         </div>
 
-        <Marquee className="w-full" repeat={3} speed={0.3}>
+        <Marquee className={cn('w-full', s.marquee)} repeat={3} speed={0.3}>
           <div className="flex dt:dr-gap-x-24 dr-mr-24">
             {persons.map((person) => (
               <div
