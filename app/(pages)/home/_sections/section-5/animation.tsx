@@ -59,7 +59,7 @@ export function Animation() {
 
       // Transition from section 4
       const section45Trans = document.getElementById('section-4-5-trans')
-      if (section45Trans) {
+      if (transitionProgress > 0 && section45Trans) {
         section45Trans.style.opacity = `${1 - transitionProgress}`
         container.style.opacity = `${transitionProgress}`
       }
@@ -111,7 +111,7 @@ export function Animation() {
       <div
         id="section-4-5-trans"
         className={cn(
-          'fixed top-1/2 -translate-y-1/2 dr-w-670 dr-h-470 opacity-15 z-50',
+          'fixed top-1/2 -translate-y-1/2 dr-w-670 dr-h-470 z-50 opacity-0 pointer-events-none',
           s.section45Trans
         )}
       >
