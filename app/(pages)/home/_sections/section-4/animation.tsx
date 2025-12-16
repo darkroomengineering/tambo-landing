@@ -11,10 +11,10 @@ import {
   type TimelineCallback,
   TimelineSectionContext,
 } from '~/app/(pages)/home/_components/timeline-section'
+import Cursor from '~/assets/svgs/cursor.svg'
 import { mapRange } from '~/libs/utils'
 import { colors } from '~/styles/colors'
 import s from './animation.module.css'
-import Cursor from './cursor.svg'
 import Selection from './selection.svg'
 
 export function Animation() {
