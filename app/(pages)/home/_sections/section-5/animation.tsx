@@ -8,6 +8,7 @@ import {
 import Cursor from '~/assets/svgs/cursor.svg'
 import { Image } from '~/components/image'
 import { mapRange } from '~/libs/utils'
+import { colors } from '~/styles/colors'
 import s from './animation.module.css'
 
 export function Animation() {
@@ -27,6 +28,8 @@ export function Animation() {
   const mapHighlightBackgroundRef = useRef<HTMLDivElement>(null)
   const whatCanIDoBackgroundRef = useRef<HTMLDivElement>(null)
   const whatCanIDoTextRef = useRef<HTMLParagraphElement>(null)
+  const thinkingDotsRef = useRef<HTMLDivElement>(null)
+  const thinkingTextRef = useRef<HTMLSpanElement>(null)
 
   const scrollAnimation = useEffectEvent<TimelineCallback>(({ steps }) => {
     // Elements
@@ -44,6 +47,8 @@ export function Animation() {
     const mapHighlightBackground = mapHighlightBackgroundRef.current
     const whatCanIDoBackground = whatCanIDoBackgroundRef.current
     const whatCanIDoText = whatCanIDoTextRef.current
+    const thinkingDots = thinkingDotsRef.current
+    const thinkingText = thinkingTextRef.current
 
     if (
       !(
@@ -60,7 +65,9 @@ export function Animation() {
         mapHighlightImage &&
         mapHighlightBackground &&
         whatCanIDoBackground &&
-        whatCanIDoText
+        whatCanIDoText &&
+        thinkingDots &&
+        thinkingText
       )
     )
       return
@@ -71,6 +78,7 @@ export function Animation() {
     const thinkingProgress = mapRange(0.5, 1, steps[1], 0, 1, true)
     const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
     const mergeProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
+    const activitiesProgress = mapRange(0, 0.5, steps[3], 0, 1, true)
 
     // Transition from section 4
     const section45Trans = document.getElementById('section-4-5-trans')
@@ -133,8 +141,36 @@ export function Animation() {
     }
 
     if (highlightProgress === 1) {
-      mapHighlightImage.style.transform = `translate(${mapRange(0, 1, mergeProgress, -10, -150, true)}%, ${mapRange(0, 1, mergeProgress, -10, 240, true)}%) scale(${1 - mergeProgress})`
-      whatCanIDoText.style.transform = `translate(${mapRange(0, 1, mergeProgress, -10, -260, true)}%, ${mapRange(0, 1, mergeProgress, -30, 170, true)}%) scale(${1 - mergeProgress})`
+      mapHighlightImage.style.transform = `translate(${mapRange(0, 1, mergeProgress, -10, -150, true)}%, ${mapRange(0, 1, mergeProgress, -10, 220, true)}%) scale(${1 - mergeProgress})`
+      whatCanIDoText.style.transform = `translate(${mapRange(0, 1, mergeProgress, -10, -280, true)}%, ${mapRange(0, 1, mergeProgress, -30, 170, true)}%) scale(${1 - mergeProgress})`
+      thinking.style.transform = `translate(${mapRange(0, 1, mergeProgress, 0, -10, true)}%, ${mapRange(0, 1, mergeProgress, 0, -40, true)}%)`
+      thinking.style.backgroundColor = `rgba(214, 255, 236, ${mergeProgress})`
+      map.style.opacity = `${mapRange(0, 1, mergeProgress, 0.3, 1)}`
+      mapHighlightBackground.style.opacity = `${mapRange(0, 1, mergeProgress, 0.3, 0)}`
+      mapHighlight.style.backgroundColor = gsap.utils.interpolate(
+        '#F2F8F680',
+        '#F2F8F600',
+        mergeProgress
+      )
+    }
+
+    if (mergeProgress === 1) {
+      container.style.setProperty(
+        '--highlight-progress',
+        `${1 - activitiesProgress}`
+      )
+      thinking.style.transform = `translate(${mapRange(0, 1, activitiesProgress, -10, 0, true)}%, ${mapRange(0, 1, activitiesProgress, -40, 0, true)}%)`
+      thinking.style.backgroundColor = gsap.utils.interpolate(
+        colors['ghost-mint'],
+        colors['dark-grey'],
+        activitiesProgress
+      )
+      thinkingDots.style.opacity = `${mapRange(0, 0.6, activitiesProgress, 1, 0)}`
+      container.style.setProperty(
+        '--activities-progress',
+        `${mapRange(0, 0.6, activitiesProgress, 0, 1, true)}`
+      )
+      thinkingText.style.opacity = `${mapRange(0.5, 1, activitiesProgress, 0, 1)}`
     }
   })
 
@@ -236,11 +272,22 @@ export function Animation() {
                 <div className="dr-w-306 dr-h-32 border border-grey rounded-full dr-mb-9" />
                 <div
                   ref={thinkingRef}
-                  className="dr-rounded-12 bg-ghost-mint border border-dark-grey flex dr-gap-4 dr-w-80 dr-h-67 justify-center items-center"
+                  className={cn(
+                    'dr-rounded-12 bg-ghost-mint border border-dark-grey flex dr-h-67 justify-center items-center',
+                    s.thinking
+                  )}
                 >
-                  <div className="dr-size-4 rounded-full bg-black" />
-                  <div className="dr-size-4 rounded-full bg-black" />
-                  <div className="dr-size-4 rounded-full bg-black" />
+                  <div ref={thinkingDotsRef} className="flex dr-gap-4">
+                    <div className="dr-size-4 rounded-full bg-black" />
+                    <div className="dr-size-4 rounded-full bg-black" />
+                    <div className="dr-size-4 rounded-full bg-black" />
+                  </div>
+                  <span
+                    ref={thinkingTextRef}
+                    className="absolute typo-p-sentient opacity-0"
+                  >
+                    Here are the best-rated activities in that area !
+                  </span>
                 </div>
               </div>
             </div>

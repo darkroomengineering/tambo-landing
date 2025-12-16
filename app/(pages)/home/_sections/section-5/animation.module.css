@@ -21,3 +21,7 @@
 .section45Trans {
   left: calc(100vw - var(--max-width) + desktop-vw(616));
 }
+
+.thinking {
+  width: calc(desktop-vw(80) + var(--activities-progress, 0) * desktop-vw(280));
+}
