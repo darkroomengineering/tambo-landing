@@ -1,27 +1,6 @@
-.wrapper {
-  max-width: desktop-vw(600px);
-}
-
-.title {
-  color: var(--color-black);
-}
-
 .infoBox {
   background-color: var(--color-light-gray);
   border: 2px solid var(--color-dark-grey);
-}
-
-.seatGrid {
-  display: flex;
-  flex-direction: column;
-}
-
-.seatHeader {
-  color: var(--color-black-70);
-}
-
-.rowNumber {
-  color: var(--color-black-70);
 }
 
 .seat {
@@ -60,15 +39,6 @@
   border-color: var(--color-dark-grey);
   color: var(--color-black-50);
   cursor: not-allowed;
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-}
-
-.legendDot {
-  border: 2px solid var(--color-dark-grey);
 }
 
 .legendAvailable {

@@ -10,7 +10,6 @@ import { Section8 } from './_sections/section-8'
 import { Section10 } from './_sections/section-10'
 import { Section11 } from './_sections/section-11'
 import { Section12 } from './_sections/section-12'
-
 export default function Home() {
   return (
     <Wrapper

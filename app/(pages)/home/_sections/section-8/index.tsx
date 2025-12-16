@@ -1,9 +1,8 @@
 'use client'
 
-import { useTamboThread } from '@tambo-ai/react'
 import cn from 'clsx'
 import { useRect, useWindowSize } from 'hamo'
-import { Fragment, useContext, useEffect, useState } from 'react'
+import { Fragment, useContext } from 'react'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import PlaneSVG from '~/assets/svgs/plane.svg'
@@ -13,12 +12,11 @@ import {
   MapAssistant,
   TamboIntegration,
   TravelAssistant,
+  useAssitant,
 } from '~/integrations/tambo'
+import { InterctableMap } from '~/integrations/tambo/(components)/map'
 import { desktopVW, fromTo } from '~/libs/utils'
 import s from './section-8.module.css'
-
-type Demo = 'travel' | 'map'
-type Threads = [string | null, string | null]
 
 const demos = [
   {
@@ -34,8 +32,6 @@ const demos = [
 ]
 
 export function Section8() {
-  const [selectedDemo, setSelectedDemo] = useState<Demo>('travel')
-  const [threads, setThreads] = useState<Threads>([null, null])
   const [setRectRef, rect] = useRect()
   const [setTitleBlockRef, titleBlockRect] = useRect()
   const [setTamboRectRef, tamboRect] = useRect()
@@ -214,62 +210,34 @@ export function Section8() {
             className="dr-w-col-8 outline-off-white/80 outline-6 dr-rounded-20 aspect-898/597 dr-h-597"
           >
             <div className="relative z-1 size-full dr-rounded-20 border border-forest/50 shadow-m bg-white overflow-hidden">
-              <TravelAssistant selectedDemo={selectedDemo} />
-              <MapAssistant selectedDemo={selectedDemo} />
+              <InterctableMap height={650} />
+              <TravelAssistant />
+              <MapAssistant />
             </div>
           </div>
-          <div className="relative z-1 dr-rounded-20 border border-dark-grey outline-6 outline-off-white/80 dr-p-8 bg-white">
+          {/* <div className="relative z-1 dr-rounded-20 border border-dark-grey outline-6 outline-off-white/80 dr-p-8 bg-white">
             <ThreadsOptions
-              selectedDemo={selectedDemo}
-              threads={threads}
-              setThreads={setThreads}
-              onSelect={setSelectedDemo}
             />
-          </div>
+          </div> */}
         </section>
       </TamboIntegration>
     </>
   )
 }
 
-function ThreadsOptions({
-  selectedDemo,
-  threads,
-  setThreads,
-  onSelect,
-}: {
-  selectedDemo: Demo
-  threads: Threads
-  setThreads: React.Dispatch<React.SetStateAction<Threads>>
-  onSelect: (demo: Demo) => void
-}) {
-  const { thread, startNewThread, switchCurrentThread } = useTamboThread()
-
-  useEffect(() => {
-    setThreads((prev: Threads) => {
-      // On first render, save the travel thread
-      if (prev[0] === null || prev[0] === 'placeholder') {
-        return [thread.id, null]
-      }
-
-      // If the map thread is created, save it
-      if (
-        prev[1] === null &&
-        thread.id !== prev[0] &&
-        thread.id !== 'placeholder'
-      ) {
-        return [prev[0], thread.id]
-      }
-
-      return prev
-    })
-  }, [thread?.id, setThreads])
+export function ThreadsOptions() {
+  const {
+    selectedDemo,
+    setSelectedDemo,
+    switchToTravelThread,
+    switchToMapThread,
+  } = useAssitant()
 
   return (
     <div
       className={cn(
         s.tabs,
-        'relative grid grid-flow-col dr-rounded-12 typo-h4 uppercase bg-off-white'
+        'relative grid grid-flow-col dr-rounded-12 typo-h5 uppercase bg-off-white'
       )}
     >
       {demos.map((demo) => (
@@ -281,21 +249,16 @@ function ThreadsOptions({
             value={demo.id}
             checked={selectedDemo === demo.id}
             onChange={() => {
-              onSelect(demo.id as 'travel' | 'map')
-
-              // If the map thread is not created, create it
-              if (threads[1] === null) {
-                startNewThread()
-              }
+              setSelectedDemo(demo.id as 'travel' | 'map')
 
               // Switch to the travel thread if it exists
-              if (demo.id === 'travel' && threads[0] !== null) {
-                switchCurrentThread(threads[0])
+              if (demo.id === 'travel') {
+                switchToTravelThread()
               }
 
               // Switch to the map thread if it exists
-              if (demo.id === 'map' && threads[1] !== null) {
-                switchCurrentThread(threads[1])
+              if (demo.id === 'map') {
+                switchToMapThread()
               }
             }}
           />

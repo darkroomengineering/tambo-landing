@@ -4,7 +4,7 @@ import { AreaSelectMap } from "~/integrations/tambo/(components)/area-select-map
 
 function MapComponent({ height }: { height: number }) {
   return (
-    <div className="relative w-full">
+    <div className="absolute top-0 left-0 w-full">
      <AreaSelectMap height={height} />
     </div>
   )
