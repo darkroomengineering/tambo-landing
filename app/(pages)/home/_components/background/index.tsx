@@ -59,7 +59,7 @@ export function BackgroundItem({
   style,
   borderOpacity,
   outerBorder,
-  index,
+  index = 1,
   ref,
 }: {
   opacity?: number
@@ -73,6 +73,7 @@ export function BackgroundItem({
   const elementRef = useRef<HTMLDivElement>(null)
   const boxShadowRef = useRef<HTMLDivElement>(null)
   const dashedBorderRef = useRef<SVGRectElement>(null)
+  const kinesisRef = useRef<number>(1)
 
   const { dpr, isWindows } = useDeviceDetection()
 
@@ -88,6 +89,10 @@ export function BackgroundItem({
         dashedBorderRef.current.style.ry = borderRadius
       }
     },
+    setKinesis: (value: number) => {
+      kinesisRef.current = value
+      console.log(kinesisRef.current)
+    },
   }))
 
   return (
@@ -96,7 +101,10 @@ export function BackgroundItem({
       style={style}
       ref={elementRef}
     >
-      <Kinesis className="absolute inset-0 rounded-[inherit] " index={index}>
+      <Kinesis
+        className="absolute inset-0 rounded-[inherit]"
+        getIndex={() => index * kinesisRef.current}
+      >
         <div
           className="absolute inset-0 rounded-[inherit] shadow-m"
           ref={boxShadowRef}

@@ -38,8 +38,9 @@ export function Section8() {
   const [threads, setThreads] = useState<Threads>([null, null])
   const [setRectRef, rect] = useRect()
   const [setTitleBlockRef, titleBlockRect] = useRect()
+  const [setTamboRectRef, tamboRect] = useRect()
 
-  const { getItems } = useContext(BackgroundContext)
+  const { getItems, getBackground } = useContext(BackgroundContext)
 
   const { width: windowWidth = 0 } = useWindowSize()
 
@@ -98,8 +99,98 @@ export function Section8() {
     [windowWidth]
   )
 
+  useScrollTrigger({
+    rect: titleBlockRect,
+    start: `${titleBlockRect?.top === undefined || titleBlockRect.height === undefined ? 'bottom' : titleBlockRect.top + titleBlockRect.height * 0.5} center`,
+    end: `top top`,
+    onProgress: ({ progress }) => {
+      const items = getItems()
+      fromTo(
+        items,
+
+        {
+          borderRadius: desktopVW(windowWidth, 20, true),
+          width: (index) =>
+            desktopVW(windowWidth, 704, true) -
+            desktopVW(
+              windowWidth,
+              (index - (items.length - 1)) * 105 * 2,
+              true
+            ),
+          height: (index) =>
+            desktopVW(windowWidth, 497, true) -
+            desktopVW(windowWidth, (index - (items.length - 1)) * 74 * 2, true),
+          y: 0,
+          kinesis: 1,
+          opacity: 1,
+        },
+        {
+          borderRadius: desktopVW(windowWidth, 20, true),
+          width: (index) => {
+            if (index === items.length - 1) {
+              return desktopVW(windowWidth, 898, true)
+            }
+            return windowWidth
+          },
+          height: (index) => {
+            if (index === items.length - 1) {
+              return desktopVW(windowWidth, 597, true)
+            }
+            return windowWidth
+          },
+          opacity: (index) => {
+            if (index === items.length - 1) {
+              return 1
+            }
+            return 0
+          },
+          y: 0,
+          kinesis: 0,
+        },
+        progress,
+        {
+          ease: 'linear',
+          render: (
+            item,
+            { borderRadius, width, height, y, kinesis, opacity }
+          ) => {
+            // @ts-expect-error
+            const element = item?.getElement()
+            // @ts-expect-error
+            item?.setBorderRadius(`${borderRadius}px`)
+            // @ts-expect-error
+            item?.setKinesis(kinesis)
+
+            if (element instanceof HTMLElement) {
+              element.style.width = `${width}px`
+              element.style.height = `${height}px`
+              element.style.transform = `translateY(${y}px)`
+              element.style.opacity = `${opacity}`
+            }
+          },
+        }
+      )
+    },
+  })
+
+  useScrollTrigger({
+    rect: tamboRect,
+    start: `${titleBlockRect?.top === undefined ? 'bottom' : titleBlockRect.top} top`,
+    end: `center center`,
+    onProgress: ({ progress }) => {
+      if (tamboRect.element) {
+        tamboRect.element.style.opacity = `${progress}`
+      }
+
+      const background = getBackground()
+      if (background) {
+        background.style.opacity = progress === 1 ? '0' : '1'
+      }
+    },
+  })
+
   return (
-    <TamboIntegration>
+    <>
       <section
         className="h-screen flex flex-col items-center justify-end"
         ref={setRectRef}
@@ -115,24 +206,29 @@ export function Section8() {
           </TitleBlock.Title>
         </TitleBlock>
       </section>
-      <section className="flex flex-col dr-gap-20 items-center justify-center h-screen">
-        {/* TODO: Dashed border style*/}
-        <div className="dr-w-col-8 outline-off-white/80 outline-6 dr-rounded-20 aspect-898/597 dr-h-597">
-          <div className="relative z-1 size-full dr-rounded-20 border border-forest/50 shadow-m bg-white overflow-hidden">
-            <TravelAssistant selectedDemo={selectedDemo} />
-            <MapAssistant selectedDemo={selectedDemo} />
+      <TamboIntegration>
+        <section className="flex flex-col dr-gap-20 items-center justify-center h-screen">
+          {/* TODO: Dashed border style*/}
+          <div
+            ref={setTamboRectRef}
+            className="dr-w-col-8 outline-off-white/80 outline-6 dr-rounded-20 aspect-898/597 dr-h-597"
+          >
+            <div className="relative z-1 size-full dr-rounded-20 border border-forest/50 shadow-m bg-white overflow-hidden">
+              <TravelAssistant selectedDemo={selectedDemo} />
+              <MapAssistant selectedDemo={selectedDemo} />
+            </div>
           </div>
-        </div>
-        <div className="relative z-1 dr-rounded-20 border border-dark-grey outline-6 outline-off-white/80 dr-p-8 bg-white">
-          <ThreadsOptions
-            selectedDemo={selectedDemo}
-            threads={threads}
-            setThreads={setThreads}
-            onSelect={setSelectedDemo}
-          />
-        </div>
-      </section>
-    </TamboIntegration>
+          <div className="relative z-1 dr-rounded-20 border border-dark-grey outline-6 outline-off-white/80 dr-p-8 bg-white">
+            <ThreadsOptions
+              selectedDemo={selectedDemo}
+              threads={threads}
+              setThreads={setThreads}
+              onSelect={setSelectedDemo}
+            />
+          </div>
+        </section>
+      </TamboIntegration>
+    </>
   )
 }
 

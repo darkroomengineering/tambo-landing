@@ -42,7 +42,7 @@ export function Section10() {
 
   const [setRectRef, rect] = useRect()
 
-  const { getItems } = useContext(BackgroundContext)
+  const { getItems, getBackground } = useContext(BackgroundContext)
 
   const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize()
 
@@ -52,27 +52,10 @@ export function Section10() {
       start: 'top center',
       end: 'top top',
       onProgress: ({ progress }) => {
-        // fromTo(
-        //   buttonsRef.current,
-        //   {
-        //     opacity: 0,
-        //     scale: 1.2,
-        //   },
-        //   {
-        //     opacity: 1,
-        //     scale: 1,
-        //   },
-        //   progress,
-        //   {
-        //     ease: 'linear',
-        //     render: (element, { opacity, scale }) => {
-        //       if (element instanceof HTMLElement) {
-        //         element.style.opacity = `${opacity}`
-        //         element.style.transform = `scale(${scale})`
-        //       }
-        //     },
-        //   }
-        // )
+        const background = getBackground()
+        if (progress > 0 && background) {
+          background.style.opacity = '1'
+        }
 
         const items = getItems()
         fromTo(
@@ -84,6 +67,8 @@ export function Section10() {
                 windowWidth * 1.5 + (items.length - 1 - index) * 100,
                 true
               ),
+            opacity: 1,
+            kinesis: 1,
           },
           {
             width: (index) =>
@@ -92,19 +77,24 @@ export function Section10() {
                 496 + (items.length - 1 - index) * 260,
                 true
               ),
+            opacity: 1,
+            kinesis: 1,
           },
           progress,
           {
             ease: 'linear',
-            render: (item, { width }) => {
+            render: (item, { width, opacity, kinesis }) => {
               // @ts-expect-error
               const element = item?.getElement()
               // @ts-expect-error
               item?.setBorderRadius(`${width * 2}px`)
+              // @ts-expect-error
+              item?.setKinesis(kinesis)
 
               if (element instanceof HTMLElement) {
                 element.style.width = `${width}px`
                 element.style.height = `${width}px`
+                element.style.opacity = `${opacity}`
               }
             },
           }

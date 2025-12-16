@@ -10,6 +10,7 @@ import PlusIcon from '~/assets/svgs/plus.svg'
 import { Button, CTA } from '~/components/button'
 import { Image } from '~/components/image'
 import { Marquee } from '~/components/marquee'
+import { Video } from '~/components/video'
 import { cards, persons } from './data'
 import s from './section-2.module.css'
 
@@ -125,6 +126,29 @@ function Card({ data }: CardProps) {
         </p>
         <div className="flex-1 grid place-items-center">
           {/* TODO: Video here */}
+          <div className="aspect-square w-144">
+            <Video
+              autoPlay
+              priority
+              fallback={
+                <Image
+                  src="/videos/Octo-Juggle.png"
+                  alt="Octo Juggle"
+                  unoptimized
+                  preload
+                />
+              }
+            >
+              <source
+                src="/videos/Octo-Juggle-compressed.mov"
+                type='video/mp4; codecs="hvc1"'
+              />
+              <source
+                src="/videos/Octo-Juggle-compressed.webm"
+                type="video/webm"
+              />
+            </Video>
+          </div>
         </div>
         <div className="max-dt:absolute dr-top-4 dr-right-4 dr-size-32 max-dt:group-hover:text-teal max-dt:group-hover:bg-black grid place-items-center dr-rounded-10 bg-mint dt:group-hover:opacity-0 dt:group-hover:translate-y-full transition-all duration-200">
           <PlusIcon className="dr-size-16 icon max-dt:group-hover:rotate-45 transition-all duration-200" />
