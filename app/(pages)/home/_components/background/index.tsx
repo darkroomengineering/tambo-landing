@@ -2,7 +2,7 @@
 
 import cn from 'clsx'
 import { useRect } from 'hamo'
-import { useContext, useEffect, useImperativeHandle, useRef } from 'react'
+import { useContext, useImperativeHandle, useRef } from 'react'
 import { Kinesis } from '~/components/kinesis'
 import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
@@ -227,7 +227,10 @@ export default function Background({
             index={50}
           />
         </div>
-        <div className={cn('absolute inset-0')} ref={solidBackgroundRef} />
+        <div
+          className={cn('absolute inset-0 opacity-0')}
+          ref={solidBackgroundRef}
+        />
       </div>
 
       <div className="relative">{children}</div>
@@ -242,29 +245,12 @@ export function SolidBackground({ children }: { children?: React.ReactNode }) {
   const { getSolidBackground } = useContext(BackgroundContext)
 
   // Initialize CSS custom property with transparent background
-  useEffect(() => {
-    const wrapper = wrapperRef.current
-    if (wrapper) {
-      wrapper.style.setProperty('--solid-bg-color', 'rgba(15, 26, 23, 0)')
-    }
-  }, [])
-
-  useScrollTrigger({
-    rect,
-    start: 'top bottom',
-    end: 'top center',
-    onProgress: ({ progress }) => {
-      const solidBackground = getSolidBackground()
-      const wrapper = wrapperRef.current
-      if (solidBackground) {
-        const bgColor = `rgba(15, 26, 23, ${progress})`
-        solidBackground.style.backgroundColor = bgColor
-        if (wrapper) {
-          wrapper.style.setProperty('--solid-bg-color', bgColor)
-        }
-      }
-    },
-  })
+  // useEffect(() => {
+  //   const wrapper = wrapperRef.current
+  //   if (wrapper) {
+  //     wrapper.style.setProperty('--solid-bg-color', 'rgba(15, 26, 23, 0)')
+  //   }
+  // }, [])
 
   useScrollTrigger({
     rect,
@@ -279,6 +265,24 @@ export function SolidBackground({ children }: { children?: React.ReactNode }) {
         const b = mapRange(0, 1, progress, 23, 255)
         const bgColor = `rgba(${r}, ${g}, ${b}, ${1})`
         solidBackground.style.backgroundColor = bgColor
+        if (wrapper) {
+          wrapper.style.setProperty('--solid-bg-color', bgColor)
+        }
+      }
+    },
+  })
+
+  useScrollTrigger({
+    rect,
+    start: 'top bottom',
+    end: 'top center',
+    onProgress: ({ progress }) => {
+      const solidBackground = getSolidBackground()
+      const wrapper = wrapperRef.current
+      if (solidBackground) {
+        const bgColor = `rgba(15, 26, 23, ${progress})`
+        solidBackground.style.backgroundColor = bgColor
+        solidBackground.style.opacity = '1'
         if (wrapper) {
           wrapper.style.setProperty('--solid-bg-color', bgColor)
         }
