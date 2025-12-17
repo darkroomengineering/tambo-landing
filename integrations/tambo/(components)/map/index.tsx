@@ -1,11 +1,14 @@
 import { withInteractable } from "@tambo-ai/react";
 import { z } from "zod";
 import { AreaSelectMap } from "~/integrations/tambo/(components)/map/area-select-map";
+import { useMap } from "./map-context";
 
 function MapComponent({ height }: { height: number }) {
+  const { mapRef } = useMap()
+
   return (
     <div className="absolute top-0 left-0 w-full">
-     <AreaSelectMap height={height} />
+     <AreaSelectMap ref={mapRef} height={height} />
     </div>
   )
 }

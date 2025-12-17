@@ -1,13 +1,13 @@
 'use client'
 
 import mapboxgl from 'mapbox-gl'
-import { useEffect, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
 
 export type BBox = { west: number; south: number; east: number; north: number }
 
-export type Cafe = {
+export type POI = {
   id: number
   type: string
   name: string | null
@@ -18,7 +18,12 @@ export type Cafe = {
 
 export type AreaAnalyzeResponse = {
   area: { bbox: BBox }
-  points_of_interest: { cafes: Cafe[] }
+  points_of_interest: { items: POI[] }
+}
+
+export type AreaSelectMapHandle = {
+  search: (query: string) => Promise<void>
+  getCurrentBBox: () => BBox | null
 }
 
 type Props = {
@@ -56,51 +61,101 @@ function bboxFromLngLats(a: mapboxgl.LngLat, b: mapboxgl.LngLat): BBox {
   }
 }
 
-function cafesToFeatureCollection(cafes: Cafe[]) {
+function poisToFeatureCollection(pois: POI[]) {
   return {
     type: 'FeatureCollection' as const,
-    features: cafes
-      .filter((c) => Number.isFinite(c.lat) && Number.isFinite(c.lon))
-      .map((c) => ({
+    features: pois
+      .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon))
+      .map((p) => ({
         type: 'Feature' as const,
-        id: c.id,
-        properties: { name: c.name ?? 'Coffee place' },
-        geometry: { type: 'Point' as const, coordinates: [c.lon, c.lat] },
+        id: p.id,
+        properties: { name: p.name ?? 'Point of interest' },
+        geometry: { type: 'Point' as const, coordinates: [p.lon, p.lat] },
       })),
   }
 }
 
-export function AreaSelectMap({
-  className,
-  height = 520,
-  pinSvgPath = 'assets/maps/pin.png',
-  useUserLocationOnLoad = true,
-  fallbackCenter = DEFAULT_FALLBACK_CENTER,
-  fallbackZoom = 12,
-  userZoom = 13,
-  onResult,
-  onBBoxSelected,
-}: Props) {
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const mapRef = useRef<mapboxgl.Map | null>(null)
+export const AreaSelectMap = forwardRef<AreaSelectMapHandle, Props>(
+  function AreaSelectMap(
+    {
+      className,
+      height = 520,
+      pinSvgPath = 'assets/maps/pin.png',
+      useUserLocationOnLoad = true,
+      fallbackCenter = DEFAULT_FALLBACK_CENTER,
+      fallbackZoom = 12,
+      userZoom = 13,
+      onResult,
+      onBBoxSelected,
+    },
+    ref
+  ) {
+    const containerRef = useRef<HTMLDivElement | null>(null)
+    const mapRef = useRef<mapboxgl.Map | null>(null)
 
-  const startRef = useRef<mapboxgl.LngLat | null>(null)
-  const drawingRef = useRef(false)
+    const startRef = useRef<mapboxgl.LngLat | null>(null)
+    const drawingRef = useRef(false)
 
-  // ✅ keep latest callbacks WITHOUT re-creating the map
-  const onResultRef = useRef<Props['onResult']>(onResult)
-  const onBBoxSelectedRef = useRef<Props['onBBoxSelected']>(onBBoxSelected)
+    // ✅ Store current bbox
+    const currentBBoxRef = useRef<BBox | null>(null)
 
-  useEffect(() => {
-    onResultRef.current = onResult
-  }, [onResult])
+    // ✅ keep latest callbacks WITHOUT re-creating the map
+    const onResultRef = useRef<Props['onResult']>(onResult)
+    const onBBoxSelectedRef = useRef<Props['onBBoxSelected']>(onBBoxSelected)
 
-  useEffect(() => {
-    onBBoxSelectedRef.current = onBBoxSelected
-  }, [onBBoxSelected])
+    useEffect(() => {
+      onResultRef.current = onResult
+    }, [onResult])
 
-  // ✅ Cmd/Ctrl to pan; otherwise drag draws rectangle
-  const panModeRef = useRef(false)
+    useEffect(() => {
+      onBBoxSelectedRef.current = onBBoxSelected
+    }, [onBBoxSelected])
+
+    // ✅ Cmd/Ctrl to pan; otherwise drag draws rectangle
+    const panModeRef = useRef(false)
+
+    // ✅ Expose search function via ref
+    useImperativeHandle(ref, () => ({
+      search: async (query: string) => {
+        const bbox = currentBBoxRef.current
+        if (!bbox) {
+          console.warn('No area selected. Please draw a rectangle first.')
+          return
+        }
+
+        try {
+          const res = await fetch('/api/area/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bbox, query }),
+          })
+
+          if (!res.ok) {
+            const errorData = await res.json().catch(() => ({ error: 'Unknown error' }))
+            console.error('Search failed:', errorData.error || 'Unknown error')
+            
+            // Show user-friendly error message
+            if (res.status === 503 || res.status === 504) {
+              console.warn('Map service is busy. Please try again in a moment.')
+            }
+            return
+          }
+
+          const data = (await res.json()) as AreaAnalyzeResponse
+
+          const pois = data.points_of_interest?.items ?? []
+          const poiSrc = mapRef.current?.getSource('pois') as
+            | mapboxgl.GeoJSONSource
+            | undefined
+          poiSrc?.setData(poisToFeatureCollection(pois))
+
+          onResultRef.current?.(data)
+        } catch (error) {
+          console.error('Search request failed:', error)
+        }
+      },
+      getCurrentBBox: () => currentBBoxRef.current,
+    }))
 
   const fcLng = fallbackCenter[0]
   const fcLat = fallbackCenter[1]
@@ -179,7 +234,7 @@ export function AreaSelectMap({
           data: { type: 'FeatureCollection', features: [] },
         })
 
-        map!.addSource('cafes', {
+        map!.addSource('pois', {
           type: 'geojson',
           data: { type: 'FeatureCollection', features: [] },
         })
@@ -221,9 +276,9 @@ export function AreaSelectMap({
           }
 
           map!.addLayer({
-            id: 'cafes-points',
+            id: 'pois-points',
             type: 'symbol',
-            source: 'cafes',
+            source: 'pois',
             layout: {
               'icon-image': 'coffee-pin',
               'icon-anchor': 'bottom',
@@ -233,9 +288,9 @@ export function AreaSelectMap({
           })
 
           map!.addLayer({
-            id: 'cafes-points-selected',
+            id: 'pois-points-selected',
             type: 'symbol',
-            source: 'cafes',
+            source: 'pois',
             filter: ['==', ['id'], -1],
             layout: {
               'icon-image': 'coffee-pin',
@@ -246,9 +301,9 @@ export function AreaSelectMap({
           })
 
           map!.addLayer({
-            id: 'cafes-labels',
+            id: 'pois-labels',
             type: 'symbol',
-            source: 'cafes',
+            source: 'pois',
             layout: {
               'text-field': ['get', 'name'],
               'text-size': 12,
@@ -261,14 +316,14 @@ export function AreaSelectMap({
           const selectFeature = (feature: mapboxgl.MapboxGeoJSONFeature) => {
             if (feature.id == null) return
             const id = Number(feature.id)
-            map!.setFilter('cafes-points-selected', ['==', ['id'], id])
+            map!.setFilter('pois-points-selected', ['==', ['id'], id])
           }
 
-          map!.on('click', 'cafes-points', (e) => {
+          map!.on('click', 'pois-points', (e) => {
             const f = e.features?.[0]
             if (f) selectFeature(f)
           })
-          map!.on('click', 'cafes-points-selected', (e) => {
+          map!.on('click', 'pois-points-selected', (e) => {
             const f = e.features?.[0]
             if (f) selectFeature(f)
           })
@@ -280,9 +335,9 @@ export function AreaSelectMap({
         if (!isLoaded) return
         if (e.originalEvent.button !== 0) return
 
-        // don't start drawing if clicking on a cafe pin
+        // don't start drawing if clicking on a POI pin
         const features = map!.queryRenderedFeatures(e.point, {
-          layers: ['cafes-points', 'cafes-points-selected', 'cafes-labels'],
+          layers: ['pois-points', 'pois-points-selected', 'pois-labels'],
         })
         if (features.length > 0) {
           // let the click handler on cafes handle this
@@ -307,11 +362,11 @@ export function AreaSelectMap({
           | undefined
         src?.setData({ type: 'FeatureCollection', features: [] })
 
-        // clear cafes when starting a new draw
-        const cafeSrc = map!.getSource('cafes') as
+        // clear POIs when starting a new draw
+        const poiSrc = map!.getSource('pois') as
           | mapboxgl.GeoJSONSource
           | undefined
-        cafeSrc?.setData({ type: 'FeatureCollection', features: [] })
+        poiSrc?.setData({ type: 'FeatureCollection', features: [] })
 
         map!.dragPan.disable()
         map!.getCanvas().style.cursor = 'crosshair'
@@ -345,7 +400,7 @@ export function AreaSelectMap({
         src?.setData({ type: 'FeatureCollection', features: [poly] })
       })
 
-      map.on('mouseup', async (e) => {
+      map.on('mouseup', (e) => {
         if (!(drawingRef.current && startRef.current)) return
 
         drawingRef.current = false
@@ -354,24 +409,14 @@ export function AreaSelectMap({
 
         map!.getCanvas().style.cursor = ''
 
+        // ✅ Store the bbox for later searches
+        currentBBoxRef.current = bbox
+
+        // ✅ Notify parent that bbox was selected (but don't search yet)
         onBBoxSelectedRef.current?.(bbox)
 
-        const res = await fetch('/api/area/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ bbox }),
-        })
-
-        const data = (await res.json()) as AreaAnalyzeResponse
-
-        const cafes = data.points_of_interest?.cafes ?? []
-        const cafeSrc = map!.getSource('cafes') as
-          | mapboxgl.GeoJSONSource
-          | undefined
-        cafeSrc?.setData(cafesToFeatureCollection(cafes))
-
         // ✅ DO NOT clear selection here => rectangle stays visible
-        onResultRef.current?.(data)
+        // ✅ DO NOT search automatically - wait for user query
 
         if (
           !(
@@ -404,9 +449,10 @@ export function AreaSelectMap({
     userZoom,
   ])
 
-  return (
-    <div className={className} style={{ width: '100%' }}>
-      <div ref={containerRef} style={{ height, width: '100%' }} />
-    </div>
-  )
-}
+    return (
+      <div className={className} style={{ width: '100%' }}>
+        <div ref={containerRef} style={{ height, width: '100%' }} />
+      </div>
+    )
+  }
+)

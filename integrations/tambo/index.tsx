@@ -8,6 +8,8 @@ import { MessageThreadFull } from './(components)/ui-tambo/message-thread-full'
 import { SeatSelector } from './(components)/seat-selector'
 import { SeatSelectorSchema } from './(components)/seat-selector/schema'
 import { useTamboThread } from '@tambo-ai/react'
+import { MapProvider } from './(components)/map/map-context'
+import { useMapSearch } from './(components)/map/use-map-search'
 
 const components = [
   {
@@ -24,7 +26,9 @@ export function TamboIntegration({children}: {children: React.ReactNode}) {
       apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}
       components={components}
     >
-      <AssistantProvider> {children} </AssistantProvider>
+      <MapProvider>
+        <AssistantProvider> {children} </AssistantProvider>
+      </MapProvider>
     </TamboProvider>
   )
 }
@@ -49,6 +53,9 @@ export function TravelAssistant() {
 export function MapAssistant() {
   const { selectedDemo } = useAssitant()
   const { addContextHelper, removeContextHelper } = useTamboContextHelpers()
+  
+  // Enable map search - pass contextKey to listen to correct thread
+  useMapSearch(selectedDemo)
 
   useEffect(() => {
     if (selectedDemo === 'map') {
@@ -80,6 +87,7 @@ const AssistantContext = createContext<{
   setThreads: React.Dispatch<React.SetStateAction<Threads>>
   switchToTravelThread: () => void
   switchToMapThread: () => void
+  finishSeatSelection: () => void
 }>({
   selectedDemo: 'travel',
   threads: [null, null],
@@ -87,6 +95,7 @@ const AssistantContext = createContext<{
   setThreads: () => {},
   switchToTravelThread: () => {},
   switchToMapThread: () => {},
+  finishSeatSelection: () => {},
 })
 
 function AssistantProvider({ children, }: { children: React.ReactNode }) {
