@@ -35,7 +35,7 @@ const demos = [
 export function Section8() {
   const [setRectRef, rect] = useRect()
   const [setTitleBlockRef, titleBlockRect] = useRect()
-  const [setTamboRectRef, tamboRect] = useRect()
+  const [setTamboRectRef, tamboRect] = useRect({ ignoreTransform: true })
 
   const { getItems, getBackground } = useContext(BackgroundContext)
 
@@ -169,9 +169,11 @@ export function Section8() {
     rect: tamboRect,
     start: `${titleBlockRect?.top === undefined ? 'bottom' : titleBlockRect.top} top`,
     end: `center center`,
-    onProgress: ({ progress }) => {
-      if (tamboRect.element) {
+    onProgress: ({ progress, height }) => {
+      if (tamboRect?.element) {
         tamboRect.element.style.opacity = `${progress}`
+        const y = -height * (1 - progress)
+        tamboRect.element.style.transform = `translateY(${y}px)`
       }
 
       const background = getBackground()
