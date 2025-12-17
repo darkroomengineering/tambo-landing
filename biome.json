@@ -26,8 +26,7 @@
       "!**/*.mdx",
       "!**/tailwind.css",
       "!**/root.css",
-      "!**/*.grit",
-      "!integrations/tambo"
+      "!**/*.grit"
     ]
   },
   "formatter": {

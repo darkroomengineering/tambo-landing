@@ -1,14 +1,28 @@
 import { withInteractable } from "@tambo-ai/react";
-import { z } from "zod";
 import { AreaSelectMap } from "~/integrations/tambo/(components)/map/area-select-map";
 import { useMap } from "./map-context";
+import { MapSchema } from "./schema";
 
-function MapComponent({ height }: { height: number }) {
+type MapComponentProps = {
+  height: number
+  center?: { lng: number; lat: number }
+  zoom?: number
+  selectedArea?: { west: number; east: number; south: number; north: number }
+  location?: string
+}
+
+function MapComponent({ height, center, zoom, selectedArea, location }: MapComponentProps) {
   const { mapRef } = useMap()
 
   return (
     <div className="absolute top-0 left-0 w-full">
-     <AreaSelectMap ref={mapRef} height={height} />
+     <AreaSelectMap 
+       ref={mapRef} 
+       height={height}
+       fallbackZoom={zoom}
+       initialCenter={center ? [center.lng, center.lat] : undefined}
+       initialBBox={selectedArea}
+     />
     </div>
   )
 }
@@ -16,7 +30,5 @@ function MapComponent({ height }: { height: number }) {
 export const InterctableMap = withInteractable(MapComponent, {
   componentName: 'map',
   description: 'A map component for selecting an area on a map and analyzing the area for things to do and add pins to the map',
-  propsSchema: z.object({
-    height: z.number().default(356),
-  }) as any,
+  propsSchema: MapSchema as any,
 })

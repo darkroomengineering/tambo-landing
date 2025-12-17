@@ -31,6 +31,8 @@ type Props = {
   height?: number | string
   pinSvgPath?: string
   fallbackZoom?: number
+  initialCenter?: [number, number] // [lng, lat]
+  initialBBox?: BBox // Initial bounding box to display
   onResult?: (result: AreaAnalyzeResponse) => void
   onBBoxSelected?: (bbox: BBox) => void
 }
@@ -67,6 +69,8 @@ export const AreaSelectMap = forwardRef<AreaSelectMapHandle, Props>(
       height = 520,
       pinSvgPath = 'assets/maps/pin.png',
       fallbackZoom = 12,
+      initialCenter,
+      initialBBox,
       onResult,
       onBBoxSelected,
     },
@@ -206,10 +210,10 @@ export const AreaSelectMap = forwardRef<AreaSelectMapHandle, Props>(
     window.addEventListener('keyup', onKeyUp)
 
     ;(async () => {
-      const center: [number, number] = [fcLng, fcLat]
+      const center: [number, number] = initialCenter ?? [fcLng, fcLat]
       const zoom = fallbackZoom
 
-      console.log('📍 Using default location (NYC):', { lng: center[0], lat: center[1] })
+      console.log('📍 Using location:', { lng: center[0], lat: center[1] })
 
       map = new mapboxgl.Map({
         container: containerRef.current!,
@@ -244,6 +248,37 @@ export const AreaSelectMap = forwardRef<AreaSelectMapHandle, Props>(
           type: 'geojson',
           data: { type: 'FeatureCollection', features: [] },
         })
+
+        // If initialBBox is provided, draw it on the map
+        if (initialBBox) {
+          const poly = {
+            type: 'Feature' as const,
+            properties: {},
+            geometry: {
+              type: 'Polygon' as const,
+              coordinates: [
+                [
+                  [initialBBox.west, initialBBox.south],
+                  [initialBBox.east, initialBBox.south],
+                  [initialBBox.east, initialBBox.north],
+                  [initialBBox.west, initialBBox.north],
+                  [initialBBox.west, initialBBox.south],
+                ],
+              ],
+            },
+          }
+
+          const src = map!.getSource('selection') as
+            | mapboxgl.GeoJSONSource
+            | undefined
+          src?.setData({ type: 'FeatureCollection', features: [poly] })
+
+          // Store the bbox
+          currentBBoxRef.current = initialBBox
+          
+          // Notify parent
+          onBBoxSelectedRef.current?.(initialBBox)
+        }
 
         // selection layers (visible)
         map!.addLayer({
@@ -449,6 +484,12 @@ export const AreaSelectMap = forwardRef<AreaSelectMapHandle, Props>(
     // ✅ stable dependencies (numbers, not the array reference)
     fallbackZoom,
     pinSvgPath,
+    initialCenter?.[0],
+    initialCenter?.[1],
+    initialBBox?.west,
+    initialBBox?.east,
+    initialBBox?.south,
+    initialBBox?.north,
   ])
 
     return (
