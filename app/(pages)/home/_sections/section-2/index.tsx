@@ -122,14 +122,8 @@ function Card({ data }: CardProps) {
                 />
               }
             >
-              <source
-                src="/videos/Octo-Juggle-compressed.mov"
-                type='video/mp4; codecs="hvc1"'
-              />
-              <source
-                src="/videos/Octo-Juggle-compressed.webm"
-                type="video/webm"
-              />
+              <source src={data?.video?.mp4} type='video/mp4; codecs="hvc1"' />
+              <source src={data?.video?.webm} type="video/webm" />
             </Video>
           </div>
         </div>
@@ -144,7 +138,7 @@ function Card({ data }: CardProps) {
       </div>
       <div
         className={cn(
-          'dr-size-32 absolute  grid place-items-center dr-rounded-10 bg-mint z-10',
+          'dr-size-32 grid place-items-center dr-rounded-10 bg-mint z-10',
           s.plusButton
         )}
       >
