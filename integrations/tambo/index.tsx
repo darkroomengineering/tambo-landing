@@ -8,12 +8,10 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { InterctableMap } from './(components)/map'
 import { MapProvider } from './(components)/map/map-context'
-import { MapSchema } from './(components)/map/schema'
 import { SeatSelectorSchema } from './(components)/seat-selector/schema'
 import { SeatMap } from './(components)/seat-selector/seatmap'
-import type { DEMOS } from './constants'
+import { DEMOS } from './constants'
 
 const components = [
   {
@@ -21,13 +19,6 @@ const components = [
     description: 'A seat selector component',
     component: SeatMap,
     propsSchema: SeatSelectorSchema,
-  },
-  {
-    name: 'map',
-    description:
-      'A map component for selecting an area on a map and analyzing the area for things to do and add pins to the map',
-    component: InterctableMap,
-    propsSchema: MapSchema,
   },
 ]
 
@@ -57,7 +48,7 @@ const AssistantContext = createContext<{
   switchToMapThread: () => void
   finishSeatSelection: (seat: string) => void
 }>({
-  selectedDemo: 'seat',
+  selectedDemo: DEMOS.SEAT,
   threads: [null, null],
   choosedSeat: [],
   setSelectedDemo: () => {
@@ -78,7 +69,7 @@ const AssistantContext = createContext<{
 })
 
 function AssistantProvider({ children }: { children: React.ReactNode }) {
-  const [selectedDemo, setSelectedDemo] = useState<Demo>('seat')
+  const [selectedDemo, setSelectedDemo] = useState<Demo>(DEMOS.SEAT)
   const [choosedSeat, setChoosedSeat] = useState<string[]>([])
   const [threads, setThreads] = useState<Threads>([null, null])
   const { thread, startNewThread, switchCurrentThread } = useTamboThread()
@@ -119,7 +110,7 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
 
   const finishSeatSelection = useCallback(
     (seat: string) => {
-      setSelectedDemo('map')
+      setSelectedDemo(DEMOS.MAP)
       switchToMapThread()
       setChoosedSeat([seat])
     },
