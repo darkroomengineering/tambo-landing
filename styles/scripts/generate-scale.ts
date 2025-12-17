@@ -79,11 +79,11 @@ function scaleUtility(name: string, properties: string | string[]) {
 
   const negatedUtility = utility
     .replace('@utility ', '@utility -')
-    .replace('--value(integer) * 100', '--value(integer) * -100')
+    .replace(/(\w+(?:-\w+)*):\s*min\(([^;]+)\);/g, '$1: calc(-1 * min($2));')
 
   const negatedAutoCompleteUtility = autoCompleteUtility
     .replace('@utility ', '@utility -')
-    .replace('100', '-100')
+    .replace(/(\w+(?:-\w+)*):\s*calc\(([^;]+)\);/g, '$1: calc(-1 * ($2));')
 
   return `${utility}\n${autoCompleteUtility}\n${negatedUtility}\n${negatedAutoCompleteUtility}`
 }

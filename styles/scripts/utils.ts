@@ -1,4 +1,7 @@
 export function scalingCalc(value: number) {
+  if (value < 0) {
+    return `calc(-1 * min(calc(((${value} * -100) / var(--device-width)) * 1vw), calc(((${value} * var(--max-width)) / var(--device-width)) * 1px)))`
+  }
   return `min(calc(((${value} * 100) / var(--device-width)) * 1vw), calc(((${value} * var(--max-width)) / var(--device-width)) * 1px))`
 }
 
