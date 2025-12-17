@@ -2,6 +2,8 @@
 
 import { useTamboContextHelpers, useTamboThread } from '@tambo-ai/react'
 import { useEffect, useState } from 'react'
+import { DEMOS } from '~/integrations/tambo/constants'
+import { useAssitant } from '../..'
 import { mapExampleContext } from '../context'
 import { MessageThreadCollapsible } from '../ui-tambo/message-thread-collapsible'
 import { useMap } from './map-context'
@@ -11,13 +13,10 @@ const introMessages = {
   map: 'While your waiting for your flight, you can search for entrainment options in your destination, do you want me to help you?',
 }
 
-type Demo = 'travel' | 'map'
+const demo = DEMOS.MAP
 
-interface MapAssistantProps {
-  selectedDemo: Demo
-}
-
-export function MapAssistant({ selectedDemo }: MapAssistantProps) {
+export function MapAssistant() {
+  const { selectedDemo } = useAssitant()
   const { addContextHelper, removeContextHelper } = useTamboContextHelpers()
   const { thread, addThreadMessage } = useTamboThread()
   const { mapRef } = useMap()
@@ -33,7 +32,7 @@ export function MapAssistant({ selectedDemo }: MapAssistantProps) {
 
   // Poll for bbox changes to update context helper
   useEffect(() => {
-    if (selectedDemo !== 'map' || !mapRef.current) return
+    if (selectedDemo !== demo || !mapRef.current) return
 
     const interval = setInterval(() => {
       const bbox = mapRef.current?.getCurrentBBox()
@@ -48,7 +47,7 @@ export function MapAssistant({ selectedDemo }: MapAssistantProps) {
   }, [selectedDemo, mapRef])
 
   useEffect(() => {
-    if (selectedDemo === 'map') {
+    if (selectedDemo === demo) {
       addContextHelper(
         'assistantBehavior',
         () =>
@@ -95,7 +94,7 @@ If the user asks about the selected area or what they can do, politely remind th
   }, [selectedDemo, addContextHelper, removeContextHelper, mapRef, currentBBox])
 
   useEffect(() => {
-    if (selectedDemo !== 'map') return
+    if (selectedDemo !== demo) return
 
     if (!thread?.messages?.length) {
       addThreadMessage(
@@ -117,7 +116,8 @@ If the user asks about the selected area or what they can do, politely remind th
     }
   }, [thread?.messages?.length, selectedDemo, thread?.id, addThreadMessage])
 
-  if (selectedDemo === 'travel') return null
+  if (selectedDemo !== demo) return null
+
   return (
     <MessageThreadCollapsible
       contextKey={selectedDemo}

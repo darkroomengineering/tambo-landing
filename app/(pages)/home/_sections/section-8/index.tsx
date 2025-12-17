@@ -9,21 +9,20 @@ import PlaneSVG from '~/assets/svgs/plane.svg'
 import StocksSVG from '~/assets/svgs/stocks.svg'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
+import { TamboIntegration, useAssitant } from '~/integrations/tambo'
 import {
-  AssistantNotifications,
-  MapAssistantWrapper,
-  TamboIntegration,
-  TravelAssistant,
-  useAssitant,
-} from '~/integrations/tambo'
-import { InterctableMap } from '~/integrations/tambo/(components)/map'
+  InterctableMap,
+  MapAssistant,
+} from '~/integrations/tambo/(components)/map'
+import { AssistantNotifications } from '~/integrations/tambo/(components)/notifications'
+import { SeatAssistant } from '~/integrations/tambo/(components)/seat-selector/index'
 import { fromTo } from '~/libs/utils'
 import s from './section-8.module.css'
 
 const demos = [
   {
-    id: 'travel',
-    label: 'travel assistant',
+    id: 'seat',
+    label: 'seat assistant',
     icon: PlaneSVG,
   },
   {
@@ -204,8 +203,8 @@ export function Section8() {
           >
             <div className="relative z-1 size-full dr-rounded-20 border border-forest/50 shadow-m bg-white overflow-hidden">
               <InterctableMap height={650} />
-              <TravelAssistant />
-              <MapAssistantWrapper />
+              <SeatAssistant />
+              <MapAssistant />
             </div>
           </div>
           {/* <div className="relative z-1 dr-rounded-20 border border-dark-grey outline-6 outline-off-white/80 dr-p-8 bg-white">
@@ -222,7 +221,7 @@ export function ThreadsOptions() {
   const {
     selectedDemo,
     setSelectedDemo,
-    switchToTravelThread,
+    switchToSeatThread,
     switchToMapThread,
   } = useAssitant()
 
@@ -242,11 +241,11 @@ export function ThreadsOptions() {
             value={demo.id}
             checked={selectedDemo === demo.id}
             onChange={() => {
-              setSelectedDemo(demo.id as 'travel' | 'map')
+              setSelectedDemo(demo.id as 'seat' | 'map')
 
-              // Switch to the travel thread if it exists
-              if (demo.id === 'travel') {
-                switchToTravelThread()
+              // Switch to the seat thread if it exists
+              if (demo.id === 'seat') {
+                switchToSeatThread()
               }
 
               // Switch to the map thread if it exists
