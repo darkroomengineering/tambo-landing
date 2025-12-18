@@ -32,3 +32,9 @@
 .mobileNavOpened {
   height: mobile-vw(403px);
 }
+
+.ctaMobile {
+  svg {
+    transform: rotate(45deg);
+  }
+}

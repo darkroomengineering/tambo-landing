@@ -213,7 +213,7 @@ export function Navigation() {
       }}
     >
       <Link
-        href="/"
+        href="https://github.com/tambo-ai"
         className="desktop-only dr-size-48 rounded-full border border-dark-grey grid place-items-center bg-white/50 backdrop-blur-[30px]"
         ref={githubRef}
       >
@@ -307,7 +307,7 @@ export function Navigation() {
             </div>
             <div className="flex dr-gap-x-12 dr-mb-40">
               <Link
-                href="/login"
+                href="https://github.com/tambo-ai"
                 className={cn(
                   'rounded-full bg-mint grid place-items-center dr-h-32 dr-w-32',
                   s.loginButton
@@ -316,7 +316,7 @@ export function Navigation() {
                 <GithubIcon className="dr-w-16 icon" />
               </Link>
               <Link
-                href="/login"
+                href="https://discord.com/invite/dJNvPEHth6"
                 className={cn(
                   'rounded-full bg-mint grid place-items-center dr-h-32 dr-w-32',
                   s.loginButton
@@ -326,13 +326,15 @@ export function Navigation() {
               </Link>
             </div>
 
-            <CTA className="w-full">Sign In</CTA>
+            <CTA className={s.ctaMobile} href="https://ui.tambo.co/">
+              Sign In
+            </CTA>
           </div>
         </div>
       </section>
 
       <Link
-        href="/"
+        href="https://discord.com/invite/dJNvPEHth6"
         className="desktop-only col-start-12 dr-size-48 rounded-full border border-dark-grey grid place-items-center bg-white/50 backdrop-blur-[30px] justify-self-end"
         ref={discordRef}
       >
@@ -347,7 +349,7 @@ export function Navigation() {
       </Link>
       <div
         className={cn(
-          'mobile-only h-screen w-full  absolute inset -z-1 bg-ghost-mint/80 opacity-0 transition-opacity duration-300 ease-in-out',
+          'mobile-only h-screen w-full  absolute inset -z-1 bg-ghost-mint/80 opacity-0 transition-opacity duration-300 ease-in-out pointer-events-none',
           isMobileNavOpened && 'opacity-100'
         )}
       >
