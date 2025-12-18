@@ -209,7 +209,7 @@ export function Section10() {
             <div
               className="absolute pointer-events-auto"
               style={{ top: `${button.top}%`, left: `${button.left}%` }}
-              key={button.title}
+              key={button.title + index.toString()}
               ref={(node) => {
                 buttonsRefs.current[index] = node
               }}

@@ -499,7 +499,6 @@ const MessageInputTextarea = ({
       )}
       disabled={isPending || isUpdatingToken}
       placeholder={placeholder}
-      defaultValue={placeholder}
       aria-label="Chat Message Input"
       data-slot="message-input-textarea"
       {...props}
