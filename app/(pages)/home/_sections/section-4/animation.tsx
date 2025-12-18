@@ -15,6 +15,8 @@ import Cursor from '~/assets/svgs/cursor.svg'
 import { mapRange } from '~/libs/utils'
 import { colors } from '~/styles/colors'
 import s from './animation.module.css'
+import Package from './package.svg'
+import { SeatMap, type SeatMapRef } from './seat-map'
 import Selection from './selection.svg'
 
 export function Animation({
@@ -34,6 +36,7 @@ export function Animation({
   const backgroundCardRef = useRef<HTMLDivElement>(null)
   const seatMapRef = useRef<HTMLDivElement>(null)
   const seatMapTitleRef = useRef<HTMLParagraphElement>(null)
+  const seatMapComponentRef = useRef<SeatMapRef>(null)
   const selectionRef = useRef<SVGSVGElement>(null)
   const availableSeatsRef = useRef<HTMLParagraphElement>(null)
   const bookingConfirmedRef = useRef<HTMLParagraphElement>(null)
@@ -55,6 +58,7 @@ export function Animation({
     const availableSeats = availableSeatsRef.current
     const bookingConfirmed = bookingConfirmedRef.current
     const cursor = cursorRef.current
+    const seatMapComponent = seatMapComponentRef.current
 
     if (
       !(
@@ -71,7 +75,8 @@ export function Animation({
         selection &&
         availableSeats &&
         bookingConfirmed &&
-        cursor
+        cursor &&
+        seatMapComponent
       )
     )
       return
@@ -104,7 +109,7 @@ export function Animation({
     if (seatsThinkingProgress === 1) {
       container.style.setProperty('--skew-progress', `${skewProgress}`)
       container.style.setProperty('--deg', `${skewProgress * -10}deg`)
-      yourApp.style.transform = `translateY(${mapRange(0, 1, skewProgress, 100, 25)}%)`
+      yourApp.style.transform = `translateY(${mapRange(0, 1, skewProgress, 100, 0)}%)`
       yourApp.style.opacity = `${mapRange(0, 1, skewProgress, 0, 1)}`
       introCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
       emptyCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
@@ -132,8 +137,10 @@ export function Animation({
       emptyCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
       selection.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
       seatMap.style.transform = `translateY(${mapRange(0, 1, swapProgress, 0, 26)}%)`
-      seatMap.style.outlineWidth = `${mapRange(0, 1, swapProgress, 4, 0)}px`
-      seatMap.style.setProperty('--size-progress', `${swapProgress}`)
+      // seatMap.style.outlineWidth = `${mapRange(0, 1, swapProgress, 4, 0)}px`
+      // seatMap.style.setProperty('--size-progress', `${swapProgress}`)
+      seatMap.style.scale = `${mapRange(0, 1, swapProgress, 0.65, 1)}`
+      seatMapComponent.highlightSeatsAnimation(swapProgress)
       yourApp.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
       availableSeats.style.opacity = `${mapRange(0.6, 1, swapProgress, 0, 1)}`
     }
@@ -142,6 +149,9 @@ export function Animation({
       cursor.style.transform = `translate(${mapRange(0, 0.5, selectProgress, 150, 0, true)}px, ${mapRange(0, 0.5, selectProgress, 150, 0, true)}px)`
       cursor.style.opacity = `${mapRange(0, 0.5, selectProgress, 0, 1)}`
       seatMap.style.transform = `translateY(${mapRange(0.6, 1, selectProgress, 26, 0, true)}%)`
+      seatMapComponent.highlightSeatAnimation(
+        mapRange(0, 0.5, selectProgress, 0, 1)
+      )
       if (selectProgress < 0.6) return
       bookingConfirmed.style.opacity = `${mapRange(0.6, 1, selectProgress, 0, 1)}`
       availableSeats.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
@@ -173,7 +183,10 @@ export function Animation({
     >
       <Card
         ref={introCardRef}
-        className={cn('z-50 flex flex-col justify-end dr-gap-14', s.card)}
+        className={cn(
+          'z-50 flex flex-col justify-end dr-gap-14 overflow-hidden',
+          s.card
+        )}
       >
         <p
           ref={seatsQuestionRef}
@@ -199,32 +212,36 @@ export function Animation({
       >
         <div
           ref={yourAppRef}
-          className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-3/4 rounded-full bg-white shadow-xs opacity-0 flex dr-p-2 dr-pr-24 dr-gap-8 items-center"
+          className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-3/4 rounded-full bg-white shadow-xs opacity-0 flex dr-p-2 dr-pr-12 dr-gap-8 items-center border-2 border-dark-grey"
         >
-          <div className="dr-size-24 bg-black rounded-full" />
-          <p className="typo-p-s uppercase">your app/components</p>
+          <div className="dr-size-24 bg-black rounded-full grid place-items-center">
+            <Package className="dr-size-16" />
+          </div>
+          <p className="typo-button uppercase">your app/components</p>
         </div>
         <Selection ref={selectionRef} />
         <div
           ref={seatMapRef}
           className={cn(
-            'absolute dr-left-16 dr-top-16 dr-rounded-8 outline-4 outline-mint bg-red shadow-xs opacity-0 origin-top-left',
+            'absolute dr-w-340 dr-h-344 dr-left-16 dr-top-16 dr-rounded-12 outline-4 outline-mint shadow-xs opacity-0 origin-top-left',
             s.seatMap
           )}
         >
           <p
             ref={availableSeatsRef}
-            className="absolute left-0 -translate-y-full -dr-top-20 typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey opacity-0"
+            className="absolute left-0 -translate-y-full -dr-top-20 typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey opacity-0 whitespace-nowrap"
           >
             Here are the available seats on your flight!
           </p>
           <p
             ref={seatMapTitleRef}
-            className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 typo-p-s bg-mint dr-px-10 dr-py-2 rounded-full shadow-xs translate-full"
+            className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 typo-button normal-case flex items-center justify-center bg-mint dr-w-102 dr-h-28 rounded-full shadow-xs translate-full"
           >
             {'<'}SeatMap{'>'}
           </p>
-          <div className="size-full dr-p-24" />
+          <div className="size-full">
+            <SeatMap ref={seatMapComponentRef} />
+          </div>
           <Cursor
             ref={cursorRef}
             className="absolute dr-size-24 dr-right-6 dr-top-223 opacity-0"
