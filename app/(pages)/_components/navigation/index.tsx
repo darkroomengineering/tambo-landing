@@ -4,6 +4,7 @@ import cn from 'clsx'
 import gsap from 'gsap'
 import { useLenis } from 'lenis/react'
 import { useEffect, useEffectEvent, useRef, useState } from 'react'
+import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import DiscordIcon from '~/assets/svgs/discord.svg'
 import GithubIcon from '~/assets/svgs/github.svg'
 import NavMobile from '~/assets/svgs/nav-mobile.svg'
@@ -272,7 +273,7 @@ export function Navigation() {
         {/* Mobile Nav */}
         <div
           className={cn(
-            'mobile-only border border-dark-grey w-full dr-h-48 dr-rounded-24 relative overflow-hidden',
+            'mobile-only border border-dark-grey w-full dr-h-48 dr-rounded-24 relative overflow-hidden bg-white',
             s.mobileNavContainer,
             isMobileNavOpened && s.mobileNavOpened
           )}
@@ -292,7 +293,7 @@ export function Navigation() {
           {/* Mobile content */}
           <div
             className={cn(
-              'absolute dr-top-80 dr-left-24 transition-opacity duration-300 ease-in-expo',
+              'absolute dr-top-80 dr-px-24 transition-opacity duration-300 ease-in-expo w-full',
               isMobileNavOpened ? 'opacity-100' : 'opacity-0'
             )}
           >
@@ -324,7 +325,8 @@ export function Navigation() {
                 <DiscordIcon className="dr-w-16 icon" />
               </Link>
             </div>
-            <CTA>Sign In</CTA>
+
+            <CTA className="w-full">Sign In</CTA>
           </div>
         </div>
       </section>
@@ -343,6 +345,14 @@ export function Navigation() {
           <DiscordIcon className="dr-w-16 icon" />
         </div>
       </Link>
+      <div
+        className={cn(
+          'mobile-only h-screen w-full  absolute inset -z-1 bg-ghost-mint/80 opacity-0 transition-opacity duration-300 ease-in-out',
+          isMobileNavOpened && 'opacity-100'
+        )}
+      >
+        <HashPattern className="absolute inset-0 text-dark-teal/50" />
+      </div>
     </nav>
   )
 }

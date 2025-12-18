@@ -103,7 +103,7 @@ export function CTA({
     >
       <Button
         className={cn(
-          'dt:dr-rounded-16 flex items-center dr-pl-16 dr-pr-8 dr-py-8 dr-h-48 relative overflow-hidden',
+          'dr-rounded-16 flex items-center dr-pl-16 dr-pr-8 dr-py-8 dr-h-48 relative overflow-hidden',
           s.button,
           color === 'black' && s.isBlack,
           type === 'secondary' && s.isSecondary,
@@ -119,7 +119,7 @@ export function CTA({
         </span>
         <span
           className={cn(
-            'dt:dr-w-32 dt:dr-h-32 bg-mint flex items-center justify-center dr-rounded-10 shrink-0 z-1',
+            'dr-w-32 dr-h-32 bg-mint flex items-center justify-center dr-rounded-10 shrink-0 z-1',
             s.arrow
           )}
         >
@@ -159,7 +159,7 @@ export function CTA({
 export function ButtonIcon({ icon }: { icon: 'arrow' | 'github' | 'discord' }) {
   return (
     <>
-      {icon === 'arrow' && <ArrowSVG className="dt:dr-w-16 dt:dr-h-16 z-1" />}
+      {icon === 'arrow' && <ArrowSVG className="dr-w-16 dr-h-16 z-1" />}
       {icon === 'github' && <GithubSVG className="dt:dr-w-24 dt:dr-h-24 z-1" />}
       {icon === 'discord' && (
         <DiscordSVG className="dt:dr-w-24 dt:dr-h-24 z-1" />
