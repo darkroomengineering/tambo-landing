@@ -44,6 +44,7 @@ export interface MessageThreadFullProps
   // TODO: fix this
   variant?: VariantProps<typeof messageVariants>['variant']
   showHistory?: boolean
+  showFileInput?: boolean
   ref?: React.RefObject<HTMLDivElement>
 }
 
@@ -93,6 +94,7 @@ export function MessageThreadFull({
   contextKey,
   variant,
   showHistory = false,
+  showFileInput = false,
   ref,
   ...props
 }: MessageThreadFullProps) {
@@ -131,7 +133,7 @@ export function MessageThreadFull({
           <MessageInput contextKey={contextKey}>
             <MessageInputTextarea placeholder="Lets pick your plane seat..." />
             <MessageInputToolbar>
-              <MessageInputFileButton />
+              {showFileInput && <MessageInputFileButton />}
               <MessageInputMcpPromptButton />
               {/* Uncomment this to enable client-side MCP config modal button */}
               {/* <MessageInputMcpConfigButton /> */}

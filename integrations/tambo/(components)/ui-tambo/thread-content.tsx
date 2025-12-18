@@ -153,12 +153,14 @@ const ThreadContentMessages = React.forwardRef<
               message={message}
               variant={variant}
               isLoading={isGenerating && index === filteredMessages.length - 1}
-              className={cn('flex w-full',
+              className={cn(
+                'flex w-full',
                 message.role === 'assistant' ? 'justify-start' : 'justify-end'
               )}
             >
               <div
-                className={cn('flex flex-col',
+                className={cn(
+                  'flex flex-col',
                   message.role === 'assistant' ? 'w-full' : 'max-w-3xl'
                 )}
               >
@@ -167,8 +169,8 @@ const ThreadContentMessages = React.forwardRef<
                 <MessageContent
                   className={
                     message.role === 'assistant'
-                      ? 'text-foreground typo-p-s'
-                      : 'text-foreground bg-container hover:bg-backdrop typo-p-s'
+                      ? 'text-foreground'
+                      : 'text-foreground bg-container hover:bg-backdrop'
                   }
                 />
                 <ToolcallInfo />

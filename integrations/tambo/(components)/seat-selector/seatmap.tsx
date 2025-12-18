@@ -1,56 +1,73 @@
 'use client'
 
+import { useTamboComponentState } from '@tambo-ai/react'
 import cn from 'clsx'
-import { useCallback, useState } from 'react'
-import type { z } from 'zod'
-import { useAssitant } from '../..'
-import { SeatSelectorSchema } from './schema'
+import { useCallback, useEffect, useState } from 'react'
+import { useAssitant } from '~/integrations/tambo'
+import { isEmptyArray } from '~/libs/utils'
+import type { SeatMapProps } from './schema'
+import { SEATS } from './schema'
 import s from './styles.module.css'
 
-export type SeatMapProps = z.infer<typeof SeatSelectorSchema>
+type SelectedSeats = string[]
+type CurrentPage = number
 
-export function SeatMap(props: SeatMapProps) {
-  const [selectedSeats, setSelectedSeats] = useState<string[]>([])
-  const validated = SeatSelectorSchema.parse(props)
-  const { rows, seatsPerRow, takenSeats, maxSelections } = validated
-  const { finishSeatSelection } = useAssitant()
+const ROWS = 25
+const SEATS_PER_ROW = 6
+const ROWS_PER_PAGE = 5
+const TOTAL_PAGES = Math.ceil(ROWS / ROWS_PER_PAGE)
+const SEAT_LETTERS = Array.from({ length: SEATS_PER_ROW }, (_, i) =>
+  String.fromCharCode(65 + i)
+)
 
-  // Generate seat labels (A, B, C, D, E, F, etc.)
-  const seatLetters = Array.from({ length: seatsPerRow }, (_, i) =>
-    String.fromCharCode(65 + i)
-  )
+function getCurrentPage(currentPage: CurrentPage) {
+  return Math.min(ROWS_PER_PAGE, ROWS - currentPage * ROWS_PER_PAGE)
+}
+
+export function SeatMap({ maxSelections, userSelectedSeats }: SeatMapProps) {
+  const [currentPage, setCurrentPage] = useState<CurrentPage>(0)
+  const [selectedSeats, setSelectedSeats] =
+    useTamboComponentState<SelectedSeats>(
+      'userSelectedSeats',
+      [],
+      userSelectedSeats
+    )
+
+  useEffect(() => {
+    if (!isEmptyArray(userSelectedSeats)) {
+      setCurrentPage(
+        Math.floor(
+          (Number.parseInt(userSelectedSeats[0].match(/\d+/)?.[0] || '1', 10) -
+            1) /
+            ROWS_PER_PAGE
+        )
+      )
+    }
+  }, [userSelectedSeats])
 
   const toggleSeat = useCallback(
     (seatId: string) => {
-      setSelectedSeats((prev) => {
-        // If already selected, deselect it
-        if (prev.includes(seatId)) {
-          return prev.filter((id) => id !== seatId)
-        }
+      if (!(selectedSeats && seatId)) return
 
-        // If max selections reached, don't add more
-        if (maxSelections !== undefined && prev.length >= maxSelections) {
-          return prev
-        }
-
-        // Add to selection
-        return [...prev, seatId]
-      })
+      if (selectedSeats?.includes(seatId)) {
+        setSelectedSeats(selectedSeats.filter((id) => id !== seatId))
+      } else if (
+        maxSelections === undefined ||
+        selectedSeats?.length < maxSelections
+      ) {
+        setSelectedSeats([...selectedSeats, seatId])
+      }
     },
-    [maxSelections]
+    [selectedSeats, maxSelections]
   )
 
-  const clearSelection = useCallback(() => {
-    setSelectedSeats([])
-  }, [])
-
   const isSeatTaken = useCallback(
-    (seatId: string) => takenSeats.includes(seatId),
-    [takenSeats]
+    (seatId: string) => SEATS.find((seat) => seat.id === seatId)?.taken,
+    []
   )
 
   const isSeatSelected = useCallback(
-    (seatId: string) => selectedSeats.includes(seatId),
+    (seatId: string) => selectedSeats?.includes(seatId),
     [selectedSeats]
   )
 
@@ -59,61 +76,21 @@ export function SeatMap(props: SeatMapProps) {
       <h3 className="dr-py-6 dr-px-12 typo-button absolute -dr-top-14 left-1/2 -translate-x-1/2 border dr-rounded-20 text-color-black">
         {'<SeatMap/>'}
       </h3>
-
-      {/* Selected seats info */}
-      <div
-        className={cn(
-          'dt:dr-mb-24 dr-mb-16 dt:dr-p-16 dr-p-12 dr-rounded-12',
-          s.infoBox
-        )}
-      >
-        <span className="typo-label-m text-black">Selected Seats:</span>{' '}
-        <span className="typo-p ml-2">
-          {selectedSeats.length > 0 ? selectedSeats.join(', ') : 'None'}
-        </span>
-        {maxSelections && (
-          <span className="typo-label-s text-black-70 ml-4">
-            ({selectedSeats.length}/{maxSelections})
-          </span>
-        )}
-      </div>
-
-      {/* Airplane seat grid */}
+      <SelectedSeatsInfo
+        selectedSeats={selectedSeats || []}
+        maxSelections={maxSelections}
+      />
       <div className="w-full dt:dr-gap-12 dr-gap-8 dt:dr-mb-24 dr-mb-16 flex flex-col items-center">
-        {/* Header with seat letters */}
-        <div className="flex dt:dr-gap-48 dr-gap-36">
-          <div className="flex dt:dr-gap-8 dr-gap-6">
-            {seatLetters.slice(0, 3).map((letter) => (
-              <div
-                key={letter}
-                className="dt:dr-w-40 dr-w-32 text-center typo-label-m text-color-black-70"
-              >
-                {letter}
-              </div>
-            ))}
-          </div>
-          <div className="flex dt:dr-gap-8 dr-gap-6">
-            {seatLetters.slice(3, 6).map((letter) => (
-              <div
-                key={letter}
-                className="dt:dr-w-40 dr-w-32 text-center typo-label-m text-color-black-70"
-              >
-                {letter}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Seat rows */}
-        {Array.from({ length: rows }, (_, rowIndex) => {
-          const rowNumber = rowIndex + 1
+        <SeatLetters />
+        {Array.from({ length: getCurrentPage(currentPage) }, (_, i) => {
+          const rowNumber = currentPage * ROWS_PER_PAGE + i + 1
           return (
             <div
               key={rowNumber}
               className="flex dt:dr-gap-8 dr-gap-6 items-center"
             >
-              {/* Seats in this row */}
-              {seatLetters.slice(0, 3).map((letter) => {
+              {/* Rows 1-3 */}
+              {SEAT_LETTERS.slice(0, 3).map((letter) => {
                 const seatId = `${rowNumber}${letter}`
                 const taken = isSeatTaken(seatId)
                 const selected = isSeatSelected(seatId)
@@ -134,14 +111,12 @@ export function SeatMap(props: SeatMapProps) {
                   </Seat>
                 )
               })}
-
               {/* Row number */}
               <div className="dt:dr-w-32 dr-w-24 text-center typo-label-m text-color-black-70">
                 {rowNumber}
               </div>
-
-              {/* Seats in this row */}
-              {seatLetters.slice(3, 6).map((letter) => {
+              {/* Rows 3-6 */}
+              {SEAT_LETTERS.slice(3, 6).map((letter) => {
                 const seatId = `${rowNumber}${letter}`
                 const taken = isSeatTaken(seatId)
                 const selected = isSeatSelected(seatId)
@@ -166,64 +141,18 @@ export function SeatMap(props: SeatMapProps) {
           )
         })}
       </div>
-
-      {/* Legend */}
-      <div className="flex dt:dr-gap-24 dr-gap-16 typo-label-s dt:dr-mb-16 dr-mb-12">
-        <div className="flex items-center">
-          <div
-            className={cn(
-              'dt:dr-w-20 dt:dr-h-20 dr-w-16 dr-h-16 dr-rounded-4 dt:dr-mr-8 dr-mr-6',
-              s.legendAvailable
-            )}
-          />
-          <span>Available</span>
-        </div>
-        <div className="flex items-center">
-          <div
-            className={cn(
-              'dt:dr-w-20 dt:dr-h-20 dr-w-16 dr-h-16 dr-rounded-4 dt:dr-mr-8 dr-mr-6 dr-border-2 border-dark-grey',
-              s.legendSelected
-            )}
-          />
-          <span>Selected</span>
-        </div>
-        <div className="flex items-center">
-          <div
-            className={cn(
-              'dt:dr-w-20 dt:dr-h-20 dr-w-16 dr-h-16 dr-rounded-4 dt:dr-mr-8 dr-mr-6',
-              s.legendTaken
-            )}
-          />
-          <span>Taken</span>
-        </div>
-      </div>
-
-      {/* Action buttons */}
-      <div className="flex dt:dr-gap-12 dr-gap-8">
-        <button
-          type="button"
-          onClick={clearSelection}
-          disabled={selectedSeats.length === 0}
-          className={cn(
-            'dt:dr-px-16 dt:dr-py-8 dr-px-12 dr-py-6 dr-rounded-10 typo-button',
-            s.button
-          )}
-        >
-          Clear Selection
-        </button>
-        <button
-          type="button"
-          disabled={selectedSeats.length !== maxSelections}
-          className={cn(
-            'dt:dr-px-16 dt:dr-py-8 dr-px-12 dr-py-6 dr-rounded-10 typo-button',
-            s.button,
-            s.buttonPrimary
-          )}
-          onClick={() => finishSeatSelection(selectedSeats.join(','))}
-        >
-          Confirm Selection
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={TOTAL_PAGES}
+        onPageChange={setCurrentPage}
+      />
+      <Legend />
+      <Actionables
+        className="absolute bottom-0 right-0"
+        clearSelection={() => setSelectedSeats([])}
+        selectedSeats={selectedSeats || []}
+        maxSelections={maxSelections}
+      />
     </div>
   )
 }
@@ -247,5 +176,157 @@ function Seat({
     >
       {children}
     </button>
+  )
+}
+
+function Actionables({
+  className,
+  clearSelection,
+  selectedSeats,
+  maxSelections,
+}: {
+  className?: string
+  clearSelection: () => void
+  selectedSeats: string[]
+  maxSelections: number
+}) {
+  const { finishSeatSelection } = useAssitant()
+
+  return (
+    <div className={cn('flex dt:dr-gap-12 dr-gap-8', className)}>
+      <button
+        type="button"
+        onClick={clearSelection}
+        disabled={isEmptyArray(selectedSeats)}
+        className={cn(
+          'dt:dr-px-16 dt:dr-py-8 dr-px-12 dr-py-6 dr-rounded-10 typo-button',
+          s.button
+        )}
+      >
+        Clear Selection
+      </button>
+      <button
+        type="button"
+        disabled={selectedSeats?.length !== maxSelections}
+        className={cn(
+          'dt:dr-px-16 dt:dr-py-8 dr-px-12 dr-py-6 dr-rounded-10 typo-button',
+          s.button,
+          s.buttonPrimary
+        )}
+        onClick={() => finishSeatSelection(selectedSeats?.join(',') || '')}
+      >
+        Confirm Selection
+      </button>
+    </div>
+  )
+}
+
+function Legend({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        'flex dt:dr-gap-24 dr-gap-16 typo-label-s dt:dr-mb-16 dr-mb-12',
+        className
+      )}
+    >
+      <div className="flex items-center">
+        <div className="dt:dr-w-20 dt:dr-h-20 dr-w-16 dr-h-16 dr-rounded-4 dt:dr-mr-8 dr-mr-6 bg-white border border-dark-grey" />
+        <span>Available</span>
+      </div>
+      <div className="flex items-center">
+        <div className="dt:dr-w-20 dt:dr-h-20 dr-w-16 dr-h-16 dr-rounded-4 dt:dr-mr-8 dr-mr-6 dr-border-2 border-dark-grey bg-teal border" />
+        <span>Selected</span>
+      </div>
+      <div className="flex items-center">
+        <div className="dt:dr-w-20 dt:dr-h-20 dr-w-16 dr-h-16 dr-rounded-4 dt:dr-mr-8 dr-mr-6 bg-grey border border-dark-grey " />
+        <span>Taken</span>
+      </div>
+    </div>
+  )
+}
+
+function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+}) {
+  return (
+    <div className="flex justify-center dr-gap-8 dr-mb-16">
+      {Array.from({ length: totalPages }, (_, i) => {
+        const pageKey = `page-${i}`
+        return (
+          <button
+            key={pageKey}
+            type="button"
+            onClick={() => onPageChange(i)}
+            className={cn(
+              'dr-w-10 dr-h-10 rounded-full border-none cursor-pointer transition-all duration-200 hover:scale-125',
+              currentPage === i ? 'bg-teal' : 'bg-grey'
+            )}
+            aria-label={`Go to rows ${i * ROWS_PER_PAGE + 1}-${Math.min((i + 1) * ROWS_PER_PAGE, ROWS)}`}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+function SeatLetters({ className }: { className?: string }) {
+  return (
+    <div className={cn('flex dt:dr-gap-48 dr-gap-36', className)}>
+      <div className="flex dt:dr-gap-8 dr-gap-6">
+        {SEAT_LETTERS.slice(0, 3).map((letter) => (
+          <div
+            key={letter}
+            className="dt:dr-w-40 dr-w-32 text-center typo-label-m text-color-black-70"
+          >
+            {letter}
+          </div>
+        ))}
+      </div>
+      <div className="flex dt:dr-gap-8 dr-gap-6">
+        {SEAT_LETTERS.slice(3, 6).map((letter) => (
+          <div
+            key={letter}
+            className="dt:dr-w-40 dr-w-32 text-center typo-label-m text-color-black-70"
+          >
+            {letter}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function SelectedSeatsInfo({
+  selectedSeats,
+  maxSelections,
+  className,
+}: {
+  selectedSeats: string[]
+  maxSelections: number
+  className?: string
+}) {
+  return (
+    <div
+      className={cn(
+        'dt:dr-mb-24 dr-mb-16 dt:dr-p-16 dr-p-12 dr-rounded-12 bg-light-gray border border-dark-grey',
+        className
+      )}
+    >
+      <span className="typo-label-m text-black">Selected Seats:</span>{' '}
+      <span className="typo-p ml-2">
+        {!isEmptyArray(selectedSeats) ? selectedSeats?.join(', ') : 'None'}
+      </span>
+      {maxSelections && (
+        <span className="typo-label-s text-black-70 ml-4">
+          ({selectedSeats?.length}/{maxSelections})
+        </span>
+      )}
+    </div>
   )
 }

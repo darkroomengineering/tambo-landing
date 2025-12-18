@@ -9,18 +9,10 @@ import {
   useState,
 } from 'react'
 import { MapProvider } from './(components)/map/map-context'
-import { SeatSelectorSchema } from './(components)/seat-selector/schema'
-import { SeatMap } from './(components)/seat-selector/seatmap'
+import { seatComponent } from './(components)/seat-selector/schema'
 import { DEMOS } from './constants'
 
-const components = [
-  {
-    name: 'seat-selector',
-    description: 'A seat selector component',
-    component: SeatMap,
-    propsSchema: SeatSelectorSchema,
-  },
-]
+const components = [...seatComponent]
 
 export function TamboIntegration({ children }: { children: React.ReactNode }) {
   return (

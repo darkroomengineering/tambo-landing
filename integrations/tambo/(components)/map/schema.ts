@@ -13,10 +13,7 @@ export const MapSchema = z.object({
     })
     .optional()
     .describe('Initial center location of the map [longitude, latitude]'),
-  zoom: z
-    .number()
-    .default(12)
-    .describe('Initial zoom level of the map'),
+  zoom: z.number().default(12).describe('Initial zoom level of the map'),
   selectedArea: z
     .object({
       west: z.number().describe('Western boundary (longitude)'),
@@ -29,6 +26,14 @@ export const MapSchema = z.object({
   location: z
     .string()
     .optional()
-    .describe('Human-readable location description (e.g., "New York City, NY")'),
+    .describe(
+      'Human-readable location description (e.g., "New York City, NY")'
+    ),
 })
 
+export const mapExampleContext = {
+  objective:
+    'You are a helpful assistant that can help with searching for entrainment options in a destination.',
+  instructions:
+    'if user asks something not related to searching for entrainment options, you should brielfy answer and politely redirect them to the entrainment selection component.',
+}

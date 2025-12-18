@@ -2,11 +2,11 @@
 
 import { useTamboContextHelpers, useTamboThread } from '@tambo-ai/react'
 import { useEffect, useState } from 'react'
+import { useAssitant } from '~/integrations/tambo'
 import { DEMOS } from '~/integrations/tambo/constants'
-import { useAssitant } from '../..'
-import { mapExampleContext } from '../context'
 import { MessageThreadCollapsible } from '../ui-tambo/message-thread-collapsible'
 import { useMap } from './map-context'
+import { mapExampleContext } from './schema'
 import { useAutoSearch } from './use-auto-search'
 import { useMapSearch } from './use-map-search'
 

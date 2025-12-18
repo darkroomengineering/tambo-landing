@@ -112,7 +112,8 @@ export const createMarkdownComponents = (): Record<
         <div className="relative border border-border dr-rounded-6 bg-muted max-w-[80ch] dr-text-14 dr-my-4">
           <CodeHeader language={match[1]} code={content} />
           <div
-            className={cn('overflow-x-auto dr-rounded-b-6 bg-background',
+            className={cn(
+              'overflow-x-auto dr-rounded-b-6 bg-background',
               '[&::-webkit-scrollbar]:w-[6px]',
               '[&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-md',
               '[&::-webkit-scrollbar:horizontal]:h-[4px]'
@@ -133,7 +134,10 @@ export const createMarkdownComponents = (): Record<
 
     return (
       <code
-        className={cn('bg-muted dr-px-1 dr-py-0 dr-rounded-4 dr-text-14', className)}
+        className={cn(
+          'bg-muted dr-px-1 dr-py-0 dr-rounded-4 dr-text-14',
+          className
+        )}
         {...props}
       >
         {children}
@@ -144,7 +148,7 @@ export const createMarkdownComponents = (): Record<
   /**
    * Paragraph component with minimal vertical margin
    */
-  p: ({ children }) => <p className="dr-my-0">{children}</p>,
+  p: ({ children }) => <p className="not-last:dr-pb-8">{children}</p>,
 
   /**
    * Heading 1 component with large text and proper spacing
@@ -182,7 +186,9 @@ export const createMarkdownComponents = (): Record<
    * Unordered list component with disc-style bullets
    * Indented from the left margin
    */
-  ul: ({ children }) => <ul className="list-disc dr-pl-5">{children}</ul>,
+  ul: ({ children }) => (
+    <ul className="list-disc dr-pl-5 flex flex-col dr-gap-8">{children}</ul>
+  ),
 
   /**
    * Ordered list component with decimal numbering

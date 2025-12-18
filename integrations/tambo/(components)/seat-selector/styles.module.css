@@ -1,8 +1,3 @@
-.infoBox {
-  background-color: var(--color-light-gray);
-  border: 2px solid var(--color-dark-grey);
-}
-
 .seat {
   --duration: 200ms;
   --ease: ease;
@@ -39,19 +34,6 @@
   border-color: var(--color-dark-grey);
   color: var(--color-black-50);
   cursor: not-allowed;
-}
-
-.legendAvailable {
-  background-color: var(--color-white);
-}
-
-.legendSelected {
-  background-color: var(--color-teal);
-  border-color: var(--color-teal);
-}
-
-.legendTaken {
-  background-color: var(--color-grey);
 }
 
 .button {

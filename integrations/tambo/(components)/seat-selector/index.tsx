@@ -1,12 +1,12 @@
 import { useTamboContextHelpers, useTamboThread } from '@tambo-ai/react'
 import { useEffect } from 'react'
+import { useAssitant } from '~/integrations/tambo'
 import { DEMOS } from '~/integrations/tambo/constants'
-import { useAssitant } from '../..'
-import { seatExampleContext } from '../context'
 import { MessageThreadFull } from '../ui-tambo/message-thread-full'
+import { seatExampleContext } from './schema'
 
 const introMessages = {
-  seat: 'You have to select your seat ASAP before the flight starts, do you want me to help you?',
+  seat: 'Damn nice choice, i’m jealous. Your flight is really soon, it’s time to select your seat. Ready to start?',
 }
 
 const demo = DEMOS.SEAT
