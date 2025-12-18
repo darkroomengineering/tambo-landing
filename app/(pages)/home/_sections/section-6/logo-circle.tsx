@@ -1,9 +1,13 @@
 import cn from 'clsx'
-import { type ComponentProps, useImperativeHandle } from 'react'
+import {
+  type ComponentProps,
+  useEffectEvent,
+  useImperativeHandle,
+  useRef,
+} from 'react'
+import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import { Image } from '~/components/image'
-import { useDesktopVW } from '~/hooks/use-device-values'
-import { HashPattern } from '../../_components/hash-pattern'
-import s from './animation.module.css'
+import { mapRange, truncate } from '~/libs/utils'
 
 export type LogoCircleRef = {
   scrollAnimation: (progress: number) => void
@@ -47,6 +51,7 @@ const LARGE_CIRCLE_LOGOS = [
   {
     src: 'assets/logos/g-cal.svg',
     alt: 'Google Calendar logo',
+    highlight: true,
   },
 ]
 
@@ -117,148 +122,161 @@ function LogosRing({
   logos,
   size,
   offset = 0,
+  ref,
 }: {
-  logos: { src: string; alt: string }[]
+  ref?: React.RefObject<HTMLDivElement | null>
+  logos: { src: string; alt: string; highlight?: boolean }[]
   size: 'l' | 'm' | 's'
   offset?: number
 }) {
   return (
     <div
       className={cn(
-        'absolute aspect-square rounded-full flex items-center justify-center',
-        size === 'l' && 'dr-w-696',
-        size === 'm' && 'dr-w-479',
-        size === 's' && 'dr-w-231'
+        'aspect-square rounded-full flex items-center justify-center',
+        size === 'l' && 'dr-w-696 z-1',
+        size === 'm' && 'dr-w-479 absolute',
+        size === 's' && 'dr-w-231 absolute'
       )}
+      ref={ref}
     >
       <div className="absolute inset-0 border-1 border-dashed border-dark-teal rounded-[inherit]" />
       {logos.map((logo, index) => (
         <LogoFrame
           src={logo.src}
+          alt={logo.alt}
           size={size}
           key={logo.src}
           style={{
-            top: `${(-getRadialPosition(index, logos.length, offset).x + 1) * 50}%`,
-            left: `${(getRadialPosition(index, logos.length, offset).y + 1) * 50}%`,
-            transform: `translate(-50%, -50%) rotate(${getRadialPosition(index, logos.length, offset).rotate}deg)`,
+            top: `${truncate((-getRadialPosition(index, logos.length, offset).x + 1) * 50, 2)}%`,
+            left: `${truncate((getRadialPosition(index, logos.length, offset).y + 1) * 50, 2)}%`,
+            transform: `translate(-50%, -50%) rotate(${truncate(getRadialPosition(index, logos.length, offset).rotate, 2)}deg)`,
           }}
-        />
+        >
+          {logo.highlight && <Highlight />}
+        </LogoFrame>
       ))}
     </div>
   )
 }
 
 export function LogoCircle({ ref }: LogoCircleProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const smallCircleRef = useRef<HTMLDivElement>(null)
+  const midCircleRef = useRef<HTMLDivElement>(null)
+  const largeCircleRef = useRef<HTMLDivElement>(null)
+
+  const scrollAnimation = useEffectEvent((progress: number) => {
+    const container = containerRef.current
+    const smallCircle = smallCircleRef.current
+    const midCircle = midCircleRef.current
+    const largeCircle = largeCircleRef.current
+
+    if (!(container && smallCircle && midCircle && largeCircle)) return
+
+    container.style.transform = `scale(${mapRange(0, 1, progress, 0.5, 1)})`
+    container.style.opacity = `${progress}`
+    smallCircle.style.transform = `rotate(${mapRange(0, 1, progress, -90, 0)}deg)`
+    midCircle.style.transform = `rotate(${mapRange(0, 1, progress, 0, 90)}deg)`
+    largeCircle.style.transform = `rotate(${mapRange(0, 1, progress, -90, 0)}deg)`
+  })
+
+  const highlightAnimation = useEffectEvent((progress: number) => {
+    console.log('highlightAnimation', progress)
+    // const smallCircle = smallCircleRef.current
+    // const midCircle = midCircleRef.current
+    // const largeCircleOtherLogos = largeCircleOtherLogosRef.current
+    // const gcalLogo = gcalLogoRef.current
+
+    // if (!(smallCircle && midCircle && largeCircleOtherLogos && gcalLogo)) return
+
+    // smallCircle.style.opacity = `${mapRange(0, 1, progress, 1, 0.3)}`
+    // largeCircleOtherLogos.style.opacity = `${mapRange(0, 1, progress, 1, 0.3)}`
+    // midCircle.style.opacity = `${mapRange(0, 1, progress, 1, 0.3)}`
+    // gcalLogo.style.translate = `${mapRange(0, 1, progress, 0, 40)}%`
+  })
+
   useImperativeHandle(ref, () => ({
-    scrollAnimation: () => {},
-    highlightAnimation: () => {},
+    scrollAnimation,
+    highlightAnimation: highlightAnimation,
     chatMessagesAnimation: () => {},
   }))
 
   return (
-    <div className=" flex items-center justify-center absolute top-1/2 left-1/2 -translate-1/2">
-      <LogosRing logos={LARGE_CIRCLE_LOGOS} size="l" />
-      <LogosRing logos={MID_CIRCLE_LOGOS} size="m" offset={0.4} />
-      <LogosRing logos={SMALL_CIRCLE_LOGOS} size="s" />
+    <div className="flex items-center justify-center absolute top-1/2 left-1/2 -translate-1/2">
+      <div
+        ref={containerRef}
+        className="absolute flex items-center justify-center"
+      >
+        <LogosRing logos={LARGE_CIRCLE_LOGOS} size="l" ref={largeCircleRef} />
+        <LogosRing
+          logos={MID_CIRCLE_LOGOS}
+          size="m"
+          offset={0.4}
+          ref={midCircleRef}
+        />
+        <LogosRing logos={SMALL_CIRCLE_LOGOS} size="s" ref={smallCircleRef} />
+      </div>
     </div>
   )
 }
 
-function SmallLogoFrame({
-  alt,
-  src,
-  rotate,
-}: Pick<LogoFrameProps, 'rotate' | 'src' | 'alt'>) {
-  return (
-    <LogoFrame
-      className="dr-size-47"
-      rotate={rotate}
-      translateY={72}
-      src={src}
-      alt={alt}
-      logoClassName="dr-size-30"
-    />
-  )
-}
-
-function MidLogoFrame({
-  alt,
-  src,
-  rotate,
-}: Pick<LogoFrameProps, 'rotate' | 'src' | 'alt'>) {
-  return (
-    <LogoFrame
-      className="absolute dr-size-52"
-      rotate={rotate}
-      translateY={120}
-      src={src}
-      alt={alt}
-      logoClassName="dr-size-34"
-    />
-  )
-}
-
-function LargeLogoFrame({
-  alt,
-  src,
-  rotate,
-  ref,
-}: Pick<LogoFrameProps, 'rotate' | 'src' | 'alt'> & {
-  ref?: React.RefObject<HTMLDivElement | null>
-}) {
-  return (
-    <LogoFrame
-      ref={ref}
-      className="absolute dr-size-69"
-      rotate={rotate}
-      translateY={188}
-      src={src}
-      alt={alt}
-      logoClassName="dr-size-45"
-    />
-  )
-}
-
 type LogoFrameProps = ComponentProps<'div'> & {
-  rotate: number
-  translateY: number
   src: string
   alt: string
-  logoClassName?: string
+  size?: 'l' | 'm' | 's'
 }
 
 function LogoFrame({
   className,
-  rotate,
-  translateY,
   src,
   alt,
-  logoClassName,
-  children,
   size,
+  children,
   ...props
 }: LogoFrameProps & { size?: 'l' | 'm' | 's' }) {
   return (
     <div
-      //   style={{
-      //     '--logo-translate-y': translateY,
-      //     '--logo-rotate': rotate,
-      //   }}
       className={cn(
-        'absolute bg-white border border-dashed border-forest/30 grid place-items-center aspect-square',
+        'absolute bg-white border border-dashed border-forest/30 grid place-items-center aspect-square shadow-m',
         size === 'l' && 'dr-size-120 dr-rounded-20',
         size === 'm' && 'dr-size-100 dr-rounded-17',
         size === 's' && 'dr-size-80 dr-rounded-14',
-        s.logo,
         className
       )}
       {...props}
     >
       <HashPattern className="absolute inset-0 text-dark-teal/50 opacity-60" />
       <div className="w-[63%] aspect-square relative">
-        <Image src={src} alt={alt} fill className={logoClassName} />
+        <Image src={src} alt={alt} fill />
       </div>
       {children}
+    </div>
+  )
+}
+
+function Highlight({ ref }: { ref?: React.RefObject<HTMLDivElement> }) {
+  return (
+    <div
+      ref={ref}
+      className="absolute w-[181%] border border-dashed border-dark-teal rounded-full aspect-square"
+    >
+      <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey bg-white dr-p-2 dr-pr-12 left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 absolute shadow-xs">
+        <div className="dr-size-24 bg-mint rounded-full" />
+        <p className="typo-button">Prompts</p>
+      </div>
+      <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey bg-white dr-p-2 dr-pr-12  left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 absolute shadow-xs">
+        <div className="dr-size-24 bg-mint rounded-full" />
+        <p className="typo-button">Elicitation</p>
+      </div>
+      <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey bg-white dr-p-2 dr-pr-12  left-1/2 top-full -translate-x-1/2 -translate-y-1/2 absolute shadow-xs">
+        <div className="dr-size-24 bg-mint rounded-full" />
+        <p className="typo-button">Resources</p>
+      </div>
+      <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey bg-white dr-p-2 dr-pr-12   left-full top-1/2 -translate-x-1/2 -translate-y-1/2 absolute shadow-xs">
+        <div className="dr-size-24 bg-mint rounded-full" />
+        <p className="typo-button">Sampling</p>
+      </div>
     </div>
   )
 }
