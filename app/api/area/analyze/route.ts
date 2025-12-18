@@ -2,87 +2,66 @@ import { NextResponse } from 'next/server'
 
 type BBox = { west: number; south: number; east: number; north: number }
 
-// Map common queries to OSM tags
-function getOSMTags(query: string): string[] {
-  const normalizedQuery = query.toLowerCase()
+// Extract brand/specific name from query
+function extractBrandName(query: string): string | null {
+  // Common brand patterns
+  const brandPatterns = [
+    /(?:only\s+)?(\w+)\s+(?:coffee|cafe|restaurant|store|shop)/i,
+    /(?:find|show|search)\s+(?:me\s+)?(?:only\s+)?(\w+)/i,
+    /^(\w+)$/, // Single word queries
+  ]
 
-  // Coffee/cafe queries
-  if (
-    normalizedQuery.includes('coffee') ||
-    normalizedQuery.includes('cafe') ||
-    normalizedQuery.includes('café') ||
-    normalizedQuery.includes('espresso') ||
-    normalizedQuery.includes('latte')
-  ) {
+  for (const pattern of brandPatterns) {
+    const match = query.match(pattern)
+    if (match?.[1]) {
+      const brand = match[1].toLowerCase()
+      // Filter out generic terms
+      if (
+        !['the', 'a', 'an', 'all', 'any', 'some', 'only', 'just'].includes(
+          brand
+        )
+      ) {
+        return match[1]
+      }
+    }
+  }
+
+  return null
+}
+
+// Map queries to OpenStreetMap tags
+// Since we now have brand filtering, we can be broad here
+function getOSMTags(query: string): string[] {
+  const q = query.toLowerCase()
+
+  // Just detect the broad category - brand filtering will handle specifics
+  if (q.includes('coffee') || q.includes('cafe') || q.includes('café')) {
     return ['amenity=cafe', 'amenity=coffee_shop']
   }
 
-  // Restaurant queries
-  if (
-    normalizedQuery.includes('restaurant') ||
-    normalizedQuery.includes('dining') ||
-    normalizedQuery.includes('eat') ||
-    normalizedQuery.includes('food')
-  ) {
+  if (q.includes('restaurant') || q.includes('food') || q.includes('eat')) {
     return ['amenity=restaurant', 'amenity=fast_food']
   }
 
-  // Bar/pub queries
-  if (
-    normalizedQuery.includes('bar') ||
-    normalizedQuery.includes('pub') ||
-    normalizedQuery.includes('drink')
-  ) {
+  if (q.includes('bar') || q.includes('pub') || q.includes('drink')) {
     return ['amenity=bar', 'amenity=pub']
   }
 
-  // Shopping queries
-  if (
-    normalizedQuery.includes('shop') ||
-    normalizedQuery.includes('store') ||
-    normalizedQuery.includes('buy') ||
-    normalizedQuery.includes('shopping')
-  ) {
+  if (q.includes('shop') || q.includes('store')) {
     return ['shop']
   }
 
-  // Attractions/tourism
   if (
-    normalizedQuery.includes('attraction') ||
-    normalizedQuery.includes('tourist') ||
-    normalizedQuery.includes('museum') ||
-    normalizedQuery.includes('sightseeing') ||
-    normalizedQuery.includes('interesting') ||
-    normalizedQuery.includes('visit')
+    q.includes('museum') ||
+    q.includes('attraction') ||
+    q.includes('tourist')
   ) {
     return ['tourism']
   }
 
-  // Entertainment queries (theaters, cinemas, clubs, etc.)
-  if (
-    normalizedQuery.includes('entertainment') ||
-    normalizedQuery.includes('entertain') ||
-    normalizedQuery.includes('theater') ||
-    normalizedQuery.includes('cinema') ||
-    normalizedQuery.includes('club') ||
-    normalizedQuery.includes('nightlife') ||
-    normalizedQuery.includes('show') ||
-    normalizedQuery.includes('more places') ||
-    normalizedQuery.includes('more options')
-  ) {
-    // Return multiple categories for entertainment
-    return [
-      'amenity=cafe',
-      'amenity=restaurant',
-      'amenity=bar',
-      'amenity=pub',
-      'tourism',
-      'leisure',
-    ]
-  }
-
-  // Default: search for cafes (backward compatibility)
-  return ['amenity=cafe']
+  // Default: search for food & drink (most common use case)
+  // Brand filtering will narrow it down
+  return ['amenity=cafe', 'amenity=restaurant', 'amenity=fast_food']
 }
 
 function buildOverpassQuery(tags: string[], bbox: BBox): string {
@@ -159,7 +138,7 @@ export async function POST(req: Request) {
 
     const overpassData = await overpassRes.json()
 
-    const items = (overpassData.elements ?? []).map(
+    let items = (overpassData.elements ?? []).map(
       (el: {
         id: number
         type: string
@@ -180,6 +159,38 @@ export async function POST(req: Request) {
         }
       }
     )
+
+    // Filter by brand name if a specific brand was requested
+    const brandName = extractBrandName(query)
+    if (brandName) {
+      const brandLower = brandName.toLowerCase()
+
+      // Simple fuzzy matching: allow 1-2 character differences for typos
+      items = items.filter((item: { name: string | null }) => {
+        if (!item.name) return false
+        const nameLower = item.name.toLowerCase()
+
+        // Exact substring match (fast path)
+        if (nameLower.includes(brandLower)) return true
+
+        // Fuzzy match: check if the brand is "close enough"
+        // Remove common suffixes and check similarity
+        const nameWords = nameLower.replace(/[''\s-]/g, '').toLowerCase()
+        const brandWords = brandLower.replace(/[''\s-]/g, '').toLowerCase()
+
+        // Check if either contains most of the other (handles typos)
+        return (
+          nameWords.includes(brandWords.slice(0, -1)) || // missing last char
+          nameWords.includes(brandWords.slice(1)) || // missing first char
+          brandWords.includes(nameWords.slice(0, -1)) ||
+          brandWords.includes(nameWords.slice(1))
+        )
+      })
+
+      console.log(
+        `🔍 Filtered to "${brandName}": ${items.length} matches (from ${(overpassData.elements ?? []).length} total)`
+      )
+    }
 
     const result = {
       area: {

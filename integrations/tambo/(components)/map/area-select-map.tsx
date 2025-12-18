@@ -216,10 +216,23 @@ export const AreaSelectMap = forwardRef<AreaSelectMapHandle, Props>(
             const data = (await res.json()) as AreaAnalyzeResponse
 
             const pois = data.points_of_interest?.items ?? []
+            console.log(
+              `🗺️ Updating map with ${pois.length} POIs for query: "${query}"`
+            )
+
             const poiSrc = mapRef.current?.getSource('pois') as
               | mapboxgl.GeoJSONSource
               | undefined
-            poiSrc?.setData(poisToFeatureCollection(pois))
+
+            if (!poiSrc) {
+              console.error('❌ POI source not found on map')
+            } else {
+              const featureCollection = poisToFeatureCollection(pois)
+              console.log(
+                `📍 Setting ${featureCollection.features.length} features on map`
+              )
+              poiSrc.setData(featureCollection)
+            }
 
             onResultRef.current?.(data)
             return // Success, exit retry loop
@@ -523,6 +536,27 @@ export const AreaSelectMap = forwardRef<AreaSelectMapHandle, Props>(
 
           // ✅ Store the bbox for later searches
           currentBBoxRef.current = bbox
+
+          // Calculate center and size for logging
+          const centerLng = (bbox.west + bbox.east) / 2
+          const centerLat = (bbox.south + bbox.north) / 2
+          const widthKm = (
+            (bbox.east - bbox.west) *
+            111 *
+            Math.cos((centerLat * Math.PI) / 180)
+          ).toFixed(2)
+          const heightKm = ((bbox.north - bbox.south) * 111).toFixed(2)
+
+          console.log('📍 Area selected:', {
+            center: `${centerLat.toFixed(4)}°N, ${centerLng.toFixed(4)}°E`,
+            size: `${widthKm} × ${heightKm} km`,
+            bounds: {
+              north: bbox.north.toFixed(4),
+              south: bbox.south.toFixed(4),
+              east: bbox.east.toFixed(4),
+              west: bbox.west.toFixed(4),
+            },
+          })
 
           // ✅ Notify parent that bbox was selected (but don't search yet)
           onBBoxSelectedRef.current?.(bbox)

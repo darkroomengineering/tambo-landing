@@ -1,10 +1,13 @@
 import { withInteractable } from '@tambo-ai/react'
+import { useEffect } from 'react'
 import { AreaSelectMap } from '~/integrations/tambo/(components)/map/area-select-map'
 import { useMap } from './map-context'
 import { MapSchema } from './schema'
+import { setMapRef } from './tools'
 
 // Re-export MapAssistant for convenience
 export { MapAssistant } from './map-assistant'
+export { mapTools } from './tools'
 
 type MapComponentProps = {
   height: number
@@ -21,6 +24,11 @@ function MapComponent({
   selectedArea,
 }: MapComponentProps) {
   const { mapRef } = useMap()
+
+  // Register the map ref with the tools so they can access the map instance
+  useEffect(() => {
+    setMapRef(mapRef)
+  }, [mapRef])
 
   return (
     <div className="absolute top-0 left-0 w-full">

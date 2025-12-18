@@ -9,16 +9,19 @@ import {
   useState,
 } from 'react'
 import { MapProvider } from './(components)/map/map-context'
+import { mapTools } from './(components)/map/tools'
 import { seatComponent } from './(components)/seat-selector/schema'
 import { DEMOS } from './constants'
 
 const components = [...seatComponent]
+const tools = [...mapTools]
 
 export function TamboIntegration({ children }: { children: React.ReactNode }) {
   return (
     <TamboProvider
       apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}
       components={components}
+      tools={tools}
     >
       <MapProvider>
         <AssistantProvider> {children} </AssistantProvider>

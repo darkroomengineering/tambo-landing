@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useRef, type ReactNode } from 'react'
+import { createContext, type ReactNode, useContext, useRef } from 'react'
 import type { AreaSelectMapHandle } from './area-select-map'
 
 type MapContextValue = {
@@ -24,4 +24,3 @@ export function useMap() {
   }
   return context
 }
-
