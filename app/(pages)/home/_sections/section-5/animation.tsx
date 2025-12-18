@@ -251,7 +251,7 @@ export function Animation() {
           s.section45Trans
         )}
       >
-        <div className="absolute inset-0 bg-white -z-1 dr-rounded-20 shadow-m border border-forest/50 dr-p-14 flex flex-col items-start justify-end">
+        <div className="absolute inset-0 bg-white -z-1 dr-rounded-20 shadow-m border border-forest/50 dr-p-16 flex flex-col items-start justify-end">
           <p className="typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey">
             Window seat confirmed. Booking 12F!
           </p>
@@ -323,7 +323,7 @@ export function Animation() {
             ref={chatBorderRef}
             className="absolute -inset-[6px] bg-white/80 -z-2 dr-rounded-26"
           />
-          <div className="size-full overflow-hidden dr-p-14 border border-forest/50 dr-rounded-20">
+          <div className="size-full overflow-hidden dr-p-16 border border-forest/50 dr-rounded-20">
             <div
               ref={chatMessagesRef}
               className={cn(
