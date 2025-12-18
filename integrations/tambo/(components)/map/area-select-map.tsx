@@ -1,12 +1,19 @@
 'use client'
 
 import mapboxgl from 'mapbox-gl'
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import {
+  useEffect,
+  useEffectEvent,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
+
+import { fetchWithRetry, updateMapPOIs } from './api'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
 
 export type BBox = { west: number; south: number; east: number; north: number }
-
 export type POI = {
   id: number
   type: string
@@ -15,17 +22,14 @@ export type POI = {
   lon: number
   tags: Record<string, unknown>
 }
-
-export type AreaAnalyzeResponse = {
-  area: { bbox: BBox }
-  points_of_interest: { items: POI[] }
-}
-
 export type AreaSelectMapHandle = {
   search: (query: string) => Promise<void>
   getCurrentBBox: () => BBox | null
 }
-
+type AreaAnalyzeResponse = {
+  area: { bbox: BBox }
+  points_of_interest: { items: POI[] }
+}
 type Props = {
   className?: string
   height?: number | string
@@ -35,9 +39,263 @@ type Props = {
   initialBBox?: BBox // Initial bounding box to display
   onResult?: (result: AreaAnalyzeResponse) => void
   onBBoxSelected?: (bbox: BBox) => void
+  ref?: React.RefObject<AreaSelectMapHandle>
 }
 
 const DEFAULT_CENTER: [number, number] = [-74.00594, 40.71278] // NYC [lng, lat]
+
+export function AreaSelectMap({
+  className,
+  height = 520,
+  fallbackZoom = 12,
+  initialCenter,
+  onResult,
+  onBBoxSelected,
+  ref,
+}: Props) {
+  const mapRef = useRef<mapboxgl.Map | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+
+  const [map, setMap] = useState<mapboxgl.Map | null>(null)
+  const [isMapLoaded, setIsMapLoaded] = useState(false)
+
+  const startRef = useRef<mapboxgl.LngLat | null>(null)
+  const drawingRef = useRef(false)
+
+  // Store current bbox
+  const currentBBoxRef = useRef<BBox | null>(null)
+
+  const { containerRef: freezeContainerRef } = useFreezeScroll()
+  const { panModeRef } = useMapPanMode({ map })
+
+  // Drawing interaction handlers (stable references via useEffectEvent)
+  const handleDrawStart = useEffectEvent((e: mapboxgl.MapMouseEvent) => {
+    if (!map || e.originalEvent.button !== 0) return
+    if (isClickOnPOI(map, e.point)) return
+
+    if (isPanModeActive(e, panModeRef)) {
+      map.dragPan.enable()
+      return
+    }
+
+    drawingRef.current = true
+    startRef.current = e.lngLat
+
+    clearGeoJSONSource(map, 'selection')
+    clearGeoJSONSource(map, 'pois')
+
+    map.dragPan.disable()
+    map.getCanvas().style.cursor = 'crosshair'
+    e.preventDefault()
+  })
+
+  const handleDrawMove = useEffectEvent((e: mapboxgl.MapMouseEvent) => {
+    if (!(map && drawingRef.current && startRef.current)) return
+
+    const bbox = bboxFromLngLats(startRef.current, e.lngLat)
+    const poly = bboxToPolygonFeature(bbox)
+    getGeoJSONSource(map, 'selection')?.setData({
+      type: 'FeatureCollection',
+      features: [poly],
+    })
+  })
+
+  const handleDrawEnd = useEffectEvent((e: mapboxgl.MapMouseEvent) => {
+    if (!(map && drawingRef.current && startRef.current)) return
+
+    drawingRef.current = false
+    const bbox = bboxFromLngLats(startRef.current, e.lngLat)
+    startRef.current = null
+
+    map.getCanvas().style.cursor = ''
+    currentBBoxRef.current = bbox
+
+    logBBoxSelection(bbox)
+    onBBoxSelected?.(bbox)
+
+    if (!isPanModeActive(e, panModeRef)) {
+      map.dragPan.disable()
+    }
+  })
+
+  const handleSearch = useEffectEvent(async (query: string) => {
+    const bbox = currentBBoxRef.current
+    if (!bbox) {
+      console.warn('No area selected. Please draw a rectangle first.')
+      return
+    }
+
+    const result = await fetchWithRetry<AreaAnalyzeResponse>(
+      '/api/area/analyze',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bbox, query }),
+      }
+    )
+
+    if (!result.ok) {
+      console.error('Search failed:', result.error)
+      return
+    }
+
+    const pois = result.data.points_of_interest?.items ?? []
+    console.log(`🗺️ Updating map with ${pois.length} POIs for query: "${query}"`)
+
+    updateMapPOIs(map, pois, getGeoJSONSource, poisToFeatureCollection)
+    onResult?.(result.data)
+  })
+
+  // Map Initialization
+  useEffect(() => {
+    if (mapRef.current) return
+    if (!containerRef.current) return
+    if (containerRef.current.querySelector('.mapboxgl-map')) return
+
+    const center: [number, number] = initialCenter ?? DEFAULT_CENTER
+    const zoom = fallbackZoom
+
+    console.log('📍 Using location:', { lng: center[0], lat: center[1] })
+
+    const map = new mapboxgl.Map({
+      container: containerRef.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center,
+      zoom,
+    })
+
+    mapRef.current = map
+    setMap(map)
+
+    map.on('load', () => {
+      setIsMapLoaded(true)
+    })
+
+    return () => {
+      setIsMapLoaded(false)
+      if (mapRef.current) {
+        mapRef.current.remove()
+        mapRef.current = null
+      }
+    }
+  }, [fallbackZoom, initialCenter?.[0], initialCenter?.[1]])
+
+  // Map Sources and Layers Setup
+  useEffect(() => {
+    if (!(map && isMapLoaded)) return
+
+    // Default: draw mode (no pan until Cmd/Ctrl)
+    map.dragPan.disable()
+
+    // Prevent double click zoom
+    map.doubleClickZoom.disable()
+
+    // Attribution can't be removed; compact is allowed
+    map.addControl(new mapboxgl.AttributionControl({ compact: true }))
+
+    // Marker for initial center
+    const center: [number, number] = initialCenter ?? DEFAULT_CENTER
+    new mapboxgl.Marker().setLngLat(center).addTo(map)
+
+    // Add GeoJSON sources
+    map.addSource('selection', {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: [] },
+    })
+
+    map.addSource('pois', {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: [] },
+    })
+
+    map.addLayer({
+      id: 'pois-points',
+      type: 'circle',
+      source: 'pois',
+      paint: {
+        'circle-radius': 8,
+        'circle-color': '#ef4444',
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#ffffff',
+      },
+    })
+
+    map.addLayer({
+      id: 'pois-labels',
+      type: 'symbol',
+      source: 'pois',
+      layout: {
+        'text-field': ['get', 'name'],
+        'text-offset': [0, 1.5],
+        'text-anchor': 'top',
+        'text-size': 12,
+      },
+      paint: {
+        'text-color': '#1f2937',
+        'text-halo-color': '#ffffff',
+        'text-halo-width': 1,
+      },
+    })
+
+    // Selection layers (visible rectangle)
+    map.addLayer({
+      id: 'selection-fill',
+      type: 'fill',
+      source: 'selection',
+      paint: {
+        'fill-color': '#22c55e',
+        'fill-opacity': 0.25,
+      },
+    })
+
+    map.addLayer({
+      id: 'selection-line',
+      type: 'line',
+      source: 'selection',
+      paint: {
+        'line-color': '#16a34a',
+        'line-width': 3,
+      },
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+      },
+    })
+  }, [map, isMapLoaded, initialCenter?.[0], initialCenter?.[1]])
+
+  // Drawing interaction event listeners
+  useEffect(() => {
+    if (!(map && isMapLoaded)) return
+
+    map.on('mousedown', handleDrawStart)
+    map.on('mousemove', handleDrawMove)
+    map.on('mouseup', handleDrawEnd)
+
+    return () => {
+      map.off('mousedown', handleDrawStart)
+      map.off('mousemove', handleDrawMove)
+      map.off('mouseup', handleDrawEnd)
+    }
+  }, [map, isMapLoaded])
+
+  useImperativeHandle(ref, () => ({
+    search: handleSearch,
+    getCurrentBBox: () => currentBBoxRef.current,
+  }))
+
+  return (
+    <div className={className} style={{ width: '100%' }}>
+      <div
+        ref={(el: HTMLDivElement | null) => {
+          containerRef.current = el
+          freezeContainerRef.current = el
+        }}
+        data-lenis-prevent
+        style={{ height, width: '100%' }}
+      />
+    </div>
+  )
+}
 
 function bboxFromLngLats(a: mapboxgl.LngLat, b: mapboxgl.LngLat): BBox {
   return {
@@ -46,6 +304,84 @@ function bboxFromLngLats(a: mapboxgl.LngLat, b: mapboxgl.LngLat): BBox {
     south: Math.min(a.lat, b.lat),
     north: Math.max(a.lat, b.lat),
   }
+}
+
+/** Create a GeoJSON polygon feature from a bounding box */
+function bboxToPolygonFeature(bbox: BBox) {
+  return {
+    type: 'Feature' as const,
+    properties: {},
+    geometry: {
+      type: 'Polygon' as const,
+      coordinates: [
+        [
+          [bbox.west, bbox.south],
+          [bbox.east, bbox.south],
+          [bbox.east, bbox.north],
+          [bbox.west, bbox.north],
+          [bbox.west, bbox.south],
+        ],
+      ],
+    },
+  }
+}
+
+/** Log bbox selection details to console */
+function logBBoxSelection(bbox: BBox): void {
+  const centerLng = (bbox.west + bbox.east) / 2
+  const centerLat = (bbox.south + bbox.north) / 2
+  const widthKm = (
+    (bbox.east - bbox.west) *
+    111 *
+    Math.cos((centerLat * Math.PI) / 180)
+  ).toFixed(2)
+  const heightKm = ((bbox.north - bbox.south) * 111).toFixed(2)
+
+  console.log('📍 Area selected:', {
+    center: `${centerLat.toFixed(4)}°N, ${centerLng.toFixed(4)}°E`,
+    size: `${widthKm} × ${heightKm} km`,
+    bounds: {
+      north: bbox.north.toFixed(4),
+      south: bbox.south.toFixed(4),
+      east: bbox.east.toFixed(4),
+      west: bbox.west.toFixed(4),
+    },
+  })
+}
+
+// Drawing interaction helpers
+const EMPTY_FEATURE_COLLECTION: GeoJSON.FeatureCollection = {
+  type: 'FeatureCollection',
+  features: [],
+}
+
+function getGeoJSONSource(
+  map: mapboxgl.Map,
+  id: string
+): mapboxgl.GeoJSONSource | undefined {
+  return map.getSource(id) as mapboxgl.GeoJSONSource | undefined
+}
+
+function clearGeoJSONSource(map: mapboxgl.Map, id: string): void {
+  getGeoJSONSource(map, id)?.setData(EMPTY_FEATURE_COLLECTION)
+}
+
+function isClickOnPOI(map: mapboxgl.Map, point: mapboxgl.Point): boolean {
+  const poiLayers = ['pois-points', 'pois-points-selected', 'pois-labels']
+  const existingLayers = poiLayers.filter((id) => map.getLayer(id))
+  if (existingLayers.length === 0) return false
+  return map.queryRenderedFeatures(point, { layers: existingLayers }).length > 0
+}
+
+function isPanModeActive(
+  e: mapboxgl.MapMouseEvent,
+  panModeRef: React.RefObject<boolean>
+): boolean {
+  return (
+    e.originalEvent.metaKey ||
+    e.originalEvent.ctrlKey ||
+    panModeRef.current === true
+  )
 }
 
 function poisToFeatureCollection(pois: POI[]) {
@@ -89,522 +425,78 @@ function poisToFeatureCollection(pois: POI[]) {
   }
 }
 
-export const AreaSelectMap = forwardRef<AreaSelectMapHandle, Props>(
-  function AreaSelectMap(
-    {
-      className,
-      height = 520,
-      pinSvgPath = 'assets/maps/pin.png',
-      fallbackZoom = 12,
-      initialCenter,
-      initialBBox,
-      onResult,
-      onBBoxSelected,
-    },
-    ref
-  ) {
-    const containerRef = useRef<HTMLDivElement | null>(null)
-    const mapRef = useRef<mapboxgl.Map | null>(null)
+function useFreezeScroll() {
+  const containerRef = useRef<HTMLDivElement | null>(null)
 
-    const startRef = useRef<mapboxgl.LngLat | null>(null)
-    const drawingRef = useRef(false)
+  // Prevent page scroll when using mouse wheel on map (allow map zoom only)
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
 
-    // ✅ Store current bbox
-    const currentBBoxRef = useRef<BBox | null>(null)
+    const handleWheel = (e: WheelEvent) => {
+      // Check if event is from Mapbox canvas (let it handle zoom)
+      const target = e.target as HTMLElement
+      const isMapboxCanvas =
+        target.tagName === 'CANVAS' &&
+        (target.classList.contains('mapboxgl-canvas') ||
+          container.querySelector('.mapboxgl-canvas') === target)
 
-    // ✅ keep latest callbacks WITHOUT re-creating the map
-    const onResultRef = useRef<Props['onResult']>(onResult)
-    const onBBoxSelectedRef = useRef<Props['onBBoxSelected']>(onBBoxSelected)
-
-    useEffect(() => {
-      onResultRef.current = onResult
-    }, [onResult])
-
-    useEffect(() => {
-      onBBoxSelectedRef.current = onBBoxSelected
-    }, [onBBoxSelected])
-
-    // ✅ Cmd/Ctrl to pan; otherwise drag draws rectangle
-    const panModeRef = useRef(false)
-
-    // Prevent page scroll when using mouse wheel on map (allow map zoom only)
-    useEffect(() => {
-      const container = containerRef.current
-      if (!container) return
-
-      const handleWheel = (e: WheelEvent) => {
-        // Check if event is from Mapbox canvas (let it handle zoom)
-        const target = e.target as HTMLElement
-        const isMapboxCanvas =
-          target.tagName === 'CANVAS' &&
-          (target.classList.contains('mapboxgl-canvas') ||
-            container.querySelector('.mapboxgl-canvas') === target)
-
-        // If it's on the Mapbox canvas, let Mapbox handle it for zoom
-        // but still prevent page scroll by preventing default
-        if (isMapboxCanvas) {
-          e.preventDefault()
-          return
-        }
-
-        // For other elements in the container, prevent page scroll
+      // If it's on the Mapbox canvas, let Mapbox handle it for zoom
+      // but still prevent page scroll by preventing default
+      if (isMapboxCanvas) {
         e.preventDefault()
-        e.stopPropagation()
+        return
       }
 
-      // Use bubble phase so Mapbox can handle canvas events first
-      container.addEventListener('wheel', handleWheel, { passive: false })
+      // For other elements in the container, prevent page scroll
+      e.preventDefault()
+      e.stopPropagation()
+    }
 
-      return () => {
-        container.removeEventListener('wheel', handleWheel)
+    // Use bubble phase so Mapbox can handle canvas events first
+    container.addEventListener('wheel', handleWheel, { passive: false })
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel)
+    }
+  }, [])
+
+  return { containerRef }
+}
+
+function useMapPanMode({ map }: { map: mapboxgl.Map | null }) {
+  const panModeRef = useRef(false)
+
+  useEffect(() => {
+    const setPanMode = (enabled: boolean) => {
+      panModeRef.current = enabled
+      if (!map) return
+
+      if (enabled) {
+        map.dragPan.enable()
+        map.getCanvas().style.cursor = 'grab'
+      } else {
+        map.dragPan.disable()
+        map.getCanvas().style.cursor = ''
       }
-    }, [])
-
-    // ✅ Expose search function via ref
-    useImperativeHandle(ref, () => ({
-      search: async (query: string) => {
-        const bbox = currentBBoxRef.current
-        if (!bbox) {
-          console.warn('No area selected. Please draw a rectangle first.')
-          return
-        }
-
-        const maxRetries = 3
-        let lastError: Error | null = null
-
-        // Retry logic with exponential backoff for 503/504 errors
-        for (let attempt = 0; attempt < maxRetries; attempt++) {
-          try {
-            const res = await fetch('/api/area/analyze', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ bbox, query }),
-            })
-
-            if (!res.ok) {
-              const errorData = await res
-                .json()
-                .catch(() => ({ error: 'Unknown error' }))
-
-              // Retry on 503/504 (service busy/timeout) with exponential backoff
-              if (
-                (res.status === 503 || res.status === 504) &&
-                attempt < maxRetries - 1
-              ) {
-                const delay = Math.min(1000 * 2 ** attempt, 5000) // Max 5 seconds
-                console.warn(
-                  `Map service busy (attempt ${attempt + 1}/${maxRetries}). Retrying in ${delay}ms...`
-                )
-                await new Promise((resolve) => setTimeout(resolve, delay))
-                continue // Retry
-              }
-
-              // For other errors or final retry, log and return
-              console.error(
-                'Search failed:',
-                errorData.error || 'Unknown error'
-              )
-              if (res.status === 503 || res.status === 504) {
-                console.warn(
-                  'Map service is busy. Please try again in a moment.'
-                )
-              }
-              return
-            }
-
-            // Success - parse and display results
-            const data = (await res.json()) as AreaAnalyzeResponse
-
-            const pois = data.points_of_interest?.items ?? []
-            console.log(
-              `🗺️ Updating map with ${pois.length} POIs for query: "${query}"`
-            )
-
-            const poiSrc = mapRef.current?.getSource('pois') as
-              | mapboxgl.GeoJSONSource
-              | undefined
-
-            if (!poiSrc) {
-              console.error('❌ POI source not found on map')
-            } else {
-              const featureCollection = poisToFeatureCollection(pois)
-              console.log(
-                `📍 Setting ${featureCollection.features.length} features on map`
-              )
-              poiSrc.setData(featureCollection)
-            }
-
-            onResultRef.current?.(data)
-            return // Success, exit retry loop
-          } catch (error) {
-            lastError =
-              error instanceof Error ? error : new Error(String(error))
-
-            // Only retry on network errors, not on final attempt
-            if (attempt < maxRetries - 1) {
-              const delay = Math.min(1000 * 2 ** attempt, 5000)
-              console.warn(
-                `Search request failed (attempt ${attempt + 1}/${maxRetries}). Retrying in ${delay}ms...`,
-                error
-              )
-              await new Promise((resolve) => setTimeout(resolve, delay))
-            }
-          }
-        }
-
-        // All retries exhausted
-        console.error('Search request failed after all retries:', lastError)
-      },
-      getCurrentBBox: () => currentBBoxRef.current,
-    }))
-
-    useEffect(() => {
-      if (mapRef.current) return
-      if (!containerRef.current) return
-      if (containerRef.current.querySelector('.mapboxgl-map')) return
-
-      // Use NYC as default center
-      const fcLng = DEFAULT_CENTER[0]
-      const fcLat = DEFAULT_CENTER[1]
-
-      let map: mapboxgl.Map | null = null
-      let isLoaded = false
-
-      const setPanMode = (enabled: boolean) => {
-        panModeRef.current = enabled
-        if (!mapRef.current) return
-
-        if (enabled) {
-          mapRef.current.dragPan.enable()
-          mapRef.current.getCanvas().style.cursor = 'grab'
-        } else {
-          mapRef.current.dragPan.disable()
-          mapRef.current.getCanvas().style.cursor = ''
-        }
-      }
-
-      const onKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Meta' || e.key === 'Control') setPanMode(true)
-      }
-      const onKeyUp = (e: KeyboardEvent) => {
-        if (e.key === 'Meta' || e.key === 'Control') setPanMode(false)
-      }
-
-      window.addEventListener('keydown', onKeyDown)
-      window.addEventListener('keyup', onKeyUp)
-
-      ;(async () => {
-        const center: [number, number] = initialCenter ?? [fcLng, fcLat]
-        const zoom = fallbackZoom
-
-        console.log('📍 Using location:', { lng: center[0], lat: center[1] })
-
-        map = new mapboxgl.Map({
-          container: containerRef.current!,
-          style: 'mapbox://styles/mapbox/streets-v12',
-          center,
-          zoom,
-        })
-
-        mapRef.current = map
-
-        map.on('load', () => {
-          isLoaded = true
-
-          // default: draw mode (no pan until Cmd/Ctrl)
-          map!.dragPan.disable()
-
-          // prevent double click zoom
-          map!.doubleClickZoom.disable()
-
-          // attribution can’t be removed; compact is allowed
-          map!.addControl(new mapboxgl.AttributionControl({ compact: true }))
-
-          // optional marker for initial center
-          new mapboxgl.Marker().setLngLat(center).addTo(map!)
-
-          map!.addSource('selection', {
-            type: 'geojson',
-            data: { type: 'FeatureCollection', features: [] },
-          })
-
-          map!.addSource('pois', {
-            type: 'geojson',
-            data: { type: 'FeatureCollection', features: [] },
-          })
-
-          // If initialBBox is provided, draw it on the map
-          if (initialBBox) {
-            const poly = {
-              type: 'Feature' as const,
-              properties: {},
-              geometry: {
-                type: 'Polygon' as const,
-                coordinates: [
-                  [
-                    [initialBBox.west, initialBBox.south],
-                    [initialBBox.east, initialBBox.south],
-                    [initialBBox.east, initialBBox.north],
-                    [initialBBox.west, initialBBox.north],
-                    [initialBBox.west, initialBBox.south],
-                  ],
-                ],
-              },
-            }
-
-            const src = map!.getSource('selection') as
-              | mapboxgl.GeoJSONSource
-              | undefined
-            src?.setData({ type: 'FeatureCollection', features: [poly] })
-
-            // Store the bbox
-            currentBBoxRef.current = initialBBox
-
-            // Notify parent
-            onBBoxSelectedRef.current?.(initialBBox)
-          }
-
-          // selection layers (visible)
-          map!.addLayer({
-            id: 'selection-fill',
-            type: 'fill',
-            source: 'selection',
-            paint: {
-              'fill-color': '#22c55e',
-              'fill-opacity': 0.25,
-            },
-          })
-
-          map!.addLayer({
-            id: 'selection-line',
-            type: 'line',
-            source: 'selection',
-            paint: {
-              'line-color': '#16a34a',
-              'line-width': 3,
-            },
-            layout: {
-              'line-join': 'round',
-              'line-cap': 'round',
-            },
-          })
-
-          // load pin image + add layers
-          map!.loadImage('/' + pinSvgPath.replace(/^\//, ''), (err, image) => {
-            if (err || !image) {
-              console.error('❌ Failed to load pin icon:', err)
-              return
-            }
-
-            if (!map!.hasImage('coffee-pin')) {
-              map!.addImage('coffee-pin', image, { pixelRatio: 2 })
-            }
-
-            map!.addLayer({
-              id: 'pois-points',
-              type: 'symbol',
-              source: 'pois',
-              layout: {
-                'icon-image': 'coffee-pin',
-                'icon-anchor': 'bottom',
-                'icon-allow-overlap': true,
-                'icon-size': 1.0,
-              },
-            })
-
-            map!.addLayer({
-              id: 'pois-points-selected',
-              type: 'symbol',
-              source: 'pois',
-              filter: ['==', ['id'], -1],
-              layout: {
-                'icon-image': 'coffee-pin',
-                'icon-anchor': 'bottom',
-                'icon-allow-overlap': true,
-                'icon-size': 1.4,
-              },
-            })
-
-            map!.addLayer({
-              id: 'pois-labels',
-              type: 'symbol',
-              source: 'pois',
-              layout: {
-                'text-field': ['get', 'name'],
-                'text-size': 12,
-                'text-offset': [0, 1.4],
-                'text-anchor': 'top',
-              },
-            })
-
-            // click highlight
-            const selectFeature = (feature: mapboxgl.MapboxGeoJSONFeature) => {
-              if (feature.id == null) return
-              const id = Number(feature.id)
-              map!.setFilter('pois-points-selected', ['==', ['id'], id])
-            }
-
-            map!.on('click', 'pois-points', (e) => {
-              const f = e.features?.[0]
-              if (f) selectFeature(f)
-            })
-            map!.on('click', 'pois-points-selected', (e) => {
-              const f = e.features?.[0]
-              if (f) selectFeature(f)
-            })
-          })
-        })
-
-        // draw rectangle with mouse; Cmd/Ctrl pans
-        map.on('mousedown', (e) => {
-          if (!isLoaded) return
-          if (e.originalEvent.button !== 0) return
-
-          // don't start drawing if clicking on a POI pin
-          const features = map!.queryRenderedFeatures(e.point, {
-            layers: ['pois-points', 'pois-points-selected', 'pois-labels'],
-          })
-          if (features.length > 0) {
-            // let the click handler on cafes handle this
-            return
-          }
-
-          if (
-            e.originalEvent.metaKey ||
-            e.originalEvent.ctrlKey ||
-            panModeRef.current
-          ) {
-            map!.dragPan.enable()
-            return
-          }
-
-          drawingRef.current = true
-          startRef.current = e.lngLat
-
-          // clear only when starting a NEW draw
-          const src = map!.getSource('selection') as
-            | mapboxgl.GeoJSONSource
-            | undefined
-          src?.setData({ type: 'FeatureCollection', features: [] })
-
-          // clear POIs when starting a new draw
-          const poiSrc = map!.getSource('pois') as
-            | mapboxgl.GeoJSONSource
-            | undefined
-          poiSrc?.setData({ type: 'FeatureCollection', features: [] })
-
-          map!.dragPan.disable()
-          map!.getCanvas().style.cursor = 'crosshair'
-          e.preventDefault()
-        })
-
-        map.on('mousemove', (e) => {
-          if (!(drawingRef.current && startRef.current)) return
-
-          const bbox = bboxFromLngLats(startRef.current, e.lngLat)
-          const poly = {
-            type: 'Feature' as const,
-            properties: {},
-            geometry: {
-              type: 'Polygon' as const,
-              coordinates: [
-                [
-                  [bbox.west, bbox.south],
-                  [bbox.east, bbox.south],
-                  [bbox.east, bbox.north],
-                  [bbox.west, bbox.north],
-                  [bbox.west, bbox.south],
-                ],
-              ],
-            },
-          }
-
-          const src = map!.getSource('selection') as
-            | mapboxgl.GeoJSONSource
-            | undefined
-          src?.setData({ type: 'FeatureCollection', features: [poly] })
-        })
-
-        map.on('mouseup', (e) => {
-          if (!(drawingRef.current && startRef.current)) return
-
-          drawingRef.current = false
-          const bbox = bboxFromLngLats(startRef.current, e.lngLat)
-          startRef.current = null
-
-          map!.getCanvas().style.cursor = ''
-
-          // ✅ Store the bbox for later searches
-          currentBBoxRef.current = bbox
-
-          // Calculate center and size for logging
-          const centerLng = (bbox.west + bbox.east) / 2
-          const centerLat = (bbox.south + bbox.north) / 2
-          const widthKm = (
-            (bbox.east - bbox.west) *
-            111 *
-            Math.cos((centerLat * Math.PI) / 180)
-          ).toFixed(2)
-          const heightKm = ((bbox.north - bbox.south) * 111).toFixed(2)
-
-          console.log('📍 Area selected:', {
-            center: `${centerLat.toFixed(4)}°N, ${centerLng.toFixed(4)}°E`,
-            size: `${widthKm} × ${heightKm} km`,
-            bounds: {
-              north: bbox.north.toFixed(4),
-              south: bbox.south.toFixed(4),
-              east: bbox.east.toFixed(4),
-              west: bbox.west.toFixed(4),
-            },
-          })
-
-          // ✅ Notify parent that bbox was selected (but don't search yet)
-          onBBoxSelectedRef.current?.(bbox)
-
-          // ✅ DO NOT clear selection here => rectangle stays visible
-          // ✅ DO NOT search automatically - wait for user query
-
-          if (
-            !(
-              e.originalEvent.metaKey ||
-              e.originalEvent.ctrlKey ||
-              panModeRef.current
-            )
-          ) {
-            map!.dragPan.disable()
-          }
-        })
-      })()
-
-      return () => {
-        window.removeEventListener('keydown', onKeyDown)
-        window.removeEventListener('keyup', onKeyUp)
-
-        if (mapRef.current) {
-          mapRef.current.remove()
-          mapRef.current = null
-        }
-      }
-    }, [
-      // ✅ stable dependencies (numbers, not the array reference)
-      fallbackZoom,
-      pinSvgPath,
-      initialCenter?.[0],
-      initialCenter?.[1],
-      initialBBox?.west,
-      initialBBox?.east,
-      initialBBox?.south,
-      initialBBox?.north,
-    ])
-
-    return (
-      <div className={className} style={{ width: '100%' }}>
-        <div
-          ref={containerRef}
-          data-lenis-prevent
-          style={{ height, width: '100%' }}
-        />
-      </div>
-    )
-  }
-)
+    }
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Meta' || e.key === 'Control') setPanMode(true)
+    }
+
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Meta' || e.key === 'Control') setPanMode(false)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('keyup', onKeyUp)
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('keyup', onKeyUp)
+    }
+  }, [map])
+
+  return { panModeRef }
+}
