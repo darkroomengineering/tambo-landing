@@ -37,6 +37,8 @@ export function Animation() {
     const addToCalendarProgress = mapRange(0.1, 1, steps[0], 0, 1, true)
     const thinkingProgress = mapRange(0, 0.5, steps[1], 0, 1, true)
     const circleFocusProgress = mapRange(0.5, 1, steps[1], 0, 1, true)
+    const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
+    const chatMessagesProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
 
     if (safeZoneProgress === 1) {
       chatMessages.style.setProperty(
@@ -60,6 +62,20 @@ export function Animation() {
       )
       chat.style.scale = `${1 - circleFocusProgress * 0.2}`
       chat.style.opacity = `${mapRange(0, 1, circleFocusProgress, 1, 0.3)}`
+    }
+
+    if (circleFocusProgress === 1) {
+      logoCircle.highlightAnimation(highlightProgress)
+    }
+
+    if (highlightProgress === 1) {
+      logoCircle.chatMessagesAnimation(chatMessagesProgress)
+      container.style.setProperty(
+        '--highlight-progress',
+        `${1 - chatMessagesProgress}`
+      )
+      chat.style.scale = `${mapRange(0, 1, chatMessagesProgress, 0.8, 1)}`
+      chat.style.opacity = `${mapRange(0, 1, chatMessagesProgress, 0.3, 1)}`
     }
   })
 
@@ -148,12 +164,33 @@ export function Animation() {
         </div>
       </div>
       <LogoCircle ref={logoCircleRef} />
+
+      <div className="absolute top-0 -translate-y-full dr-pb-8 flex justify-start dr-gap-12 uppercase">
+        <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey dr-p-2 dr-pr-12">
+          <div className="dr-size-24 bg-off-white rounded-full" />
+          <p className="typo-button">Prompts</p>
+        </div>
+        <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey dr-p-2 dr-pr-12">
+          <div className="dr-size-24 bg-off-white rounded-full" />
+          <p className="typo-button">Elicitation</p>
+        </div>
+        <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey dr-p-2 dr-pr-12">
+          <div className="dr-size-24 bg-off-white rounded-full" />
+          <p className="typo-button">Resources</p>
+        </div>
+        <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey dr-p-2 dr-pr-12">
+          <div className="dr-size-24 bg-off-white rounded-full" />
+          <p className="typo-button">Sampling</p>
+        </div>
+      </div>
     </div>
   )
 }
 
 type LogoCircleRef = {
   scrollAnimation: (progress: number) => void
+  highlightAnimation: (progress: number) => void
+  chatMessagesAnimation: (progress: number) => void
 }
 
 type LogoCircleProps = {
@@ -165,6 +202,8 @@ function LogoCircle({ ref }: LogoCircleProps) {
   const smallCircleRef = useRef<HTMLDivElement>(null)
   const midCircleRef = useRef<HTMLDivElement>(null)
   const largeCircleRef = useRef<HTMLDivElement>(null)
+  const gcalLogoRef = useRef<HTMLDivElement>(null)
+  const largeCircleOtherLogosRef = useRef<HTMLDivElement>(null)
 
   const scrollAnimation = useCallback((progress: number) => {
     const container = containerRef.current
@@ -181,8 +220,41 @@ function LogoCircle({ ref }: LogoCircleProps) {
     largeCircle.style.transform = `rotate(${progress * -90}deg)`
   }, [])
 
+  const highlightAnimation = useCallback((progress: number) => {
+    const smallCircle = smallCircleRef.current
+    const midCircle = midCircleRef.current
+    const largeCircleOtherLogos = largeCircleOtherLogosRef.current
+    const gcalLogo = gcalLogoRef.current
+
+    if (!(smallCircle && midCircle && largeCircleOtherLogos && gcalLogo)) return
+
+    smallCircle.style.opacity = `${mapRange(0, 1, progress, 1, 0.3)}`
+    largeCircleOtherLogos.style.opacity = `${mapRange(0, 1, progress, 1, 0.3)}`
+    midCircle.style.opacity = `${mapRange(0, 1, progress, 1, 0.3)}`
+    gcalLogo.style.translate = `${mapRange(0, 1, progress, 0, 40)}%`
+  }, [])
+
+  const chatMessagesAnimation = useCallback((progress: number) => {
+    const container = containerRef.current
+    const smallCircle = smallCircleRef.current
+    const midCircle = midCircleRef.current
+    const largeCircle = largeCircleRef.current
+    const gcalLogo = gcalLogoRef.current
+
+    if (!(container && smallCircle && midCircle && largeCircle && gcalLogo))
+      return
+
+    container.style.scale = `${1.5 - progress * 0.5}`
+    smallCircle.style.transform = `rotate(${-90 - progress * 90}deg)`
+    midCircle.style.transform = `rotate(${90 + progress * 90}deg)`
+    largeCircle.style.transform = `rotate(${-90 - progress * 90}deg)`
+    gcalLogo.style.translate = `${mapRange(0, 1, progress, 40, 150)}%`
+  }, [])
+
   useImperativeHandle(ref, () => ({
     scrollAnimation,
+    highlightAnimation,
+    chatMessagesAnimation,
   }))
 
   return (
@@ -262,48 +334,55 @@ function LogoCircle({ ref }: LogoCircleProps) {
       </div>
       <div
         ref={largeCircleRef}
-        className="absolute dr-size-400 rounded-full border border-dark-grey flex items-center justify-center"
+        className="absolute dr-size-400 flex items-center justify-center"
       >
         <LargeLogoFrame
-          rotate={45 * 0}
-          src="/assets/logos/linear.svg"
-          alt="Linear logo"
-        />
-        <LargeLogoFrame
+          ref={gcalLogoRef}
           rotate={45 * 1}
           src="/assets/logos/g-cal.svg"
           alt="Google Calendar logo"
         />
-        <LargeLogoFrame
-          rotate={45 * 2}
-          src="/assets/logos/github.svg"
-          alt="GitHub logo"
-        />
-        <LargeLogoFrame
-          rotate={45 * 3}
-          src="/assets/logos/outlook.svg"
-          alt="Outlook logo"
-        />
-        <LargeLogoFrame
-          rotate={45 * 4}
-          src="/assets/logos/g-drive.svg"
-          alt="Google Drive logo"
-        />
-        <LargeLogoFrame
-          rotate={45 * 5}
-          src="/assets/logos/zapier.svg"
-          alt="Zapier logo"
-        />
-        <LargeLogoFrame
-          rotate={45 * 6}
-          src="/assets/logos/airbnb.svg"
-          alt="Airbnb logo"
-        />
-        <LargeLogoFrame
-          rotate={45 * 7}
-          src="/assets/logos/notion.svg"
-          alt="Notion logo"
-        />
+        <div
+          ref={largeCircleOtherLogosRef}
+          className="size-full translate-[40%] -z-1"
+        >
+          <div className="absolute inset-0 rounded-full border border-dark-grey -translate-[40%]" />
+          <LargeLogoFrame
+            rotate={45 * 0}
+            src="/assets/logos/linear.svg"
+            alt="Linear logo"
+          />
+          <LargeLogoFrame
+            rotate={45 * 2}
+            src="/assets/logos/github.svg"
+            alt="GitHub logo"
+          />
+          <LargeLogoFrame
+            rotate={45 * 3}
+            src="/assets/logos/outlook.svg"
+            alt="Outlook logo"
+          />
+          <LargeLogoFrame
+            rotate={45 * 4}
+            src="/assets/logos/g-drive.svg"
+            alt="Google Drive logo"
+          />
+          <LargeLogoFrame
+            rotate={45 * 5}
+            src="/assets/logos/zapier.svg"
+            alt="Zapier logo"
+          />
+          <LargeLogoFrame
+            rotate={45 * 6}
+            src="/assets/logos/airbnb.svg"
+            alt="Airbnb logo"
+          />
+          <LargeLogoFrame
+            rotate={45 * 7}
+            src="/assets/logos/notion.svg"
+            alt="Notion logo"
+          />
+        </div>
       </div>
     </div>
   )
@@ -347,9 +426,13 @@ function LargeLogoFrame({
   alt,
   src,
   rotate,
-}: Pick<LogoFrameProps, 'rotate' | 'src' | 'alt'>) {
+  ref,
+}: Pick<LogoFrameProps, 'rotate' | 'src' | 'alt'> & {
+  ref?: React.RefObject<HTMLDivElement | null>
+}) {
   return (
     <LogoFrame
+      ref={ref}
       className="absolute dr-size-69"
       rotate={rotate}
       translateY={188}
@@ -375,6 +458,7 @@ function LogoFrame({
   src,
   alt,
   logoClassName,
+  children,
   ...props
 }: LogoFrameProps) {
   return (
@@ -397,6 +481,7 @@ function LogoFrame({
         height={45}
         className={logoClassName}
       />
+      {children}
     </div>
   )
 }
