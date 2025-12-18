@@ -172,6 +172,7 @@ export function Section8() {
     onProgress: ({ progress, height }) => {
       if (tamboRect?.element) {
         tamboRect.element.style.opacity = `${progress}`
+        tamboRect.element.style.pointerEvents = progress === 1 ? 'auto' : 'none'
         const y = -height * (1 - progress)
         if (y !== 0) {
           tamboRect.element.style.transform = `translateY(${y}px) translateZ(0)`

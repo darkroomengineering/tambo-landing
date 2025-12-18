@@ -290,7 +290,6 @@ export function AreaSelectMap({
           containerRef.current = el
           freezeContainerRef.current = el
         }}
-        data-lenis-prevent
         style={{ height, width: '100%' }}
       />
     </div>

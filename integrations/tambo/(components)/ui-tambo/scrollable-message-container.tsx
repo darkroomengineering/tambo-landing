@@ -1,6 +1,7 @@
 'use client'
 
 import { useTambo } from '@tambo-ai/react'
+import { useRect } from 'hamo'
 import * as React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
@@ -94,12 +95,29 @@ export const ScrollableMessageContainer = React.forwardRef<
     }
   }, [messagesContent, generationStage, shouldAutoscroll])
 
+  const [setRect, rect] = useRect()
+  const [setInnerRect, innerRect] = useRect()
+  const [isScrollable, setIsScrollable] = useState(false)
+
+  useEffect(() => {
+    if (rect?.height !== undefined && innerRect?.height !== undefined) {
+      const scrollHeight = innerRect.height
+      const height = rect.height
+      setIsScrollable(scrollHeight > height)
+    }
+  }, [rect, innerRect])
+
   return (
     <div
-      data-lenis-prevent
-      ref={scrollContainerRef}
+      {...(isScrollable ? { 'data-lenis-prevent': true } : {})}
+      ref={(el) => {
+        scrollContainerRef.current = el
+        setRect(el)
+        setInnerRect((el?.children[0] as HTMLElement) || null)
+      }}
       onScroll={handleScroll}
-      className={cn('flex-1 overflow-y-auto',
+      className={cn(
+        'flex-1 overflow-y-auto',
         '[&::-webkit-scrollbar]:w-[6px]',
         '[&::-webkit-scrollbar-thumb]:bg-gray-300',
         '[&::-webkit-scrollbar:horizontal]:h-[4px]',

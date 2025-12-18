@@ -1,5 +1,4 @@
 import cn from 'clsx'
-import { useLazyState } from 'hamo'
 import { use, useEffect, useEffectEvent, useRef } from 'react'
 import {
   type TimelineCallback,
@@ -17,138 +16,61 @@ export function Animation() {
   const chatMessagesRef = useRef<HTMLDivElement>(null)
   const logoCircleRef = useRef<LogoCircleRef | null>(null)
 
-  const [setSafeZoneProgress] = useLazyState<number>(
-    0,
-    (progress: number, previousProgress?: number) => {
-      console.log('setSafeZoneProgress', progress)
-    }
-  )
-  const [setAddToCalendarProgress] = useLazyState<number>(
-    0,
-    (addToCalendarProgress: number, previousProgress?: number) => {
-      if (chatMessagesRef.current) {
-        chatMessagesRef.current.style.setProperty(
-          '--chat-translate-y',
-          `${mapRange(0, 1, addToCalendarProgress, 0, 84, true)}`
-        )
-      }
-    }
-  )
-  const [setThinkingProgress] = useLazyState<number>(
-    0,
-    (thinkingProgress: number, previousProgress?: number) => {
-      if (chatMessagesRef.current) {
-        chatMessagesRef.current.style.setProperty(
-          '--chat-translate-y',
-          `${mapRange(0, 1, thinkingProgress, 84, 164, true)}`
-        )
-      }
-    }
-  )
-  const [setCircleFocusProgress] = useLazyState<number>(
-    0,
-    (circleFocusProgress: number, previousProgress?: number) => {
-      console.log('setCircleFocusProgress', circleFocusProgress)
-      logoCircleRef.current?.scrollAnimation(circleFocusProgress)
-      if (containerRef.current) {
-        containerRef.current.style.setProperty(
-          '--highlight-progress',
-          `${circleFocusProgress}`
-        )
-      }
-      if (chatRef.current) {
-        chatRef.current.style.scale = `${1 - circleFocusProgress * 0.2}`
-        chatRef.current.style.opacity = `${mapRange(0, 1, circleFocusProgress, 1, 0.3)}`
-      }
-    }
-  )
-  const [setHighlightProgress] = useLazyState<number>(
-    0,
-    (highlightProgress: number, previousProgress?: number) => {
-      console.log('setHighlightProgress', highlightProgress)
-      logoCircleRef.current?.highlightAnimation(highlightProgress)
-    }
-  )
-  const [setChatMessagesProgress] = useLazyState<number>(
-    0,
-    (chatMessagesProgress: number, previousProgress?: number) => {
-      console.log('setChatMessagesProgress', chatMessagesProgress)
-
-      logoCircleRef.current?.chatMessagesAnimation(chatMessagesProgress)
-      if (containerRef.current) {
-        containerRef.current.style.setProperty(
-          '--highlight-progress',
-          `${1 - chatMessagesProgress}`
-        )
-      }
-      if (chatRef.current) {
-        chatRef.current.style.scale = `${mapRange(0, 1, chatMessagesProgress, 0.8, 1)}`
-        chatRef.current.style.opacity = `${mapRange(0, 1, chatMessagesProgress, 0.3, 1)}`
-      }
-    }
-  )
-
   const scrollAnimation = useEffectEvent<TimelineCallback>(({ steps }) => {
     // console.log('scrollAnimation', steps)
     // Elements
-    // const container = containerRef.current
-    // const chat = chatRef.current
-    // const chatMessages = chatMessagesRef.current
-    // const logoCircle = logoCircleRef.current
+    const container = containerRef.current
+    const chat = chatRef.current
+    const chatMessages = chatMessagesRef.current
+    const logoCircle = logoCircleRef.current
 
-    // if (!(container && chat && chatMessages && logoCircle)) return
+    if (!(container && chat && chatMessages && logoCircle)) return
 
     const safeZoneProgress = mapRange(0, 0.05, steps[0], 0, 1, true)
-    setSafeZoneProgress(safeZoneProgress)
     const addToCalendarProgress = mapRange(0.1, 1, steps[0], 0, 1, true)
-    setAddToCalendarProgress(addToCalendarProgress)
     const thinkingProgress = mapRange(0, 0.5, steps[1], 0, 1, true)
-    setThinkingProgress(thinkingProgress)
     const circleFocusProgress = mapRange(0.5, 1, steps[1], 0, 1, true)
-    setCircleFocusProgress(circleFocusProgress)
     const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
-    setHighlightProgress(highlightProgress)
     const chatMessagesProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
-    setChatMessagesProgress(chatMessagesProgress)
 
-    // if (safeZoneProgress === 1) {
-    //   chatMessages.style.setProperty(
-    //     '--chat-translate-y',
-    //     `${mapRange(0, 1, addToCalendarProgress, 0, 84, true)}`
-    //   )
-    // }
+    if (safeZoneProgress === 1) {
+      chatMessages.style.setProperty(
+        '--chat-translate-y',
+        `${mapRange(0, 1, addToCalendarProgress, 0, 84, true)}`
+      )
+    }
 
-    // if (addToCalendarProgress === 1) {
-    //   chatMessages.style.setProperty(
-    //     '--chat-translate-y',
-    //     `${mapRange(0, 1, thinkingProgress, 84, 164, true)}`
-    //   )
-    // }
+    if (addToCalendarProgress === 1) {
+      chatMessages.style.setProperty(
+        '--chat-translate-y',
+        `${mapRange(0, 1, thinkingProgress, 84, 164, true)}`
+      )
+    }
 
-    // logoCircle.scrollAnimation(circleFocusProgress)
+    logoCircle.scrollAnimation(circleFocusProgress)
 
-    // if (thinkingProgress === 1) {
-    //   container.style.setProperty(
-    //     '--highlight-progress',
-    //     `${circleFocusProgress}`
-    //   )
-    //   chat.style.scale = `${1 - circleFocusProgress * 0.2}`
-    //   chat.style.opacity = `${mapRange(0, 1, circleFocusProgress, 1, 0.3)}`
-    // }
+    if (thinkingProgress === 1) {
+      container.style.setProperty(
+        '--highlight-progress',
+        `${circleFocusProgress}`
+      )
+      chat.style.scale = `${1 - circleFocusProgress * 0.2}`
+      chat.style.opacity = `${mapRange(0, 1, circleFocusProgress, 1, 0.3)}`
+    }
 
     // if (circleFocusProgress === 1) {
-    // logoCircle.highlightAnimation(highlightProgress)
+    logoCircle.highlightAnimation(highlightProgress)
     // }
 
-    // if (highlightProgress === 1) {
-    //   logoCircle.chatMessagesAnimation(chatMessagesProgress)
-    //   container.style.setProperty(
-    //     '--highlight-progress',
-    //     `${1 - chatMessagesProgress}`
-    //   )
-    //   chat.style.scale = `${mapRange(0, 1, chatMessagesProgress, 0.8, 1)}`
-    //   chat.style.opacity = `${mapRange(0, 1, chatMessagesProgress, 0.3, 1)}`
-    // }
+    if (highlightProgress === 1) {
+      logoCircle.chatMessagesAnimation(chatMessagesProgress)
+      container.style.setProperty(
+        '--highlight-progress',
+        `${1 - chatMessagesProgress}`
+      )
+      chat.style.scale = `${mapRange(0, 1, chatMessagesProgress, 0.8, 1)}`
+      chat.style.opacity = `${mapRange(0, 1, chatMessagesProgress, 0.3, 1)}`
+    }
   })
 
   useEffect(() => {
