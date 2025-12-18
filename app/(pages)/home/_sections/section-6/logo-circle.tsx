@@ -228,7 +228,6 @@ export function LogoCircle({ ref }: LogoCircleProps) {
   })
 
   const highlightAnimation = useEffectEvent((progress: number) => {
-    console.log('highlightAnimation', progress)
     const smallCircle = smallCircleRef.current
     const midCircle = midCircleRef.current
     const largeCircle = largeCircleRef.current
