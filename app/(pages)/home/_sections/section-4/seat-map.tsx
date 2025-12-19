@@ -26,9 +26,10 @@ export type SeatMapRef = {
 
 type SeatMapProps = {
   ref?: React.RefObject<SeatMapRef | null>
+  selected?: boolean
 }
 
-export function SeatMap({ ref }: SeatMapProps) {
+export function SeatMap({ ref, selected }: SeatMapProps) {
   const seatsRef = useRef<(HTMLDivElement | null)[]>([])
   const labelRefs = useRef<(HTMLParagraphElement | null)[]>([])
   const seatRef = useRef<HTMLDivElement>(null)
@@ -97,10 +98,13 @@ export function SeatMap({ ref }: SeatMapProps) {
   }))
 
   return (
-    <div className="relative size-full dr-rounded-12 outline-4 outline-mint bg-white dr-p-16 shadow-xs">
+    <div className="relative dr-w-340 dr-h-344 dr-rounded-12 outline-4 outline-mint bg-white dr-p-20 shadow-xs">
       <p
         ref={seatMapTitleRef}
-        className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 typo-button normal-case flex items-center justify-center bg-mint dr-w-102 dr-h-28 rounded-full shadow-xs translate-full opacity-0"
+        className={cn(
+          'absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 typo-button normal-case flex items-center justify-center bg-mint dr-w-102 dr-h-28 rounded-full shadow-xs translate-full',
+          selected ? 'opacity-100' : 'opacity-0'
+        )}
       >
         {'<'}SeatMap{'>'}
       </p>
@@ -120,6 +124,7 @@ export function SeatMap({ ref }: SeatMapProps) {
               idx={idx}
               letters={letters1}
               highlighted={highlightedSeats1.includes(idx)}
+              selected={selected}
               ref={(el) => {
                 if (!highlightedSeats1.includes(idx)) {
                   seatsRef.current.push(el)
@@ -148,6 +153,7 @@ export function SeatMap({ ref }: SeatMapProps) {
               idx={idx}
               letters={letters2}
               highlighted={highlightedSeats2.includes(idx)}
+              selected={selected}
               ref={(el) => {
                 if (!highlightedSeats2.includes(idx)) {
                   seatsRef.current.push(el)
@@ -178,17 +184,28 @@ function Seat({
   letters,
   highlighted,
   labelRef,
+  selected,
   ...props
 }: ComponentProps<'div'> & {
   idx: number
   letters: string[]
   highlighted: boolean
   labelRef?: React.RefCallback<HTMLParagraphElement | null>
+  selected?: boolean
 }) {
   return (
     <div
       className={cn(
-        'w-full aspect-40/60 bg-ghost-mint border border-dark-grey dr-rounded-4 flex flex-col text-dark-grey outline-mint',
+        'w-full aspect-41/60 border border-dark-grey dr-rounded-4 flex flex-col text-dark-grey outline-mint',
+        selected === undefined
+          ? 'bg-ghost-mint'
+          : // biome-ignore lint/style/noNestedTernary: needed
+            selected && highlighted
+            ? // biome-ignore lint/style/noNestedTernary: needed
+              idx === highlightedSeatIndex
+              ? 'bg-black border-mint'
+              : 'bg-ghost-mint'
+            : 'bg-light-gray',
         className
       )}
       {...props}
@@ -197,7 +214,13 @@ function Seat({
         {highlighted && (
           <p
             ref={labelRef}
-            className="typo-p-s bg-white border border-dark-grey dr-rounded-4 dr-px-3 dr-py-1 opacity-0 text-black"
+            className={cn(
+              'typo-p-s  border  dr-rounded-4 dr-px-3 dr-py-1 text-black',
+              selected === undefined ? 'opacity-0' : 'opacity-100',
+              selected && idx === highlightedSeatIndex
+                ? 'bg-mint border-mint'
+                : 'bg-white border-dark-grey'
+            )}
           >
             {Math.floor(10 + idx / 3)}
             {letters[idx % 3]}
