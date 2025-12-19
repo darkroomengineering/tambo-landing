@@ -129,3 +129,12 @@ html.screenshot {
     transparent 100%
   );
 }
+
+.card-outline {
+  outline: 6px solid
+    color-mix(in oklab, var(--color-off-white) 80%, transparent);
+}
+
+.dashed-border {
+  border: 1px dashed color-mix(in oklab, var(--color-forest) 50%, transparent);
+}

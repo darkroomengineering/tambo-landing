@@ -101,7 +101,10 @@ export function BackgroundItem({
       ref={elementRef}
     >
       <Kinesis
-        className="absolute inset-0 rounded-[inherit]"
+        className={cn(
+          'absolute inset-0 rounded-[inherit]',
+          outerBorder && 'card-outline'
+        )}
         getIndex={() => index * kinesisRef.current}
       >
         <div
@@ -132,14 +135,6 @@ export function BackgroundItem({
             style={{ opacity: `${opacity * 0.5}` }}
           />
         )}
-        {outerBorder && (
-          <div
-            className="absolute inset-[-10] rounded-[inherit] border-solid border-white border-10"
-            style={{
-              opacity: borderOpacity,
-            }}
-          />
-        )}
         {isWindows ? (
           <DashedBorder
             ref={dashedBorderRef}
@@ -151,7 +146,7 @@ export function BackgroundItem({
         ) : (
           <div
             className={cn(
-              'absolute inset-0 rounded-[inherit] border-dashed border-[#008346] border',
+              'absolute inset-0 rounded-[inherit] border-dashed border-forest border',
               s.border
             )}
             style={{

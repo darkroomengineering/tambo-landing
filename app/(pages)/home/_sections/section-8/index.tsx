@@ -217,9 +217,9 @@ export function Section8() {
           {/* TODO: Dashed border style*/}
           <div
             ref={setTamboRectRef}
-            className="col-start-3 col-end-10 outline-off-white/80 outline-6 dr-rounded-20 aspect-898/597 dr-h-597"
+            className="col-start-3 col-end-10 card-outline outline-off-white/80 dr-rounded-20 aspect-898/597 dr-h-597"
           >
-            <div className="relative z-1 size-full dr-rounded-20 border border-forest/50 shadow-m bg-white overflow-hidden">
+            <div className="relative z-1 size-full dr-rounded-20 shadow-m dashed-border bg-white overflow-hidden">
               <InterctableMap height={650} />
               <SeatAssistant />
               <MapAssistant />
