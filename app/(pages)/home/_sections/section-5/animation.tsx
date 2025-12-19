@@ -127,8 +127,7 @@ export function Animation() {
     )
       return
 
-    const safeZoneProgress = mapRange(0, 0.05, steps[0], 0, 1, true)
-    const transitionProgress = mapRange(0.05, 0.15, steps[0], 0, 1, true)
+    const transitionProgress = mapRange(0, 0.15, steps[0], 0, 1, true)
     const introProgress = mapRange(0.15, 0.5, steps[0], 0, 1, true)
     const whatCanIDoProgress = mapRange(0, 0.5, steps[1], 0, 1, true)
     const thinkingProgress = mapRange(0.5, 1, steps[1], 0, 1, true)
@@ -138,12 +137,8 @@ export function Animation() {
     const hoverPinProgress = mapRange(0.5, 1, steps[3], 0, 1, true)
     const greatPickProgress = mapRange(0, 0.5, steps[4], 0, 1, true)
 
-    // Transition from section 4
-    const section45Trans = document.getElementById('section-4-5-trans')
-    if (safeZoneProgress === 1 && section45Trans) {
-      section45Trans.style.opacity = `${1 - transitionProgress}`
-      container.style.opacity = `${transitionProgress}`
-    }
+    // TODO: Remap this with steps
+    const exitProgress = mapRange(0.8, 1, steps[4], 0, 1, true)
 
     // Intro
     if (transitionProgress === 1) {
@@ -254,6 +249,8 @@ export function Animation() {
       )
       spinner.style.opacity = `${mapRange(0, 0.6, activitiesProgress, 1, 0)}`
       checkmark.style.opacity = `${mapRange(0.4, 1, activitiesProgress, 0, 1)}`
+      chatBackground.style.opacity = `${mapRange(0, 1, activitiesProgress, 0.3, 1)}`
+      chatBorder.style.opacity = `${mapRange(0, 1, activitiesProgress, 0.3, 1)}`
     }
 
     if (activitiesProgress === 1) {
@@ -271,6 +268,11 @@ export function Animation() {
       cursorPin.style.transform = `translate(${1000 * greatPickProgress}%, ${200 * greatPickProgress}%)`
       greatPickText.style.opacity = `${greatPickProgress}`
     }
+
+    if (greatPickProgress === 1) {
+      container.style.setProperty('--intro-progress', `${1 - exitProgress}`)
+      map.style.opacity = `${1 - exitProgress}`
+    }
   })
 
   useEffect(() => {
@@ -278,202 +280,181 @@ export function Animation() {
   }, [addCallback])
 
   return (
-    <>
-      <div
-        id="section-4-5-trans"
-        className={cn(
-          'fixed top-1/2 -translate-y-1/2 dr-w-668 aspect-668/470 z-50 opacity-0 pointer-events-none',
-          s.section45Trans
-        )}
-      >
-        <div className="absolute inset-0 bg-white -z-1 dr-rounded-20 shadow-m dashed-border dr-p-16 dr-gap-20 flex flex-col items-start justify-end">
-          <SeatMap selected />
-          <p className="typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey">
-            Window seat confirmed. Booking 12F!
-          </p>
+    <div ref={containerRef} className={cn('w-full', s.container)}>
+      <div className={cn('relative w-full shadow-m -z-3', s.map)}>
+        <div ref={mapRef} className="relative size-full">
+          <Image
+            src="/images/map.png"
+            alt="Map of Boston"
+            className="absolute inset-0 object-cover dr-rounded-20 overflow-hidden dashed-border shadow-m"
+            fill
+          />
+          <Pin
+            className="absolute dr-left-394 dr-top-76"
+            pinRef={pin1Ref}
+            dotRef={dot1Ref}
+          />
+          <Pin
+            className="absolute dr-left-480 dr-top-154"
+            pinRef={pin2Ref}
+            dotRef={dot2Ref}
+          />
+          <Pin
+            className="absolute dr-left-330 dr-top-220"
+            pinRef={pin3Ref}
+            dotRef={dot3Ref}
+            animateRef={pinAnimateRef}
+          />
+          <Cursor
+            ref={cursorPinRef}
+            className="absolute dr-left-330 dr-top-220 opacity-0 dr-size-24 translate-full"
+          />
+          <div className="absolute -inset-[6px] bg-white/80 -z-2 dr-rounded-26" />
         </div>
-        <div className="absolute -inset-[6px] bg-white/80 -z-2 dr-rounded-26" />
-      </div>
-      <div ref={containerRef} className={cn('w-full', s.container)}>
-        <div className={cn('relative w-full shadow-m -z-3', s.map)}>
-          <div ref={mapRef} className="relative size-full">
+
+        <div className="absolute dr-left-320 dr-top-88 dr-w-274 dr-h-190 z-10">
+          <div
+            ref={mapHighlightRef}
+            className="relative size-full origin-top-left z-10"
+          >
+            <div
+              ref={mapHighlightBackgroundRef}
+              className="size-full relative border-2 border-forest/50 dr-rounded-12"
+            />
             <Image
+              ref={mapHighlightImageRef}
               src="/images/map.png"
               alt="Map of Boston"
-              className="absolute inset-0 object-cover dr-rounded-20 overflow-hidden dashed-border shadow-m"
+              objectFit="none"
               fill
-            />
-            <Pin
-              className="absolute dr-left-394 dr-top-76"
-              pinRef={pin1Ref}
-              dotRef={dot1Ref}
-            />
-            <Pin
-              className="absolute dr-left-480 dr-top-154"
-              pinRef={pin2Ref}
-              dotRef={dot2Ref}
-            />
-            <Pin
-              className="absolute dr-left-330 dr-top-220"
-              pinRef={pin3Ref}
-              dotRef={dot3Ref}
-              animateRef={pinAnimateRef}
-            />
-            <Cursor
-              ref={cursorPinRef}
-              className="absolute dr-left-330 dr-top-220 opacity-0 dr-size-24 translate-full"
-            />
-            <div className="absolute -inset-[6px] bg-white/80 -z-2 dr-rounded-26" />
-          </div>
-
-          <div className="absolute dr-left-320 dr-top-88 dr-w-274 dr-h-190 z-10">
-            <div
-              ref={mapHighlightRef}
-              className="relative size-full origin-top-left z-10"
-            >
-              <div
-                ref={mapHighlightBackgroundRef}
-                className="size-full relative border-2 border-forest/50 dr-rounded-12"
-              />
-              <Image
-                ref={mapHighlightImageRef}
-                src="/images/map.png"
-                alt="Map of Boston"
-                objectFit="none"
-                fill
-                className="object-[82.6%_58.4%] scale-106 opacity-0 dr-rounded-12 border-2 border-forest/50"
-              />
-            </div>
-            <Cursor
-              ref={cursorRef}
-              className="absolute left-full top-full dr-size-24 -translate-1/3 z-20"
+              className="object-[82.6%_58.4%] scale-106 opacity-0 dr-rounded-12 border-2 border-forest/50"
             />
           </div>
+          <Cursor
+            ref={cursorRef}
+            className="absolute left-full top-full dr-size-24 -translate-1/3 z-20"
+          />
         </div>
-        <div className={cn('relative w-full', s.chat)}>
+      </div>
+      <div className={cn('relative w-full', s.chat)}>
+        <div
+          ref={chatBackgroundRef}
+          className="absolute inset-0 bg-white -z-1 dr-rounded-20 shadow-m"
+        />
+        <div
+          ref={chatBorderRef}
+          className="absolute -inset-[6px] bg-white/80 -z-2 dr-rounded-26"
+        />
+        <div className="size-full overflow-hidden dr-p-14 dr-pb-13 dashed-border dr-rounded-20">
           <div
-            ref={chatBackgroundRef}
-            className="absolute inset-0 bg-white -z-1 dr-rounded-20 shadow-m"
-          />
-          <div
-            ref={chatBorderRef}
-            className="absolute -inset-[6px] bg-white/80 -z-2 dr-rounded-26"
-          />
-          <div className="size-full overflow-hidden dr-p-16 dr-pb-13 dashed-border dr-rounded-20">
+            ref={chatMessagesRef}
+            className={cn(
+              'size-full flex flex-col justify-end ',
+              s.chatMessages
+            )}
+          >
             <div
-              ref={chatMessagesRef}
-              className={cn(
-                'size-full flex flex-col justify-end ',
-                s.chatMessages
-              )}
+              ref={seatMapRef}
+              className="self-start flex flex-col items-start justify-end dr-gap-20"
             >
-              <div
-                ref={seatMapRef}
-                className="self-start flex flex-col items-start justify-end dr-gap-20"
-              >
-                <SeatMap selected />
-                <p className="typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey">
-                  Window seat confirmed. Booking 12F!
-                </p>
-              </div>
-              <div
-                ref={whatCanIDoRef}
-                className="relative typo-p self-end dr-mt-78 opacity-0"
-              >
-                <div
-                  ref={whatCanIDoBackgroundRef}
-                  className="absolute inset-0 bg-ghost-mint dr-rounded-12 dr-p-24 border border-dark-grey"
-                >
-                  <span ref={whatCanIDoText2Ref} className="opacity-0">
-                    What can I do here?
-                  </span>
-                </div>
-                <p
-                  ref={whatCanIDoTextRef}
-                  className="bg-ghost-mint dr-rounded-12 dr-p-24 border border-dark-grey"
-                >
-                  What can I do here?
-                </p>
-              </div>
-              <div className="self-start dr-mt-14">
-                <div
-                  ref={checkingContainerRef}
-                  style={{
-                    '--width': 306,
-                  }}
-                  className="w-[calc(var(--width)*desktop-vw(1))] dr-h-32 border border-grey dr-rounded-12 dr-mb-9 font-geist dr-text-10 flex items-center justify-start dr-pl-8 overflow-hidden"
-                >
-                  <div className="relative flex justify-center items-center">
-                    <div
-                      ref={spinnerRef}
-                      className={cn(
-                        'dr-size-14 rounded-full dr-mr-6',
-                        s.spinner
-                      )}
-                    />
-                    <svg
-                      ref={checkmarkRef}
-                      className="absolute w-full -dr-left-3 opacity-0"
-                      width="13"
-                      height="10"
-                      viewBox="0 0 13 10"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <title>Checkmark Icon</title>
-                      <path
-                        d="M0.75 5.25L4.25 8.75L12.25 0.75"
-                        stroke="#7FFFC3"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div className="relative">
-                    <span ref={checkingTextRef} className="whitespace-nowrap">
-                      checking activities matching the area and your trip
-                      dates...
-                    </span>
-                    <span
-                      ref={foundTextRef}
-                      className="absolute left-0 whitespace-nowrap opacity-0"
-                    >
-                      found some activities for you
-                    </span>
-                  </div>
-                </div>
-                <div
-                  ref={thinkingRef}
-                  className={cn(
-                    'dr-rounded-12 bg-ghost-mint border border-dark-grey flex dr-h-67 justify-center items-center',
-                    s.thinking
-                  )}
-                >
-                  <div ref={thinkingDotsRef} className="flex dr-gap-4">
-                    <div className="dr-size-4 rounded-full bg-black" />
-                    <div className="dr-size-4 rounded-full bg-black" />
-                    <div className="dr-size-4 rounded-full bg-black" />
-                  </div>
-                  <span
-                    ref={thinkingTextRef}
-                    className="absolute typo-p-sentient opacity-0"
-                  >
-                    Here are the best-rated activities in that area !
-                  </span>
-                </div>
-              </div>
-              <p
-                ref={greatPickTextRef}
-                className="absolute top-full dr-rounded-12 bg-light-gray border border-dark-grey flex dr-h-67 justify-center items-center typo-p-sentient self-start dr-mt-8 dr-px-24 opacity-0"
-              >
-                Great pick for a history buff.
+              <SeatMap selected />
+              <p className="typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey">
+                Window seat confirmed. Booking 12F!
               </p>
             </div>
+            <div
+              ref={whatCanIDoRef}
+              className="relative typo-p self-end dr-mt-78 opacity-0"
+            >
+              <div
+                ref={whatCanIDoBackgroundRef}
+                className="absolute inset-0 bg-ghost-mint dr-rounded-12 dr-p-24 border border-dark-grey"
+              >
+                <span ref={whatCanIDoText2Ref} className="opacity-0">
+                  What can I do here?
+                </span>
+              </div>
+              <p
+                ref={whatCanIDoTextRef}
+                className="bg-ghost-mint dr-rounded-12 dr-p-24 border border-dark-grey"
+              >
+                What can I do here?
+              </p>
+            </div>
+            <div className="self-start dr-mt-14">
+              <div
+                ref={checkingContainerRef}
+                style={{
+                  '--width': 306,
+                }}
+                className="w-[calc(var(--width)*desktop-vw(1))] dr-h-32 border border-grey dr-rounded-12 dr-mb-9 font-geist dr-text-10 flex items-center justify-start dr-pl-8 overflow-hidden"
+              >
+                <div className="relative flex justify-center items-center">
+                  <div
+                    ref={spinnerRef}
+                    className={cn('dr-size-14 rounded-full dr-mr-6', s.spinner)}
+                  />
+                  <svg
+                    ref={checkmarkRef}
+                    className="absolute w-full -dr-left-3 opacity-0"
+                    width="13"
+                    height="10"
+                    viewBox="0 0 13 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Checkmark Icon</title>
+                    <path
+                      d="M0.75 5.25L4.25 8.75L12.25 0.75"
+                      stroke="#7FFFC3"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div className="relative">
+                  <span ref={checkingTextRef} className="whitespace-nowrap">
+                    checking activities matching the area and your trip dates...
+                  </span>
+                  <span
+                    ref={foundTextRef}
+                    className="absolute left-0 whitespace-nowrap opacity-0"
+                  >
+                    found some activities for you
+                  </span>
+                </div>
+              </div>
+              <div
+                ref={thinkingRef}
+                className={cn(
+                  'dr-rounded-12 bg-ghost-mint border border-dark-grey flex dr-h-67 justify-center items-center',
+                  s.thinking
+                )}
+              >
+                <div ref={thinkingDotsRef} className="flex dr-gap-4">
+                  <div className="dr-size-4 rounded-full bg-black" />
+                  <div className="dr-size-4 rounded-full bg-black" />
+                  <div className="dr-size-4 rounded-full bg-black" />
+                </div>
+                <span
+                  ref={thinkingTextRef}
+                  className="absolute typo-p-sentient opacity-0"
+                >
+                  Here are the best-rated activities in that area !
+                </span>
+              </div>
+            </div>
+            <p
+              ref={greatPickTextRef}
+              className="absolute top-full dr-rounded-12 bg-light-gray border border-dark-grey flex dr-h-67 justify-center items-center typo-p-sentient self-start dr-mt-8 dr-px-24 opacity-0"
+            >
+              Great pick for a history buff.
+            </p>
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

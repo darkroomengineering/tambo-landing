@@ -100,7 +100,28 @@ export function Animation() {
               What can I do here?
             </p>
             <div className="self-start dr-mb-6">
-              <div className="dr-w-306 dr-h-32 border border-grey dr-rounded-12 dr-mb-9" />
+              <div className="dr-w-173 dr-h-32 border border-grey dr-rounded-12 dr-mb-9 font-geist dr-text-10 flex items-center justify-start">
+                <div className="relative flex justify-center items-center dr-size-14 dr-mr-6 dr-pl-8">
+                  <svg
+                    className="absolute w-full -dr-left-3"
+                    width="13"
+                    height="10"
+                    viewBox="0 0 13 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Checkmark Icon</title>
+                    <path
+                      d="M0.75 5.25L4.25 8.75L12.25 0.75"
+                      stroke="#7FFFC3"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+                <span>found some activities for you</span>
+              </div>
               <p className="typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey">
                 Here are the best-rated activities in that area!
               </p>

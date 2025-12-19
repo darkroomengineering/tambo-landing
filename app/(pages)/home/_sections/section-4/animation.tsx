@@ -85,7 +85,6 @@ export function Animation({
     const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
     const swapProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
     const selectProgress = mapRange(0.3, 1, steps[3], 0, 1, true)
-    const transitionProgress = mapRange(0.5, 1, steps[4], 0, 1, true)
 
     if (introProgress === 1) {
       seatsQuestion.style.transform = `translateY(${mapRange(0, 1, seatsQuestionProgress, 150, 0)}%)`
@@ -155,15 +154,6 @@ export function Animation({
       availableSeats.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
       cursor.style.transform = `translate(${mapRange(0.6, 1, selectProgress, 0, 150, true)}px, ${mapRange(0.6, 1, selectProgress, 0, 150, true)}px)`
       cursor.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
-    }
-
-    if (selectProgress === 1) {
-      // Transition to section 5
-      const section45Trans = document.getElementById('section-4-5-trans')
-      if (section45Trans) {
-        section45Trans.style.opacity = `${transitionProgress}`
-        container.style.opacity = `${1 - transitionProgress}`
-      }
     }
   })
 
