@@ -34,7 +34,7 @@ export function Marquee({
 
   // return
   const elementsRef = useRef<HTMLDivElement[]>([])
-  const transformRef = useRef(Math.random() * 1000)
+  const transformRef = useRef(0)
   const isHovered = useRef(false)
 
   const [setIntersectionRef, intersection] = useIntersectionObserver()
