@@ -7,8 +7,6 @@ import { DEMOS } from '~/integrations/tambo/constants'
 import { MessageThreadCollapsible } from '../ui-tambo/message-thread-collapsible'
 import { useMap } from './map-context'
 import { mapExampleContext } from './schema'
-import { useAutoSearch } from './use-auto-search'
-import { useMapSearch } from './use-map-search'
 
 const introMessages = {
   map: 'While your waiting for your flight, you can search for entrainment options in your destination, do you want me to help you?',
@@ -27,12 +25,6 @@ export function MapAssistant() {
     south: number
     north: number
   } | null>(null)
-
-  // Auto-search for entertainment when area is selected
-  useAutoSearch(selectedDemo === demo, 'entertainment')
-
-  // Enable map search - pass contextKey to listen to correct thread (for user queries)
-  useMapSearch(selectedDemo)
 
   // Poll for bbox changes to update context helper
   useEffect(() => {
