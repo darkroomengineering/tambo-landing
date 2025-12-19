@@ -1,3 +1,11 @@
 .video {
   transform-origin: center 77%;
 }
+
+.arrowCTA {
+  @media (--mobile) {
+    svg {
+      transform: rotate(135deg);
+    }
+  }
+}

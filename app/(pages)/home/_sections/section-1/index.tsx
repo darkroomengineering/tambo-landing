@@ -268,14 +268,14 @@ export function Section1() {
   return (
     <section
       ref={setRectRef}
-      className="flex flex-col items-center justify-center h-screen relative"
+      className="flex flex-col items-center justify-center h-screen relative  dt:px-0"
     >
-      <div className="dr-w-480 aspect-square border-1 border-[red] rounded-full absolute left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%]" />
-      <div className="dr-w-col-8 flex flex-col dr-gap-8 text-center items-center relative top-[-2%]">
+      <div className="dt:dr-w-480 dt:aspect-square dt:border dt:border-[red] dt:rounded-full dt:absolute dt:left-[50%] dt:translate-x-[-50%] dt:top-[50%] dt:translate-y-[-50%]" />
+      <div className="dt:dr-w-col-8 flex flex-col dt:dr-gap-8 text-center items-center dt:relative dt:top-[-2%]">
         <div className="relative">
           <div
             className={cn(
-              '-dr-mb-60 dr-w-300 aspect-square scale-[0.25]',
+              'dt:-dr-mb-60 dt:dr-w-300 dr-w-181 aspect-square dt:scale-[0.25]',
               s.video
             )}
             ref={videoRef}
@@ -303,7 +303,7 @@ export function Section1() {
             </Video>
           </div>
           <div
-            className="absolute left-[50%] translate-x-[-50%] top-[100%]"
+            className="absolute left-[50%] translate-x-[-50%] top-full"
             ref={subVideoRef}
           >
             <div className="dr-h-26 dr-mb-8">
@@ -313,10 +313,10 @@ export function Section1() {
           </div>
         </div>
         <div
-          className="dr-w-col-8 flex flex-col dr-gap-8 text-center items-center opacity-0"
+          className="dt:dr-w-col-8 flex flex-col dr-gap-8 text-center items-center opacity-0 "
           ref={titleRef}
         >
-          <h1 className="typo-h1">
+          <h1 className="dt:typo-h1 typo-h3">
             You shouldn&apos;t need a PhD
             <br />
             to add AI to your app.
@@ -324,7 +324,7 @@ export function Section1() {
           <p className="typo-p-l text-black/70">
             Turn any React app into an AI-powered experience in minutes
           </p>
-          <div className="flex dr-gap-16 dr-mt-40">
+          <div className="flex dt:flex-row flex-col dt:dr-gap-16 dr-gap-12 dt:dr-mt-40 dr-mt-24 place-items-center">
             <CTA snippet className="bg-black! text-teal border-teal">
               START BUILDING
               <span className="typo-code-snippet">
@@ -340,13 +340,13 @@ export function Section1() {
                 <span className="text-pink">{'</TamboProvider>'}</span>
               </span>
             </CTA>
-            <CTA>Try Live Demo</CTA>
+            <CTA className={s.arrowCTA}>Try Live Demo</CTA>
           </div>
         </div>
       </div>
       <div
         ref={arrowDownRef}
-        className="dr-w-136 aspect-square bg-white bottom-0 left-[50%] translate-x-[-50%] translate-y-[50%] rounded-full fixed opacity-0"
+        className="dt:dr-w-136 dt:aspect-square dt:bg-white dt:bottom-0 dt:left-[50%] dt:translate-x-[-50%] dt:translate-y-[50%] dt:rounded-full dt:fixed dt:opacity-0"
       >
         <DashedBorder className="absolute inset-0" />
         <ArrowDownSVG className="dr-w-32 absolute left-[50%] translate-x-[-50%] dr-top-24" />
