@@ -34,8 +34,7 @@ export function Animation({
   const yourAppRef = useRef<HTMLDivElement>(null)
   const emptyCardRef = useRef<HTMLDivElement>(null)
   const backgroundCardRef = useRef<HTMLDivElement>(null)
-  const seatMapRef = useRef<HTMLDivElement>(null)
-  const seatMapTitleRef = useRef<HTMLParagraphElement>(null)
+  const seatMapContainerRef = useRef<HTMLDivElement>(null)
   const seatMapComponentRef = useRef<SeatMapRef>(null)
   const selectionRef = useRef<SVGSVGElement>(null)
   const availableSeatsRef = useRef<HTMLParagraphElement>(null)
@@ -52,8 +51,7 @@ export function Animation({
     const yourApp = yourAppRef.current
     const emptyCard = emptyCardRef.current
     const backgroundCard = backgroundCardRef.current
-    const seatMap = seatMapRef.current
-    const seatMapTitle = seatMapTitleRef.current
+    const seatMapContainer = seatMapContainerRef.current
     const selection = selectionRef.current
     const availableSeats = availableSeatsRef.current
     const bookingConfirmed = bookingConfirmedRef.current
@@ -70,8 +68,7 @@ export function Animation({
         yourApp &&
         emptyCard &&
         backgroundCard &&
-        seatMap &&
-        seatMapTitle &&
+        seatMapContainer &&
         selection &&
         availableSeats &&
         bookingConfirmed &&
@@ -121,9 +118,8 @@ export function Animation({
         '--highlight-progress',
         `${highlightProgress}`
       )
-      seatMap.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
-      seatMapTitle.style.transform = `translateY(${mapRange(0, 1, highlightProgress, 50, 0)}%)`
-      seatMapTitle.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
+      seatMapContainer.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
+      seatMapComponent.highlightTitleAnimation(highlightProgress)
     }
 
     if (highlightProgress === 1) {
@@ -136,10 +132,10 @@ export function Animation({
       introCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
       emptyCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
       selection.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
-      seatMap.style.transform = `translateY(${mapRange(0, 1, swapProgress, 0, 26)}%)`
+      seatMapContainer.style.transform = `translateY(${mapRange(0, 1, swapProgress, 0, 26)}%)`
       // seatMap.style.outlineWidth = `${mapRange(0, 1, swapProgress, 4, 0)}px`
       // seatMap.style.setProperty('--size-progress', `${swapProgress}`)
-      seatMap.style.scale = `${mapRange(0, 1, swapProgress, 0.65, 1)}`
+      seatMapContainer.style.scale = `${mapRange(0, 1, swapProgress, 0.65, 1)}`
       seatMapComponent.highlightSeatsAnimation(swapProgress)
       yourApp.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
       availableSeats.style.opacity = `${mapRange(0.6, 1, swapProgress, 0, 1)}`
@@ -148,7 +144,7 @@ export function Animation({
     if (swapProgress === 1) {
       cursor.style.transform = `translate(${mapRange(0, 0.5, selectProgress, 150, 0, true)}px, ${mapRange(0, 0.5, selectProgress, 150, 0, true)}px)`
       cursor.style.opacity = `${mapRange(0, 0.5, selectProgress, 0, 1)}`
-      seatMap.style.transform = `translateY(${mapRange(0.6, 1, selectProgress, 26, 0, true)}%)`
+      seatMapContainer.style.transform = `translateY(${mapRange(0.6, 1, selectProgress, 26, 2, true)}%)`
       seatMapComponent.highlightSeatAnimation(
         mapRange(0, 0.5, selectProgress, 0, 1)
       )
@@ -208,7 +204,7 @@ export function Animation({
 
       <Card
         ref={selectionCardRef}
-        className="relative z-30 outline-7 outline-white/80"
+        className="relative z-30 outline-7 outline-white/80 overflow-hidden"
       >
         <div
           ref={yourAppRef}
@@ -221,9 +217,9 @@ export function Animation({
         </div>
         <Selection ref={selectionRef} />
         <div
-          ref={seatMapRef}
+          ref={seatMapContainerRef}
           className={cn(
-            'absolute dr-w-340 dr-h-344 dr-left-16 dr-top-16 dr-rounded-12 outline-4 outline-mint shadow-xs opacity-0 origin-top-left',
+            'absolute dr-w-340 dr-h-344 dr-left-14 dr-top-16 opacity-0 origin-top-left scale-65',
             s.seatMap
           )}
         >
@@ -233,15 +229,8 @@ export function Animation({
           >
             Here are the available seats on your flight!
           </p>
-          <p
-            ref={seatMapTitleRef}
-            className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 typo-button normal-case flex items-center justify-center bg-mint dr-w-102 dr-h-28 rounded-full shadow-xs translate-full"
-          >
-            {'<'}SeatMap{'>'}
-          </p>
-          <div className="size-full">
-            <SeatMap ref={seatMapComponentRef} />
-          </div>
+
+          <SeatMap ref={seatMapComponentRef} />
           <Cursor
             ref={cursorRef}
             className="absolute dr-size-24 dr-right-6 dr-top-223 opacity-0"

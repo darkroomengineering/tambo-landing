@@ -18,6 +18,7 @@ import Cursor from '~/assets/svgs/cursor.svg'
 import { Image } from '~/components/image'
 import { mapRange } from '~/libs/utils'
 import { colors } from '~/styles/colors'
+import { SeatMap } from '../section-4/seat-map'
 import s from './animation.module.css'
 
 export function Animation() {
@@ -251,7 +252,10 @@ export function Animation() {
           s.section45Trans
         )}
       >
-        <div className="absolute inset-0 bg-white -z-1 dr-rounded-20 shadow-m border border-forest/50 dr-p-16 flex flex-col items-start justify-end">
+        <div className="absolute inset-0 bg-white -z-1 dr-rounded-20 shadow-m border border-forest/50 dr-p-14 dr-gap-20 flex flex-col items-start justify-end">
+          <div className="dr-w-340">
+            <SeatMap />
+          </div>
           <p className="typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey">
             Window seat confirmed. Booking 12F!
           </p>
@@ -331,8 +335,13 @@ export function Animation() {
                 s.chatMessages
               )}
             >
-              <div ref={seatMapRef} className="self-start">
-                {/* TODO: Seat map here */}
+              <div
+                ref={seatMapRef}
+                className="self-start flex flex-col items-start justify-end dr-gap-20"
+              >
+                <div className="dr-w-340">
+                  <SeatMap />
+                </div>
                 <p className="typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey">
                   Window seat confirmed. Booking 12F!
                 </p>

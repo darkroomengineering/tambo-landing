@@ -21,6 +21,7 @@ const highlightedSeatIndex = 8
 export type SeatMapRef = {
   highlightSeatsAnimation: (progress: number) => void
   highlightSeatAnimation: (progress: number) => void
+  highlightTitleAnimation: (progress: number) => void
 }
 
 type SeatMapProps = {
@@ -32,6 +33,15 @@ export function SeatMap({ ref }: SeatMapProps) {
   const labelRefs = useRef<(HTMLParagraphElement | null)[]>([])
   const seatRef = useRef<HTMLDivElement>(null)
   const labelRef = useRef<HTMLParagraphElement>(null)
+  const seatMapTitleRef = useRef<HTMLParagraphElement>(null)
+
+  const highlightTitleAnimation = useCallback((progress: number) => {
+    const seatMapTitle = seatMapTitleRef.current
+    if (!seatMapTitle) return
+
+    seatMapTitle.style.transform = `translateY(${mapRange(0, 1, progress, 50, 0)}%)`
+    seatMapTitle.style.opacity = `${mapRange(0, 1, progress, 0, 1)}`
+  }, [])
 
   const highlightSeatsAnimation = useCallback((progress: number) => {
     for (const seat of seatsRef.current) {
@@ -83,10 +93,17 @@ export function SeatMap({ ref }: SeatMapProps) {
   useImperativeHandle(ref, () => ({
     highlightSeatsAnimation,
     highlightSeatAnimation,
+    highlightTitleAnimation,
   }))
 
   return (
-    <div className="size-full dr-p-16 bg-white">
+    <div className="relative size-full dr-rounded-12 outline-4 outline-mint bg-white dr-p-16 shadow-xs">
+      <p
+        ref={seatMapTitleRef}
+        className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 typo-button normal-case flex items-center justify-center bg-mint dr-w-102 dr-h-28 rounded-full shadow-xs translate-full opacity-0"
+      >
+        {'<'}SeatMap{'>'}
+      </p>
       <div className="grid grid-cols-[auto_desktop-vw(36)_auto]">
         <div className="grid grid-cols-3 items-center justify-items-center gap-x-px dr-gap-y-5">
           {letters1.map((letter) => (
