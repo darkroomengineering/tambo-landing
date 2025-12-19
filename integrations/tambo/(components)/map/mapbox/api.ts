@@ -1,4 +1,4 @@
-import type { POI } from './area-select-map'
+import type { POI } from '.'
 
 // Retry configuration
 const RETRY_STATUS_CODES = [503, 504]

@@ -8,7 +8,6 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { MapProvider } from './(components)/map/map-context'
 import { mapTools } from './(components)/map/tools'
 import { seatComponent } from './(components)/seat-selector/schema'
 import { DEMOS } from './constants'
@@ -23,22 +22,28 @@ export function TamboIntegration({ children }: { children: React.ReactNode }) {
       components={components}
       tools={tools}
     >
-      <MapProvider>
-        <AssistantProvider> {children} </AssistantProvider>
-      </MapProvider>
+      <AssistantProvider> {children} </AssistantProvider>
     </TamboProvider>
   )
 }
 
 type Demo = (typeof DEMOS)[keyof typeof DEMOS]
 type Threads = [string | null, string | null]
+export type BBox = { west: number; south: number; east: number; north: number }
 
 const AssistantContext = createContext<{
+  // Main
   selectedDemo: Demo
   threads: Threads
+  // Seat
   choosedSeat: string[]
+  // Map
+  map: mapboxgl.Map | undefined
+  currentBBox: BBox | null
   setSelectedDemo: React.Dispatch<React.SetStateAction<Demo>>
   setThreads: React.Dispatch<React.SetStateAction<Threads>>
+  setMap: React.Dispatch<React.SetStateAction<mapboxgl.Map | undefined>>
+  setCurrentBBox: React.Dispatch<React.SetStateAction<BBox | null>>
   switchToSeatThread: () => void
   switchToMapThread: () => void
   finishSeatSelection: (seat: string) => void
@@ -46,28 +51,29 @@ const AssistantContext = createContext<{
   selectedDemo: DEMOS.SEAT,
   threads: [null, null],
   choosedSeat: [],
-  setSelectedDemo: () => {
-    // Default context value
-  },
-  setThreads: () => {
-    // Default context value
-  },
-  switchToSeatThread: () => {
-    // Default context value
-  },
-  switchToMapThread: () => {
-    // Default context value
-  },
-  finishSeatSelection: () => {
-    // Default context value
-  },
+  map: undefined,
+  currentBBox: null,
+  setSelectedDemo: () => {},
+  setThreads: () => {},
+  setMap: () => {},
+  setCurrentBBox: () => {},
+  switchToSeatThread: () => {},
+  switchToMapThread: () => {},
+  finishSeatSelection: () => {},
 })
 
 function AssistantProvider({ children }: { children: React.ReactNode }) {
   const [selectedDemo, setSelectedDemo] = useState<Demo>(DEMOS.SEAT)
-  const [choosedSeat, setChoosedSeat] = useState<string[]>([])
   const [threads, setThreads] = useState<Threads>([null, null])
   const { thread, startNewThread, switchCurrentThread } = useTamboThread()
+  const [choosedSeat, setChoosedSeat] = useState<string[]>([])
+  const [map, setMap] = useState<mapboxgl.Map | undefined>(undefined)
+  const [currentBBox, setCurrentBBox] = useState<{
+    west: number
+    east: number
+    south: number
+    north: number
+  } | null>(null)
 
   useEffect(() => {
     setThreads((prev: Threads) => {
@@ -118,11 +124,15 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
         selectedDemo,
         threads,
         choosedSeat,
+        map,
+        currentBBox,
         setSelectedDemo,
         setThreads,
         switchToSeatThread,
         switchToMapThread,
+        setMap,
         finishSeatSelection,
+        setCurrentBBox,
       }}
     >
       {children}

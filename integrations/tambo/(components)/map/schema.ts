@@ -11,7 +11,6 @@ export const MapSchema = z.object({
       lng: z.number().describe('Longitude of the map center'),
       lat: z.number().describe('Latitude of the map center'),
     })
-    .optional()
     .describe('Initial center location of the map [longitude, latitude]'),
   zoom: z.number().default(12).describe('Initial zoom level of the map'),
   selectedArea: z
@@ -23,12 +22,6 @@ export const MapSchema = z.object({
     })
     .optional()
     .describe('Currently selected bounding box area on the map'),
-  location: z
-    .string()
-    .optional()
-    .describe(
-      'Human-readable location description (e.g., "New York City, NY")'
-    ),
 })
 
 export const mapExampleContext = {

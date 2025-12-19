@@ -1,40 +1,46 @@
-import type { TamboTool } from '@tambo-ai/react'
+import { defineTool, type TamboTool } from '@tambo-ai/react'
 import { z } from 'zod'
-import type { AreaSelectMapHandle } from './area-select-map'
+import { dispatchMapSearch } from './mapbox/events'
 
-// Create a global reference to the map instance
-// This will be set by the map component when it mounts
-let mapInstanceRef: React.RefObject<AreaSelectMapHandle | null> | null = null
-
-export function setMapRef(ref: React.RefObject<AreaSelectMapHandle | null>) {
-  mapInstanceRef = ref
+type BBox = {
+  west: number
+  east: number
+  south: number
+  north: number
 }
 
-export function getMapRef() {
-  return mapInstanceRef
+type MapboxFeature = {
+  place_name: string
+  center: [number, number]
+  bbox?: [number, number, number, number]
+  place_type?: string[]
+}
+
+type LocationResult = {
+  name: string
+  center: { lng: number; lat: number }
+  bbox: BBox | null
+  placeType: string
+}
+
+type SearchLocationResult =
+  | { found: false; message: string; suggestions: never[] }
+  | { found: true; message: string; results: LocationResult[] }
+
+type AreaSuggestion = {
+  category: string
+  queries: string[]
 }
 
 // Tool 1: Search and display results on the map
-const analyzeArea = async (params: { query: string }) => {
-  const mapRef = getMapRef()
-
-  if (!mapRef?.current) {
-    throw new Error('Map is not initialized yet')
-  }
-
-  const bbox = mapRef.current.getCurrentBBox()
-
-  if (!bbox) {
-    throw new Error(
-      'No area selected. Please draw a rectangle on the map first.'
-    )
-  }
-
+// Note: This tool dispatches a search event. The actual search and bbox validation
+// happens in the useMapSearch hook which has access to React context.
+async function analyzeArea(params: {
+  query: string
+}): Promise<{ success: boolean; message: string }> {
   try {
     console.log(`🔍 Triggering map search for query: ${params.query}`)
-
-    // Use the map's built-in search which handles displaying pins
-    await mapRef.current.search(params.query)
+    await dispatchMapSearch(params.query)
 
     return {
       success: true,
@@ -48,74 +54,10 @@ const analyzeArea = async (params: { query: string }) => {
   }
 }
 
-// Tool 2: Get current map state with location info
-const getMapState = async () => {
-  const mapRef = getMapRef()
-
-  if (!mapRef?.current) {
-    throw new Error('Map is not initialized yet')
-  }
-
-  const bbox = mapRef.current.getCurrentBBox()
-
-  if (!bbox) {
-    return {
-      hasSelection: false,
-      selectedArea: null,
-      message: 'No area is selected. The user needs to draw a rectangle on the map first.',
-    }
-  }
-
-  // Calculate center point and dimensions
-  const centerLng = (bbox.west + bbox.east) / 2
-  const centerLat = (bbox.south + bbox.north) / 2
-  
-  // Calculate approximate size in km
-  const latDiff = bbox.north - bbox.south
-  const lngDiff = bbox.east - bbox.west
-  const heightKm = latDiff * 111 // ~111 km per degree latitude
-  const widthKm = lngDiff * 111 * Math.cos(centerLat * Math.PI / 180)
-
-  // Reverse geocode to get location name
-  let locationName = 'Unknown location'
-  try {
-    const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
-    if (mapboxToken) {
-      const res = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${centerLng},${centerLat}.json?access_token=${mapboxToken}&limit=1`
-      )
-      if (res.ok) {
-        const data = await res.json()
-        if (data.features?.[0]) {
-          locationName = data.features[0].place_name
-        }
-      }
-    }
-  } catch (error) {
-    console.warn('Could not reverse geocode location:', error)
-  }
-
-  return {
-    hasSelection: true,
-    selectedArea: bbox,
-    location: {
-      name: locationName,
-      center: {
-        lat: centerLat.toFixed(6),
-        lng: centerLng.toFixed(6),
-      },
-      size: {
-        width: `${widthKm.toFixed(2)} km`,
-        height: `${heightKm.toFixed(2)} km`,
-        area: `${(widthKm * heightKm).toFixed(2)} km²`,
-      },
-    },
-    message: `Selected area in ${locationName}. Size: ${widthKm.toFixed(1)} × ${heightKm.toFixed(1)} km`,
-  }
-}
-
-// Tool 3: Search for a location by name (geocoding)
-const searchLocation = async (params: { location: string }) => {
+// Tool 2: Search for a location by name (geocoding)
+async function searchLocation(params: {
+  location: string
+}): Promise<SearchLocationResult> {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
 
   if (!mapboxToken) {
@@ -139,13 +81,6 @@ const searchLocation = async (params: { location: string }) => {
         message: `No locations found for "${params.location}"`,
         suggestions: [],
       }
-    }
-
-    type MapboxFeature = {
-      place_name: string
-      center: [number, number]
-      bbox?: [number, number, number, number]
-      place_type?: string[]
     }
 
     const results = data.features.map((feature: MapboxFeature) => ({
@@ -177,8 +112,11 @@ const searchLocation = async (params: { location: string }) => {
   }
 }
 
-// Tool 4: Get suggestions for what to search in an area
-const getAreaSuggestions = async () => {
+// Tool 3: Get suggestions for what to search in an area
+async function getAreaSuggestions(): Promise<{
+  message: string
+  suggestions: AreaSuggestion[]
+}> {
   const suggestions = [
     {
       category: 'Food & Drink',
@@ -200,7 +138,7 @@ const getAreaSuggestions = async () => {
 }
 
 export const mapTools: TamboTool[] = [
-  {
+  defineTool({
     name: 'analyze_selected_area',
     description:
       'Search for places in the selected map area and display them as pins. Supports specific brands (e.g., "Starbucks", "McDonald\'s") or general categories (e.g., "coffee", "restaurants"). The user must draw a rectangle on the map first.',
@@ -216,41 +154,8 @@ export const mapTools: TamboTool[] = [
       success: z.boolean(),
       message: z.string(),
     }),
-  },
-  {
-    name: 'get_map_state',
-    description:
-      'Get detailed information about the currently selected map area, including location name, coordinates, and size. Use this to verify the user has selected the correct area.',
-    tool: getMapState,
-    inputSchema: z.object({}),
-    outputSchema: z.object({
-      hasSelection: z.boolean(),
-      selectedArea: z
-        .object({
-          west: z.number(),
-          east: z.number(),
-          south: z.number(),
-          north: z.number(),
-        })
-        .nullable(),
-      location: z
-        .object({
-          name: z.string(),
-          center: z.object({
-            lat: z.string(),
-            lng: z.string(),
-          }),
-          size: z.object({
-            width: z.string(),
-            height: z.string(),
-            area: z.string(),
-          }),
-        })
-        .optional(),
-      message: z.string(),
-    }),
-  },
-  {
+  }),
+  defineTool({
     name: 'search_location',
     description:
       'Search for a location by name (e.g., "New York City", "Paris, France", "Central Park") and get coordinates and bounding box',
@@ -282,8 +187,8 @@ export const mapTools: TamboTool[] = [
         )
         .optional(),
     }),
-  },
-  {
+  }),
+  defineTool({
     name: 'get_area_suggestions',
     description:
       'Get suggestions for what types of places can be searched for in a map area',
@@ -298,5 +203,5 @@ export const mapTools: TamboTool[] = [
         })
       ),
     }),
-  },
+  }),
 ]

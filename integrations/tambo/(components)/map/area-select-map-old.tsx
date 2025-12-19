@@ -1,5 +1,6 @@
 'use client'
 
+import { useLenis } from 'lenis/react'
 import mapboxgl from 'mapbox-gl'
 import {
   useEffect,
@@ -8,8 +9,9 @@ import {
   useRef,
   useState,
 } from 'react'
-
-import { fetchWithRetry, updateMapPOIs } from './api'
+import { useAssitant } from '~/integrations/tambo'
+import { useRectangleMapDrawing } from './map-drawing'
+import { fetchWithRetry, updateMapPOIs } from './mapbox/api'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
 
@@ -35,7 +37,7 @@ type Props = {
   height?: number | string
   pinSvgPath?: string
   fallbackZoom?: number
-  initialCenter?: [number, number] // [lng, lat]
+  center?: [number, number] // [lng, lat]
   initialBBox?: BBox // Initial bounding box to display
   onResult?: (result: AreaAnalyzeResponse) => void
   onBBoxSelected?: (bbox: BBox) => void
@@ -44,11 +46,11 @@ type Props = {
 
 const DEFAULT_CENTER: [number, number] = [-74.00594, 40.71278] // NYC [lng, lat]
 
-export function AreaSelectMap({
+export function AreaSelectMapOld({
   className,
   height = 520,
   fallbackZoom = 12,
-  initialCenter,
+  center = DEFAULT_CENTER,
   onResult,
   onBBoxSelected,
   ref,
@@ -56,7 +58,7 @@ export function AreaSelectMap({
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
-  const [map, setMap] = useState<mapboxgl.Map | null>(null)
+  const { map, setMap } = useAssitant()
   const [isMapLoaded, setIsMapLoaded] = useState(false)
 
   const startRef = useRef<mapboxgl.LngLat | null>(null)
@@ -65,8 +67,7 @@ export function AreaSelectMap({
   // Store current bbox
   const currentBBoxRef = useRef<BBox | null>(null)
 
-  const { containerRef: freezeContainerRef } = useFreezeScroll()
-  const { panModeRef } = useMapPanMode({ map })
+  const { panModeRef } = useMapPanMode({ map: map ?? null })
 
   // Drawing interaction handlers (stable references via useEffectEvent)
   const handleDrawStart = useEffectEvent((e: mapboxgl.MapMouseEvent) => {
@@ -152,7 +153,6 @@ export function AreaSelectMap({
     if (!containerRef.current) return
     if (containerRef.current.querySelector('.mapboxgl-map')) return
 
-    const center: [number, number] = initialCenter ?? DEFAULT_CENTER
     const zoom = fallbackZoom
 
     console.log('📍 Using location:', { lng: center[0], lat: center[1] })
@@ -178,7 +178,7 @@ export function AreaSelectMap({
         mapRef.current = null
       }
     }
-  }, [fallbackZoom, initialCenter?.[0], initialCenter?.[1]])
+  }, [fallbackZoom, center])
 
   // Map Sources and Layers Setup
   useEffect(() => {
@@ -194,7 +194,6 @@ export function AreaSelectMap({
     map.addControl(new mapboxgl.AttributionControl({ compact: true }))
 
     // Marker for initial center
-    const center: [number, number] = initialCenter ?? DEFAULT_CENTER
     new mapboxgl.Marker().setLngLat(center).addTo(map)
 
     // Add GeoJSON sources
@@ -261,7 +260,7 @@ export function AreaSelectMap({
         'line-cap': 'round',
       },
     })
-  }, [map, isMapLoaded, initialCenter?.[0], initialCenter?.[1]])
+  }, [map, isMapLoaded, center?.[0], center?.[1]])
 
   // Drawing interaction event listeners
   useEffect(() => {
@@ -288,7 +287,6 @@ export function AreaSelectMap({
       <div
         ref={(el: HTMLDivElement | null) => {
           containerRef.current = el
-          freezeContainerRef.current = el
         }}
         style={{ height, width: '100%' }}
       />
@@ -296,92 +294,7 @@ export function AreaSelectMap({
   )
 }
 
-function bboxFromLngLats(a: mapboxgl.LngLat, b: mapboxgl.LngLat): BBox {
-  return {
-    west: Math.min(a.lng, b.lng),
-    east: Math.max(a.lng, b.lng),
-    south: Math.min(a.lat, b.lat),
-    north: Math.max(a.lat, b.lat),
-  }
-}
-
-/** Create a GeoJSON polygon feature from a bounding box */
-function bboxToPolygonFeature(bbox: BBox) {
-  return {
-    type: 'Feature' as const,
-    properties: {},
-    geometry: {
-      type: 'Polygon' as const,
-      coordinates: [
-        [
-          [bbox.west, bbox.south],
-          [bbox.east, bbox.south],
-          [bbox.east, bbox.north],
-          [bbox.west, bbox.north],
-          [bbox.west, bbox.south],
-        ],
-      ],
-    },
-  }
-}
-
-/** Log bbox selection details to console */
-function logBBoxSelection(bbox: BBox): void {
-  const centerLng = (bbox.west + bbox.east) / 2
-  const centerLat = (bbox.south + bbox.north) / 2
-  const widthKm = (
-    (bbox.east - bbox.west) *
-    111 *
-    Math.cos((centerLat * Math.PI) / 180)
-  ).toFixed(2)
-  const heightKm = ((bbox.north - bbox.south) * 111).toFixed(2)
-
-  console.log('📍 Area selected:', {
-    center: `${centerLat.toFixed(4)}°N, ${centerLng.toFixed(4)}°E`,
-    size: `${widthKm} × ${heightKm} km`,
-    bounds: {
-      north: bbox.north.toFixed(4),
-      south: bbox.south.toFixed(4),
-      east: bbox.east.toFixed(4),
-      west: bbox.west.toFixed(4),
-    },
-  })
-}
-
 // Drawing interaction helpers
-const EMPTY_FEATURE_COLLECTION: GeoJSON.FeatureCollection = {
-  type: 'FeatureCollection',
-  features: [],
-}
-
-function getGeoJSONSource(
-  map: mapboxgl.Map,
-  id: string
-): mapboxgl.GeoJSONSource | undefined {
-  return map.getSource(id) as mapboxgl.GeoJSONSource | undefined
-}
-
-function clearGeoJSONSource(map: mapboxgl.Map, id: string): void {
-  getGeoJSONSource(map, id)?.setData(EMPTY_FEATURE_COLLECTION)
-}
-
-function isClickOnPOI(map: mapboxgl.Map, point: mapboxgl.Point): boolean {
-  const poiLayers = ['pois-points', 'pois-points-selected', 'pois-labels']
-  const existingLayers = poiLayers.filter((id) => map.getLayer(id))
-  if (existingLayers.length === 0) return false
-  return map.queryRenderedFeatures(point, { layers: existingLayers }).length > 0
-}
-
-function isPanModeActive(
-  e: mapboxgl.MapMouseEvent,
-  panModeRef: React.RefObject<boolean>
-): boolean {
-  return (
-    e.originalEvent.metaKey ||
-    e.originalEvent.ctrlKey ||
-    panModeRef.current === true
-  )
-}
 
 function poisToFeatureCollection(pois: POI[]) {
   return {
@@ -424,51 +337,14 @@ function poisToFeatureCollection(pois: POI[]) {
   }
 }
 
-function useFreezeScroll() {
-  const containerRef = useRef<HTMLDivElement | null>(null)
-
-  // Prevent page scroll when using mouse wheel on map (allow map zoom only)
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-
-    const handleWheel = (e: WheelEvent) => {
-      // Check if event is from Mapbox canvas (let it handle zoom)
-      const target = e.target as HTMLElement
-      const isMapboxCanvas =
-        target.tagName === 'CANVAS' &&
-        (target.classList.contains('mapboxgl-canvas') ||
-          container.querySelector('.mapboxgl-canvas') === target)
-
-      // If it's on the Mapbox canvas, let Mapbox handle it for zoom
-      // but still prevent page scroll by preventing default
-      if (isMapboxCanvas) {
-        e.preventDefault()
-        return
-      }
-
-      // For other elements in the container, prevent page scroll
-      e.preventDefault()
-      e.stopPropagation()
-    }
-
-    // Use bubble phase so Mapbox can handle canvas events first
-    container.addEventListener('wheel', handleWheel, { passive: false })
-
-    return () => {
-      container.removeEventListener('wheel', handleWheel)
-    }
-  }, [])
-
-  return { containerRef }
-}
-
-function useMapPanMode({ map }: { map: mapboxgl.Map | null }) {
-  const panModeRef = useRef(false)
+// HOOKS
+export function useMapPanMode() {
+  const [panMode, setPanMode] = useState(false)
+  const { map } = useAssitant()
 
   useEffect(() => {
-    const setPanMode = (enabled: boolean) => {
-      panModeRef.current = enabled
+    function onKeyChange(enabled: boolean) {
+      setPanMode(enabled)
       if (!map) return
 
       if (enabled) {
@@ -481,11 +357,11 @@ function useMapPanMode({ map }: { map: mapboxgl.Map | null }) {
     }
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Meta' || e.key === 'Control') setPanMode(true)
+      if (e.key === 'Meta' || e.key === 'Control') onKeyChange(true)
     }
 
     const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key === 'Meta' || e.key === 'Control') setPanMode(false)
+      if (e.key === 'Meta' || e.key === 'Control') onKeyChange(false)
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -497,5 +373,5 @@ function useMapPanMode({ map }: { map: mapboxgl.Map | null }) {
     }
   }, [map])
 
-  return { panModeRef }
+  return panMode
 }
