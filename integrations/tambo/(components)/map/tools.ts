@@ -35,8 +35,8 @@ type AreaSuggestion = {
 type AnalyzeAreaResult = {
   success: boolean
   message: string
-  unknownCategory?: boolean
-  suggestedCategories?: string[]
+  count: number
+  names: string[]
 }
 
 // Tool 1: Search and display results on the map
@@ -47,31 +47,24 @@ async function analyzeArea(params: {
   brandFilter?: string
 }): Promise<AnalyzeAreaResult> {
   try {
-    console.log(
-      `🔍 Triggering map search: category="${params.category}", brand="${params.brandFilter || 'none'}"`
-    )
-
     const result = await dispatchMapSearch({
       category: params.category,
       brandFilter: params.brandFilter,
     })
 
-    // Check if the category was unknown
-    if (result.unknownCategory) {
-      return {
-        success: false,
-        message: `I don't know how to search for "${params.category}". Could you tell me what type of place this is? For example, is it more like: ${result.suggestedCategories?.join(', ') || 'a restaurant, cafe, shop, or something else'}?`,
-        unknownCategory: true,
-        suggestedCategories: result.suggestedCategories,
-      }
-    }
+    const message =
+      result.count > 0
+        ? `Found ${result.count} places matching "${params.category}"${params.brandFilter ? ` filtered by "${params.brandFilter}"` : ''}${result.names.length > 0 ? `: ${result.names.join(', ')}` : ''}`
+        : `No places found matching "${params.category}"${params.brandFilter ? ` filtered by "${params.brandFilter}"` : ''} in the selected area`
 
     return {
-      success: true,
-      message: `Found places matching "${params.category}"${params.brandFilter ? ` filtered by "${params.brandFilter}"` : ''} and displayed them on the map`,
+      success: result.count > 0,
+      message,
+      count: result.count,
+      names: result.names,
     }
   } catch (error) {
-    console.error(`❌ Search failed`, error)
+    console.error('Search failed', error)
     throw new Error(
       error instanceof Error ? error.message : 'Failed to search area'
     )
@@ -178,30 +171,28 @@ export const mapTools: TamboTool[] = [
     description:
       'Search for places in the selected map area and display them as pins. ' +
       "Extract the category (type of place) and optionally a specific brand/name filter from the user's request. " +
-      'If the result indicates unknownCategory=true, ask the user to clarify what type of place it is using the suggestedCategories as hints. ' +
       'The user must draw a rectangle on the map first.',
     tool: analyzeArea,
     inputSchema: z.object({
       category: z
         .string()
         .describe(
-          'The type of place to search for. Examples: "coffee shop", "restaurant", "hotel", ' +
-            '"gym", "pharmacy", "gas station", "bank", "park", "museum", "supermarket", ' +
-            '"hospital", "school", "bar", "cinema", "office", "coworking space"'
+          'The type of place to search for. Can be any text query. ' +
+            'Examples: "coffee shop", "restaurant", "hotel", "gym", "pharmacy", "Starbucks", "museum"'
         ),
       brandFilter: z
         .string()
         .optional()
         .describe(
-          'Optional: specific brand or business name to filter results. ' +
-            'Examples: "Starbucks", "McDonald\'s", "Hilton", "Planet Fitness", "Walgreens"'
+          'Optional: specific brand or business name to combine with the category. ' +
+            'Examples: "Starbucks", "McDonald\'s", "Hilton", "Planet Fitness"'
         ),
     }),
     outputSchema: z.object({
       success: z.boolean(),
       message: z.string(),
-      unknownCategory: z.boolean().optional(),
-      suggestedCategories: z.array(z.string()).optional(),
+      count: z.number(),
+      names: z.array(z.string()),
     }),
   }),
   defineTool({

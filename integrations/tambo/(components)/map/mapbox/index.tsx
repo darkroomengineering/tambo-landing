@@ -11,7 +11,7 @@ import { useMapSearch } from './search'
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
 
 export type POI = {
-  id: number
+  id: string | number
   type: string
   name: string | null
   lat: number

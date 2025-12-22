@@ -10,8 +10,8 @@ export type SearchParams = {
 
 /** Result returned from search handler */
 export type SearchResult = {
-  unknownCategory?: boolean
-  suggestedCategories?: string[]
+  count: number
+  names: string[]
 }
 
 type SearchEventDetail = {
