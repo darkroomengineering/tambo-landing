@@ -2,12 +2,13 @@ import cn from 'clsx'
 import { useAssitant } from '~/integrations/tambo'
 
 export function AssistantNotifications({ className }: { className: string }) {
-  const { finishSeatSelection, choosedSeat, itinerary } = useAssitant()
+  const { finishSeatSelection, choosedSeat, itinerary, destination } = useAssitant()
 
   return (
     <ul
       className={cn(
-        'flex flex-col dr-gap-8 border border-dark-grey dr-rounded-8 dr-p-16',
+        'flex flex-col dr-gap-8 border border-dark-grey dr-rounded-8 dr-p-16 opacity-0 transition-opacity duration-200 ease-in-out',
+        destination.name && 'opacity-100',
         className
       )}
     >
@@ -18,7 +19,7 @@ export function AssistantNotifications({ className }: { className: string }) {
       </li>
       <li>
         <span className="typo-label-m">Flight: </span>
-        <span className="typo-label-s"> NYC La Guardia</span>
+        <span className="typo-label-s"> {destination.name}</span>
       </li>
       <li>
         <span className="typo-label-m">Seat selection: </span>

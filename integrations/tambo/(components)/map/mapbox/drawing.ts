@@ -92,7 +92,7 @@ export function useRectangleMapDrawing({
 
     // Attribution can't be removed; compact is allowed
     map.addControl(new mapboxgl.AttributionControl({ compact: true }))
-    new mapboxgl.Marker().setLngLat(center).addTo(map)
+    new mapboxgl.Marker()?.setLngLat(center)?.addTo(map)
 
     // Add GeoJSON sources
     map.addSource('selection', {

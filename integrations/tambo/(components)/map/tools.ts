@@ -79,7 +79,7 @@ async function analyzeArea(params: {
 }
 
 // Tool 2: Search for a location by name (geocoding)
-async function searchLocation(params: {
+export async function searchLocation(params: {
   location: string
 }): Promise<SearchLocationResult> {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
@@ -130,6 +130,7 @@ async function searchLocation(params: {
       // Calculate zoom from bbox if available, otherwise use default
       const zoom = firstResult.bbox ? 10 : 12
       dispatchMapNavigation({
+        destination: params.location,
         center: firstResult.center,
         zoom,
       })
@@ -181,7 +182,7 @@ type AddToItineraryToolResult = {
 // Tool 4: Add a POI to the itinerary
 async function addPoiToItinerary(params: {
   poi: POI
-  selectedDate?: string
+  selectedDate: string
 }): Promise<AddToItineraryToolResult> {
   try {
     const result = await dispatchAddToItinerary(params)
@@ -294,8 +295,7 @@ export const mapTools: TamboTool[] = [
       }).describe('The point of interest to add to the itinerary'),
       selectedDate: z
         .string()
-        .optional()
-        .describe('Optional date for when to visit this location (YYYY-MM-DD format)'),
+        .describe('Date for when to visit this location (YYYY-MM-DD format)'),
     }),
     outputSchema: z.object({
       success: z.boolean(),

@@ -1,16 +1,13 @@
 'use client'
 
-import cn from 'clsx'
 import { useRect, useWindowSize } from 'hamo'
-import { Fragment, useContext } from 'react'
+import { useContext } from 'react'
 import { useLenisSnap } from '~/app/(pages)/_components/lenis/snap'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
-import PlaneSVG from '~/assets/svgs/plane.svg'
-import StocksSVG from '~/assets/svgs/stocks.svg'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
-import { TamboIntegration, useAssitant } from '~/integrations/tambo'
+import { TamboIntegration } from '~/integrations/tambo'
 import {
   InterctableMap,
   MapAssistant,
@@ -18,20 +15,7 @@ import {
 import { AssistantNotifications } from '~/integrations/tambo/(components)/notifications'
 import { SeatAssistant } from '~/integrations/tambo/(components)/seat-selector/index'
 import { fromTo } from '~/libs/utils'
-import s from './section-8.module.css'
-
-const demos = [
-  {
-    id: 'seat',
-    label: 'seat assistant',
-    icon: PlaneSVG,
-  },
-  {
-    id: 'map',
-    label: 'map assistant',
-    icon: StocksSVG,
-  },
-]
+import { IntroAssistant } from '~/integrations/tambo/(components)/intro'
 
 export function Section8() {
   const [setRectRef, rect] = useRect()
@@ -225,6 +209,7 @@ export function Section8() {
                 center={{ lng: -74.00594, lat: 40.71278 }}
                 zoom={12}
               />
+              <IntroAssistant />
               <SeatAssistant />
               <MapAssistant />
             </div>
@@ -239,54 +224,54 @@ export function Section8() {
   )
 }
 
-export function ThreadsOptions() {
-  const {
-    selectedDemo,
-    setSelectedDemo,
-    switchToSeatThread,
-    switchToMapThread,
-  } = useAssitant()
+// export function ThreadsOptions() {
+//   const {
+//     selectedDemo,
+//     setSelectedDemo,
+//     switchToSeatThread,
+//     switchToMapThread,
+//   } = useAssitant()
 
-  return (
-    <div
-      className={cn(
-        s.tabs,
-        'relative grid grid-flow-col dr-rounded-12 typo-h5 uppercase bg-off-white'
-      )}
-    >
-      {demos.map((demo) => (
-        <Fragment key={demo.id}>
-          <input
-            name="demo"
-            type="radio"
-            id={demo.id}
-            value={demo.id}
-            checked={selectedDemo === demo.id}
-            onChange={() => {
-              setSelectedDemo(demo.id as 'seat' | 'map')
+//   return (
+//     <div
+//       className={cn(
+//         s.tabs,
+//         'relative grid grid-flow-col dr-rounded-12 typo-h5 uppercase bg-off-white'
+//       )}
+//     >
+//       {demos.map((demo) => (
+//         <Fragment key={demo.id}>
+//           <input
+//             name="demo"
+//             type="radio"
+//             id={demo.id}
+//             value={demo.id}
+//             checked={selectedDemo === demo.id}
+//             onChange={() => {
+//               setSelectedDemo(demo.id as 'seat' | 'map')
 
-              // Switch to the seat thread if it exists
-              if (demo.id === 'seat') {
-                switchToSeatThread()
-              }
+//               // Switch to the seat thread if it exists
+//               if (demo.id === 'seat') {
+//                 switchToSeatThread()
+//               }
 
-              // Switch to the map thread if it exists
-              if (demo.id === 'map') {
-                switchToMapThread()
-              }
-            }}
-          />
-          <label
-            htmlFor={demo.id}
-            className="flex dr-gap-16 items-center justify-center dr-h-60"
-          >
-            <div className="dr-size-32 grid place-items-center rounded-full">
-              <demo.icon className="dr-size-16 icon text-black" />
-            </div>
-            <span className="block typo-h5">{demo.label}</span>
-          </label>
-        </Fragment>
-      ))}
-    </div>
-  )
-}
+//               // Switch to the map thread if it exists
+//               if (demo.id === 'map') {
+//                 switchToMapThread()
+//               }
+//             }}
+//           />
+//           <label
+//             htmlFor={demo.id}
+//             className="flex dr-gap-16 items-center justify-center dr-h-60"
+//           >
+//             <div className="dr-size-32 grid place-items-center rounded-full">
+//               <demo.icon className="dr-size-16 icon text-black" />
+//             </div>
+//             <span className="block typo-h5">{demo.label}</span>
+//           </label>
+//         </Fragment>
+//       ))}
+//     </div>
+//   )
+// }

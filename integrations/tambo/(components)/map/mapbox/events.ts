@@ -65,6 +65,7 @@ export const MAP_NAVIGATION_EVENT = 'tambo:map:navigation'
 export type MapNavigationParams = {
   center: { lng: number; lat: number }
   zoom?: number
+  destination: string
 }
 
 /**

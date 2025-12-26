@@ -30,6 +30,10 @@ export function TamboIntegration({ children }: { children: React.ReactNode }) {
 
 type Demo = (typeof DEMOS)[keyof typeof DEMOS]
 type Threads = [string | null, string | null]
+type Destination = {
+  name: string | null
+  center: [number, number]
+}
 export type POI = {
   id: string | number
   type: string
@@ -47,10 +51,12 @@ export type itineraryItem = {
 
 const AssistantContext = createContext<{
   // Main
+  destination: Destination
   selectedDemo: Demo
   threads: Threads
   setSelectedDemo: React.Dispatch<React.SetStateAction<Demo>>
   setThreads: React.Dispatch<React.SetStateAction<Threads>>
+  setDestination: React.Dispatch<React.SetStateAction<Destination>>
   // Seat
   choosedSeat: string[]
   finishSeatSelection: (seat: string) => void
@@ -62,10 +68,9 @@ const AssistantContext = createContext<{
   setCurrentBBox: React.Dispatch<React.SetStateAction<BBox | null>>
   addToItinerary: (item: itineraryItem) => void
   // Thread functions
-  switchToSeatThread: () => void
-  switchToMapThread: () => void
-
+  switchToDemoThread: (demo: Demo) => void
 }>({
+  destination: {name: 'New York', center: [-74.00594, 40.71278]},
   selectedDemo: DEMOS.SEAT,
   threads: [null, null],
   choosedSeat: [],
@@ -77,33 +82,30 @@ const AssistantContext = createContext<{
   setThreads: () => {},
   setMap: () => {},
   setCurrentBBox: () => {},
-  switchToSeatThread: () => {},
-  switchToMapThread: () => {},
+  setDestination: () => {},
+  switchToDemoThread: (demo: Demo) => {},
   finishSeatSelection: () => {},
 })
 
 function AssistantProvider({ children }: { children: React.ReactNode }) {
-  const [selectedDemo, setSelectedDemo] = useState<Demo>(DEMOS.SEAT)
+  const [destination, setDestination] = useState<Destination>({name: null, center: [-74.00594, 40.71278]})
+  const [selectedDemo, setSelectedDemo] = useState<Demo>(DEMOS.INTRO)
   const [threads, setThreads] = useState<Threads>([null, null])
   const { thread, startNewThread, switchCurrentThread } = useTamboThread()
   const [choosedSeat, setChoosedSeat] = useState<string[]>([])
   const [map, setMap] = useState<mapboxgl.Map | undefined>(undefined)
   const [itinerary,setItinerary] = useState<itineraryItem[]>([])
-  const [currentBBox, setCurrentBBox] = useState<{
-    west: number
-    east: number
-    south: number
-    north: number
-  } | null>(null)
+  const [currentBBox, setCurrentBBox] = useState<BBox | null>(null)
 
+  // Obscure but failing to use Tambo thread management better
   useEffect(() => {
     setThreads((prev: Threads) => {
-      // On first render, save the travel thread
+      // On first render, save the intro thread
       if (prev[0] === null || prev[0] === 'placeholder') {
         return [thread.id, null]
       }
 
-      // If the map thread is created, save it
+      // If the seat thread is created, save it
       if (
         prev[1] === null &&
         thread.id !== prev[0] &&
@@ -116,27 +118,24 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
     })
   }, [thread?.id])
 
-  const switchToSeatThread = useCallback(() => {
-    if (threads[0]) {
-      switchCurrentThread(threads[0])
-    }
-  }, [threads, switchCurrentThread])
+  const switchToDemoThread = useCallback((demo: Demo) => {
+    const demoIndex = Object.values(DEMOS).indexOf(demo)
+    const threadId = threads[demoIndex -1]
 
-  const switchToMapThread = useCallback(() => {
-    if (threads[1] === null) {
+    if (threadId === null) {
       startNewThread()
     } else {
-      switchCurrentThread(threads[1])
+      switchCurrentThread(threadId)
     }
   }, [threads, switchCurrentThread, startNewThread])
 
   const finishSeatSelection = useCallback(
     (seat: string) => {
       setSelectedDemo(DEMOS.MAP)
-      switchToMapThread()
+      switchToDemoThread(DEMOS.MAP)
       setChoosedSeat([seat])
     },
-    [switchToMapThread]
+    [switchToDemoThread]
   )
 
   const addToItinerary = useCallback((item: itineraryItem) => {
@@ -161,6 +160,7 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
   return (
     <AssistantContext.Provider
       value={{
+        destination,
         selectedDemo,
         threads,
         choosedSeat,
@@ -170,11 +170,11 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
         currentBBox,
         setSelectedDemo,
         setThreads,
-        switchToSeatThread,
-        switchToMapThread,
+        switchToDemoThread,
         setMap,
         finishSeatSelection,
         setCurrentBBox,
+        setDestination,
       }}
     >
       {children}
