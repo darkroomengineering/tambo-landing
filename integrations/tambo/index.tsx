@@ -9,9 +9,9 @@ import {
   useState,
 } from 'react'
 import { useAddToItineraryListener } from './(components)/map/mapbox/events'
-import { mapTools } from './(components)/map/tools'
 import { seatComponent } from './(components)/seat-selector/schema'
 import { DEMOS } from './constants'
+import { mapTools } from './tools'
 
 const components = [...seatComponent]
 const tools = [...mapTools]
@@ -30,7 +30,7 @@ export function TamboIntegration({ children }: { children: React.ReactNode }) {
 
 type Demo = (typeof DEMOS)[keyof typeof DEMOS]
 type Threads = [string | null, string | null]
-type Destination = {
+export type Destination = {
   name: string | null
   center: [number, number]
 }
@@ -43,7 +43,8 @@ export type POI = {
   metadata?: Record<string, unknown>
 }
 export type BBox = { west: number; south: number; east: number; north: number }
-type DateString = `${number}${number}${number}${number}-${number}${number}-${number}${number}`
+type DateString =
+  `${number}${number}${number}${number}-${number}${number}-${number}${number}`
 export type itineraryItem = {
   poi: POI
   selectedDate: DateString
@@ -70,7 +71,7 @@ const AssistantContext = createContext<{
   // Thread functions
   switchToDemoThread: (demo: Demo) => void
 }>({
-  destination: {name: 'New York', center: [-74.00594, 40.71278]},
+  destination: { name: 'New York', center: [-74.00594, 40.71278] },
   selectedDemo: DEMOS.SEAT,
   threads: [null, null],
   choosedSeat: [],
@@ -88,13 +89,16 @@ const AssistantContext = createContext<{
 })
 
 function AssistantProvider({ children }: { children: React.ReactNode }) {
-  const [destination, setDestination] = useState<Destination>({name: null, center: [-74.00594, 40.71278]})
+  const [destination, setDestination] = useState<Destination>({
+    name: null,
+    center: [-74.00594, 40.71278],
+  })
   const [selectedDemo, setSelectedDemo] = useState<Demo>(DEMOS.INTRO)
   const [threads, setThreads] = useState<Threads>([null, null])
   const { thread, startNewThread, switchCurrentThread } = useTamboThread()
   const [choosedSeat, setChoosedSeat] = useState<string[]>([])
   const [map, setMap] = useState<mapboxgl.Map | undefined>(undefined)
-  const [itinerary,setItinerary] = useState<itineraryItem[]>([])
+  const [itinerary, setItinerary] = useState<itineraryItem[]>([])
   const [currentBBox, setCurrentBBox] = useState<BBox | null>(null)
 
   // Obscure but failing to use Tambo thread management better
@@ -118,16 +122,19 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
     })
   }, [thread?.id])
 
-  const switchToDemoThread = useCallback((demo: Demo) => {
-    const demoIndex = Object.values(DEMOS).indexOf(demo)
-    const threadId = threads[demoIndex -1]
+  const switchToDemoThread = useCallback(
+    (demo: Demo) => {
+      const demoIndex = Object.values(DEMOS).indexOf(demo)
+      const threadId = threads[demoIndex - 1]
 
-    if (threadId === null) {
-      startNewThread()
-    } else {
-      switchCurrentThread(threadId)
-    }
-  }, [threads, switchCurrentThread, startNewThread])
+      if (threadId === null) {
+        startNewThread()
+      } else {
+        switchCurrentThread(threadId)
+      }
+    },
+    [threads, switchCurrentThread, startNewThread]
+  )
 
   const finishSeatSelection = useCallback(
     (seat: string) => {
@@ -138,9 +145,12 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
     [switchToDemoThread]
   )
 
-  const addToItinerary = useCallback((item: itineraryItem) => {
-    setItinerary((prev) => [...prev, item])
-  }, [setItinerary])
+  const addToItinerary = useCallback(
+    (item: itineraryItem) => {
+      setItinerary((prev) => [...prev, item])
+    },
+    [setItinerary]
+  )
 
   // Listen for itinerary add events from the tool
   useAddToItineraryListener((params) => {

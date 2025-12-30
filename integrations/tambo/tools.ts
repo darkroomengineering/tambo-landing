@@ -1,11 +1,11 @@
 import { defineTool, type TamboTool } from '@tambo-ai/react'
 import { z } from 'zod'
+import type { POI } from '~/integrations/tambo'
 import {
   dispatchAddToItinerary,
   dispatchMapNavigation,
   dispatchMapSearch,
-} from './mapbox/events'
-import { type POI } from '~/integrations/tambo'
+} from '~/integrations/tambo/(components)/map/mapbox/events'
 
 type BBox = {
   west: number
@@ -43,6 +43,29 @@ type AnalyzeAreaResult = {
   count: number
   names: string[]
   points_of_interest: POI[]
+}
+
+type ForecastDay = {
+  date: string
+  temperatureMax: number
+  temperatureMin: number
+  temperatureUnit: string
+  weatherCode: number
+  weatherDescription: string
+  precipitation: number
+  precipitationUnit: string
+  windSpeedMax: number
+  windSpeedUnit: string
+}
+
+type WeatherResult = {
+  message: string
+  forecast: ForecastDay[]
+  units: {
+    temperature: string
+    precipitation: string
+    windSpeed: string
+  }
 }
 
 // Tool 1: Search and display results on the map
@@ -198,6 +221,85 @@ async function addPoiToItinerary(params: {
   }
 }
 
+// Tool 5: Get current date
+async function getCurrentDate(): Promise<{
+  message: string
+  date: string
+}> {
+  return {
+    message: `The current date is ${new Date().toLocaleDateString()}`,
+    date: new Date().toLocaleDateString(),
+  }
+}
+
+// Tool 6: Get weather for coordinates
+async function getWeather(params: {
+  latitude: number
+  longitude: number
+}): Promise<WeatherResult> {
+  try {
+    // Validate coordinates
+    if (
+      typeof params.latitude !== 'number' ||
+      typeof params.longitude !== 'number'
+    ) {
+      throw new Error('Latitude and longitude must be valid numbers')
+    }
+
+    if (params.latitude < -90 || params.latitude > 90) {
+      throw new Error('Latitude must be between -90 and 90')
+    }
+
+    if (params.longitude < -180 || params.longitude > 180) {
+      throw new Error('Longitude must be between -180 and 180')
+    }
+
+    // Call weather API route (relative URL works in both client and server contexts)
+    const url = `/api/weather?lat=${params.latitude}&lon=${params.longitude}`
+
+    const response = await fetch(url)
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(
+        errorData.error || `Failed to fetch weather: ${response.statusText}`
+      )
+    }
+
+    const data = await response.json()
+
+    // Validate forecast data
+    if (
+      !(data.forecast && Array.isArray(data.forecast)) ||
+      data.forecast.length === 0
+    ) {
+      throw new Error('Invalid forecast data received')
+    }
+
+    // Format user-friendly message with week forecast summary
+    const forecastSummary = data.forecast
+      .slice(0, 7)
+      .map((day: ForecastDay) => {
+        const date = new Date(day.date)
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'short' })
+        return `${dayName}: ${day.weatherDescription}, ${day.temperatureMin}${day.temperatureUnit}-${day.temperatureMax}${day.temperatureUnit}`
+      })
+      .join('; ')
+
+    const message = `7-day weather forecast for coordinates ${params.latitude.toFixed(4)}, ${params.longitude.toFixed(4)}: ${forecastSummary}`
+
+    return {
+      message,
+      forecast: data.forecast,
+      units: data.units,
+    }
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : 'Failed to get weather data'
+    )
+  }
+}
+
 export const mapTools: TamboTool[] = [
   defineTool({
     name: 'analyze_selected_area',
@@ -281,18 +383,24 @@ export const mapTools: TamboTool[] = [
   defineTool({
     name: 'add_to_itinerary',
     description:
-      'Add a point of interest (POI) to the user\'s travel itinerary. ' +
+      "Add a point of interest (POI) to the user's travel itinerary. " +
       'Use this when the user wants to save a location they found on the map to their itinerary. ' +
       'The POI must have been returned from a previous search or analysis.',
     tool: addPoiToItinerary,
     inputSchema: z.object({
-      poi: z.object({
-        id: z.union([z.string(), z.number()]).describe('Unique identifier for the POI'),
-        type: z.string().describe('Type of the POI (e.g., "restaurant", "museum")'),
-        name: z.string().nullable().describe('Name of the POI'),
-        lat: z.number().describe('Latitude coordinate'),
-        lon: z.number().describe('Longitude coordinate'),
-      }).describe('The point of interest to add to the itinerary'),
+      poi: z
+        .object({
+          id: z
+            .union([z.string(), z.number()])
+            .describe('Unique identifier for the POI'),
+          type: z
+            .string()
+            .describe('Type of the POI (e.g., "restaurant", "museum")'),
+          name: z.string().nullable().describe('Name of the POI'),
+          lat: z.number().describe('Latitude coordinate'),
+          lon: z.number().describe('Longitude coordinate'),
+        })
+        .describe('The point of interest to add to the itinerary'),
       selectedDate: z
         .string()
         .describe('Date for when to visit this location (YYYY-MM-DD format)'),
@@ -303,6 +411,57 @@ export const mapTools: TamboTool[] = [
       addedItem: z.object({
         name: z.string(),
         id: z.union([z.string(), z.number()]),
+      }),
+    }),
+  }),
+  defineTool({
+    name: 'get_current_date',
+    description: 'Get local current date',
+    tool: getCurrentDate,
+    inputSchema: z.object({}),
+    outputSchema: z.object({
+      message: z.string(),
+      date: z.string(),
+    }),
+  }),
+  defineTool({
+    name: 'get_weather',
+    description:
+      'Get seven days weather forecast for a specific location using latitude and longitude coordinates.' +
+      'Returns temperature, weather conditions, precipitation, and wind speed.',
+    tool: getWeather,
+    inputSchema: z.object({
+      latitude: z
+        .number()
+        .min(-90)
+        .max(90)
+        .describe('Latitude coordinate (-90 to 90)'),
+      longitude: z
+        .number()
+        .min(-180)
+        .max(180)
+        .describe('Longitude coordinate (-180 to 180)'),
+    }),
+    outputSchema: z.object({
+      message: z.string(),
+      forecast: z.array(
+        z.object({
+          date: z.string(),
+          temperatureMax: z.number(),
+          temperatureMin: z.number(),
+          temperatureUnit: z.string(),
+          weatherCode: z.number(),
+          weatherDescription: z.string(),
+          precipitation: z.number(),
+          precipitationUnit: z.string(),
+          windSpeedMax: z.number(),
+          windSpeedUnit: z.string(),
+        })
+      ),
+      units: z.object({
+        temperature: z.string(),
+        precipitation: z.string(),
+        windSpeed: z.string(),
       }),
     }),
   }),

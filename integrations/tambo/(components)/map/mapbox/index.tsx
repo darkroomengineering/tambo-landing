@@ -42,12 +42,18 @@ export function MapBox({
   useRectangleMapDrawing({ center })
   useMapSearch({ center })
   useMapNavigationListener((params) => {
-    if (!mapRef.current) return
-    mapRef.current.flyTo({
-      center: [params.center.lng, params.center.lat],
-      zoom: params.zoom ?? fallbackZoom,
-      essential: true,
-    })
+    const map = mapRef.current
+
+    if (!map) return
+    map.stop()
+
+    setTimeout(() => {
+      map.flyTo({
+        center: [params.center.lng, params.center.lat],
+        zoom: params.zoom ?? fallbackZoom,
+        essential: true,
+      })
+    }, 100)
   })
 
   // Map Initialization
@@ -74,17 +80,7 @@ export function MapBox({
         mapRef.current = null
       }
     }
-  }, [fallbackZoom, center, setMap])
-
-  // Fly to center on change
-  useEffect(() => {
-    if (!mapRef.current) return
-
-    mapRef.current.flyTo({
-      center,
-      essential: true,
-    })
-  }, [center])
+  }, [setMap])
 
   return (
     <div

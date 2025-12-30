@@ -40,15 +40,21 @@ export const InterctableMap = withInteractable(MapComponent, {
 })
 
 export function MapAssistant() {
-  const { selectedDemo, currentBBox, itinerary } = useAssitant()
+  const { destination, selectedDemo, currentBBox, itinerary } = useAssitant()
   const { addContextHelper, removeContextHelper } = useTamboContextHelpers()
   const { thread, addThreadMessage } = useTamboThread()
 
   useEffect(() => {
     if (selectedDemo === demo) {
-      addContextHelper('assistantBehavior',() => mapExampleContext.assistantBehavior())
-      addContextHelper('mapState', () =>  mapExampleContext.mapState(currentBBox))
-      addContextHelper('itinerary', () => mapExampleContext.itinerary(itinerary))
+      addContextHelper('assistantBehavior', () =>
+        mapExampleContext.assistantBehavior(destination)
+      )
+      addContextHelper('mapState', () =>
+        mapExampleContext.mapState(currentBBox)
+      )
+      addContextHelper('itinerary', () =>
+        mapExampleContext.itinerary(itinerary)
+      )
     }
 
     return () => {

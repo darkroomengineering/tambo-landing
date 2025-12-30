@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { type BBox, type itineraryItem, type POI } from '~/integrations/tambo'
+import type { BBox, Destination, itineraryItem } from '~/integrations/tambo'
 
 // Schema for map component props
 export const MapSchema = z.object({
@@ -26,7 +26,13 @@ export const MapSchema = z.object({
 })
 
 export const mapExampleContext = {
-  assistantBehavior: () => `## Role\n  'You are a helpful assistant that can help with searching for entrainment options in a destination.' \n\n## Instructions\n if user asks something not related to searching for entrainment options, you should brielfy answer and politely redirect them to the entrainment selection component.`,
+  assistantBehavior: (destination: Destination) =>
+    `## Role: You are a helpful assistant that can help with searching for entrainment options in the ${destination.name} destination.
+  
+    Knowledge: Fetch current date from the get_current_date tool and use it to get the weather for the destination using the get_weather tool.
+  
+    Instructions: if user asks something not related to searching for entrainment options, you should brielfy answer and politely redirect them to the entrainment selection component. You have access to the get_weather tool to get the weather for the destination using its coordinates and the get_current_date tool to get the current date.
+  `,
   mapState: (bbox: BBox | null) => {
     if (!bbox) {
       return `
@@ -53,6 +59,7 @@ export const mapExampleContext = {
     - The map component will automatically search for points of interest when the user asks questions
     - You can describe what types of activities or places might be available in this geographic area
     - If the user asks "what can I do with this selection?" or similar questions, explain that they can search for entertainment options, restaurants, cafes, attractions, etc. in the selected area
+    - take into account the weather forecast to suggest activities or places to visit.
     
       **Navigation:**
  - You can navigate the map to any location by using search_location and then updating the interactable map's center prop`
@@ -61,7 +68,10 @@ export const mapExampleContext = {
     return `
     The user has selected the following points of interest:
     ${itinerary
-      .map((item) => `- ${item.poi.type} - ${item.poi.name} ${item.selectedDate ? `(Selected time: ${item.selectedDate})` : ''}`)
+      .map(
+        (item) =>
+          `- ${item.poi.type} - ${item.poi.name} ${item.selectedDate ? `(Selected time: ${item.selectedDate})` : ''}`
+      )
       .join('\n')}
     If user asks to add a point of interest to the itinerary, first check if its already in the itinerary.
 
@@ -69,5 +79,5 @@ export const mapExampleContext = {
 
     Depending on the other pois in the itinerary, you can suggest to the user to add the point of interest to the itinerary. for example if the user is already planning to visit a restaurant, you can suggest to add a cafe to the itinerary.
     `
-  }
+  },
 }

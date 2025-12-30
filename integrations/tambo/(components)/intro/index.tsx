@@ -1,12 +1,11 @@
-
-import { useAssitant } from "../.."
-import { DEMOS } from "../../constants" 
 import { ArrowUp } from 'lucide-react'
-import { Image } from "~/components/image"
-import PlaneSVG from '~/assets/svgs/plane.svg'
-import { useMapNavigationListener } from "../map/mapbox/events"
-import { searchLocation } from "../map/tools"
 import type * as React from 'react'
+import PlaneSVG from '~/assets/svgs/plane.svg'
+import { Image } from '~/components/image'
+import { useAssitant } from '~/integrations/tambo'
+import { DEMOS } from '~/integrations/tambo/constants'
+import { searchLocation } from '~/integrations/tambo/tools'
+import { useMapNavigationListener } from '../map/mapbox/events'
 
 const demo = DEMOS.INTRO
 
@@ -14,11 +13,14 @@ export function IntroAssistant() {
   const { selectedDemo, setDestination, setSelectedDemo } = useAssitant()
 
   useMapNavigationListener((params) => {
-    setDestination({name: params.destination, center: [params.center.lng, params.center.lat]})
+    setDestination({
+      name: params.destination,
+      center: [params.center.lng, params.center.lat],
+    })
     setSelectedDemo(DEMOS.SEAT)
   })
 
-  if(selectedDemo !== demo) return null
+  if (selectedDemo !== demo) return null
 
   return (
     <div className="relative w-full h-full z-10">
@@ -44,10 +46,7 @@ function LocationInput() {
         </span>
         <p className="typo-button dr-mr-12">{`< my goated travel assistant >`}</p>
       </div>
-      <form
-        onSubmit={handleSendMessage}
-        className="relative dr-w-436 dr-h-48"
-      >
+      <form onSubmit={handleSendMessage} className="relative dr-w-436 dr-h-48">
         <input
           id="message"
           name="message"
@@ -59,7 +58,7 @@ function LocationInput() {
         />
         <button
           type="submit"
-          className='absolute dr-bottom-8 dr-right-8 dr-w-32 aspect-square dr-p-4 bg-black/80 text-white dr-rounded-8 hover:bg-black/70 disabled:opacity-50 flex items-center justify-center enabled:cursor-pointer'
+          className="absolute dr-bottom-8 dr-right-8 dr-w-32 aspect-square dr-p-4 bg-black/80 text-white dr-rounded-8 hover:bg-black/70 disabled:opacity-50 flex items-center justify-center enabled:cursor-pointer"
         >
           <ArrowUp className="w-full h-full" />
         </button>

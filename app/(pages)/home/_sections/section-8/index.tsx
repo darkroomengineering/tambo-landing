@@ -8,6 +8,7 @@ import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
 import { TamboIntegration } from '~/integrations/tambo'
+import { IntroAssistant } from '~/integrations/tambo/(components)/intro'
 import {
   InterctableMap,
   MapAssistant,
@@ -15,7 +16,6 @@ import {
 import { AssistantNotifications } from '~/integrations/tambo/(components)/notifications'
 import { SeatAssistant } from '~/integrations/tambo/(components)/seat-selector/index'
 import { fromTo } from '~/libs/utils'
-import { IntroAssistant } from '~/integrations/tambo/(components)/intro'
 
 export function Section8() {
   const [setRectRef, rect] = useRect()
