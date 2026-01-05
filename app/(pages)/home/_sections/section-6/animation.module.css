@@ -13,3 +13,11 @@
   transform: rotate(calc(var(--logo-rotate, 0) * 1deg))
     translateY(calc(var(--logo-translate-y, 0) * desktop-vw(-1) + 50%));
 } */
+
+.confirmingBackground {
+  width: calc(
+    desktop-vw(80) +
+    var(--added-to-calendar-progress, 0) *
+    desktop-vw(247)
+  );
+}
