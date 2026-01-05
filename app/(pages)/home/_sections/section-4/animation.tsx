@@ -78,13 +78,20 @@ export function Animation({
     )
       return
 
-    const introProgress = mapRange(0, 0.1, steps[0], 0, 1, true)
-    const seatsQuestionProgress = mapRange(0.1, 0.98, steps[0], 0, 1, true)
+    const safeZoneProgress = mapRange(0, 0.05, steps[0], 0, 1, true)
+    const containerProgress = mapRange(0.05, 0.1, steps[0], 0, 1, true)
+    const introProgress = mapRange(0.1, 0.2, steps[0], 0, 1, true)
+    const seatsQuestionProgress = mapRange(0.2, 0.98, steps[0], 0, 1, true)
     const seatsThinkingProgress = mapRange(0.02, 0.5, steps[1], 0, 1, true)
     const skewProgress = mapRange(0.6, 1, steps[1], 0, 1, true)
     const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
     const swapProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
     const selectProgress = mapRange(0.3, 1, steps[3], 0, 1, true)
+    const exitProgress = mapRange(0.8, 1, steps[4], 0, 1, true)
+
+    if (safeZoneProgress === 1) {
+      container.style.opacity = `${containerProgress}`
+    }
 
     if (introProgress === 1) {
       seatsQuestion.style.transform = `translateY(${mapRange(0, 1, seatsQuestionProgress, 150, 0)}%)`
@@ -141,7 +148,10 @@ export function Animation({
       selectionCard.style.overflow = 'visible'
     }
 
-    if (swapProgress === 1) {
+    const section5Container = document.getElementById('section-5-container')
+    if (swapProgress === 1 && section5Container) {
+      section5Container.style.display = 'none'
+      container.style.display = 'grid'
       selectionCard.style.overflow = 'hidden'
       cursor.style.transform = `translate(${mapRange(0, 0.5, selectProgress, 150, 0, true)}px, ${mapRange(0, 0.5, selectProgress, 150, 0, true)}px)`
       cursor.style.opacity = `${mapRange(0, 0.5, selectProgress, 0, 1)}`
@@ -163,12 +173,13 @@ export function Animation({
 
   return (
     <div
+      id="section-4-container"
       ref={(el) => {
         containerRef.current = el
         ref?.(el)
       }}
       className={cn(
-        'w-full aspect-668/470 dr-rounded-20 typo-p grid grid-cols-1 grid-rows-1',
+        'w-full aspect-668/449 dr-rounded-20 typo-p grid grid-cols-1 grid-rows-1 opacity-0',
         s.container
       )}
     >

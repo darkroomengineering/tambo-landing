@@ -115,7 +115,8 @@ export function Animation() {
     )
       return
 
-    const transitionProgress = mapRange(0, 0.15, steps[0], 0, 1, true)
+    const transitionProgress = mapRange(0, 0.05, steps[0], 0, 1, true)
+    const containerProgress = mapRange(0.05, 0.1, steps[0], 0, 1, true)
     const introProgress = mapRange(0.15, 0.5, steps[0], 0, 1, true)
     const whatCanIDoProgress = mapRange(0, 0.5, steps[1], 0, 1, true)
     const thinkingProgress = mapRange(0.5, 1, steps[1], 0, 1, true)
@@ -127,6 +128,13 @@ export function Animation() {
 
     // TODO: Remap this with steps
     const exitProgress = mapRange(0.8, 1, steps[4], 0, 1, true)
+
+    const section4Container = document.getElementById('section-4-container')
+
+    if (transitionProgress === 1 && section4Container) {
+      section4Container.style.display = 'none'
+      container.style.display = 'block'
+    }
 
     // Intro
     if (transitionProgress === 1) {
@@ -251,9 +259,12 @@ export function Animation() {
       greatPickText.style.opacity = `${greatPickProgress}`
     }
 
-    if (greatPickProgress === 1) {
+    const section6Container = document.getElementById('section-6-container')
+
+    if (greatPickProgress === 1 && section6Container) {
       container.style.setProperty('--intro-progress', `${1 - exitProgress}`)
       map.style.opacity = `${1 - exitProgress}`
+      section6Container.style.display = 'none'
     }
   })
 
@@ -262,7 +273,11 @@ export function Animation() {
   }, [addCallback])
 
   return (
-    <div ref={containerRef} className={cn('w-full', s.container)}>
+    <div
+      id="section-5-container"
+      ref={containerRef}
+      className={cn('w-full hidden', s.container)}
+    >
       <div className={cn('relative w-full shadow-m -z-3', s.map)}>
         <div ref={mapRef} className="relative size-full">
           <Image

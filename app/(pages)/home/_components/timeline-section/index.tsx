@@ -40,11 +40,13 @@ export function TimelineSection({
   title,
   children,
   ref,
+  zIndex,
 }: {
   messages: typeof messagesType
   title: string
   children?: React.ReactNode
   ref?: React.RefCallback<HTMLElement | null>
+  zIndex: number
 }) {
   const [rectRef, rect] = useRect()
   const [messagesVisible, setMessagesVisible] = useState(0)
@@ -124,7 +126,10 @@ export function TimelineSection({
               Start building
             </CTA>
           </div>
-          <div className="col-start-6 col-end-12 flex items-center justify-center">
+          <div
+            className="fixed dr-left-900 top-0 dr-w-col-5 h-screen flex items-center justify-center pointer-events-none"
+            style={{ zIndex }}
+          >
             {children}
           </div>
         </div>

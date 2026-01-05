@@ -83,6 +83,7 @@ export function Section4() {
     <TimelineSection
       messages={messages}
       title="AI-generated interfaces, powered by your own components."
+      zIndex={10}
     >
       <Animation ref={setRectRef} />
     </TimelineSection>

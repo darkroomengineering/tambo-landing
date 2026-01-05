@@ -8,6 +8,7 @@ export function Section6() {
     <TimelineSection
       messages={messages}
       title="Native MCP support, hard wiring done for you."
+      zIndex={3}
     >
       <Animation />
     </TimelineSection>

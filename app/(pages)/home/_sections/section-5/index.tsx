@@ -8,6 +8,7 @@ export function Section5() {
     <TimelineSection
       messages={messages}
       title="Your app state, as context for your AI assistant."
+      zIndex={5}
     >
       <Animation />
     </TimelineSection>
