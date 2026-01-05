@@ -286,7 +286,7 @@ export function Navigation() {
               }}
               className="flex dr-gap-4"
             >
-              {isMobileNavOpened ? 'Close' : 'Open'}
+              {isMobileNavOpened ? 'Close' : 'Menu'}
               <NavMobile className="dr-w-16" />
             </Button>
           </div>

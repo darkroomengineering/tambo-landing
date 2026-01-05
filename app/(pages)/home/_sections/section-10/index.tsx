@@ -202,14 +202,28 @@ export function Section10() {
             <TitleBlock.LeadIn>
               {'<'} FEATURES {'>'}
             </TitleBlock.LeadIn>
-            <TitleBlock.Title level="h2" className="dt:dr-mb-8!">
-              One SDK,
-              <br />
-              orchestrating <br /> everything
+            <TitleBlock.Title level="h2" className="dt:dr-mb-8! mb-0! typo-h1!">
+              <span className="desktop-only">
+                One SDK,
+                <br />
+                orchestrating <br /> everything
+              </span>
+              <span className="mobile-only">
+                One SDK,
+                <br />
+                orchestrating everything
+              </span>
             </TitleBlock.Title>
           </TitleBlock>
         </div>
-        <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute bottom-0 w-full dr-p-24 mobile-only">
+          {BUTTONS.map((button, index) => (
+            <div className="w-full" key={button.title + index.toString()}>
+              <CTA href={button.href}>{button.title}</CTA>
+            </div>
+          ))}
+        </div>
+        <div className="absolute inset-0 pointer-events-none desktop-only">
           {BUTTONS.map((button, index) => (
             <div
               className="absolute pointer-events-auto"
