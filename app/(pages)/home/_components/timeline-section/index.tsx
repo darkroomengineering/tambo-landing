@@ -95,7 +95,15 @@ export function TimelineSection({
       >
         <div className="sticky top-0 dr-layout-grid-inner h-screen">
           <div className="col-span-4 flex flex-col dr-mt-112">
-            <h3 className="typo-h2">{title}</h3>
+            <h3
+              className="typo-h2"
+              style={{
+                background:
+                  'linear-gradient(to bottom, transparent 0%, #E5F0ED 10%, #E5F0ED 90%, transparent 97%)',
+              }}
+            >
+              {title}
+            </h3>
             <div
               className="relative dr-py-40"
               style={{
@@ -103,10 +111,17 @@ export function TimelineSection({
                   'linear-gradient(to bottom, transparent 0%, black 5%)',
               }}
             >
-              <div className="absolute z-15 dr-w-32 inset-y-0 dr-left-27">
+              <div className="absolute z-15 dr-w-32 inset-y-0 dr-left-26">
+                <div
+                  className="absolute inset-y-0 dr-left-16 w-px z-1"
+                  style={{
+                    background:
+                      'repeating-linear-gradient(0deg,#80C1A2 0 8px,#0000 0 14px)',
+                  }}
+                />
                 <div
                   ref={whiteLineRef}
-                  className="dr-w-8 h-[110%] bg-white rounded-full shadow-xs mx-auto"
+                  className="dr-w-9 h-[110%] bg-white rounded-full shadow-xs mx-auto"
                 />
               </div>
               <ul className="flex flex-col dr-gap-4 items-start">
@@ -121,6 +136,15 @@ export function TimelineSection({
                 ))}
               </ul>
             </div>
+            <div
+              className="absolute inset-y-0 dr-left-82 w-px -z-1"
+              style={{
+                background:
+                  'repeating-linear-gradient(0deg,#80C1A2 0 8px,#0000 0 14px)',
+                maskImage:
+                  'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 97%)',
+              }}
+            />
             <CTA
               wrapperRef={buttonRef}
               wrapperClassName="opacity-0 transition-opacity duration-300 ease-gleasing"
