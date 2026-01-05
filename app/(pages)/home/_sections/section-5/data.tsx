@@ -16,13 +16,13 @@ export const messages = [
     tag: 'tambo',
     message:
       'Tambo sees the map selection, and any context you pass via <ContextHelpers>.',
-    video: '/video/section-4-2.mp4',
+    video: 'Octo-Search',
   },
   {
     id: 'tambo-aware-again',
     tag: 'tambo',
     message: 'Tambo updates the map with new pins through <Interactables>.',
-    video: '/video/section-4-3.mp4',
+    video: 'Octo-Carry',
   },
   {
     id: 'no-rebuilds-again',

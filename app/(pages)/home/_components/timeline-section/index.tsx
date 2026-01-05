@@ -13,9 +13,13 @@ import {
 } from 'react'
 import type { messages as messagesType } from '~/app/(pages)/home/_sections/section-4/data'
 import { CTA } from '~/components/button'
+import { Image } from '~/components/image'
+import { Video } from '~/components/video'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
 import { mapRange } from '~/libs/utils'
 import { colors } from '~/styles/colors'
+import CursorClickIcon from './cursor-click.svg'
+import SealCheckIcon from './seal-check.svg'
 
 export const TimelineSectionContext = createContext<{
   callbacks: RefObject<TimelineCallback[]>
@@ -111,6 +115,7 @@ export function TimelineSection({
                     key={message.id}
                     message={message}
                     visible={idx < messagesVisible}
+                    idx={idx}
                     last={idx === messages.length - 1}
                   />
                 ))}
@@ -136,15 +141,18 @@ export function TimelineSection({
 function TimelineItem({
   message,
   visible,
+  idx,
   last,
 }: {
   message: (typeof messagesType)[number]
   visible: boolean
+  idx: number
   last: boolean
 }) {
   const backgroundRef = useRef<HTMLDivElement>(null)
   const iconRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
+  const iconContentRef = useRef<HTMLDivElement>(null)
 
   const showItem = useEffectEvent(() => {
     const tl = gsap.timeline()
@@ -165,6 +173,15 @@ function TimelineItem({
         height: '100%',
         backgroundColor: last ? colors['ghost-mint'] : colors['light-gray'],
         borderColor: colors['dark-grey'],
+        duration: 0.35,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
+    tl.to(
+      iconContentRef.current,
+      {
+        opacity: 1,
         duration: 0.35,
         ease: 'power2.inOut',
       },
@@ -219,6 +236,15 @@ function TimelineItem({
       '<'
     )
     tl.to(
+      iconContentRef.current,
+      {
+        opacity: 0,
+        duration: 0.35,
+        ease: 'power2.inOut',
+      },
+      '<'
+    )
+    tl.to(
       textRef.current,
       {
         clipPath: 'inset(0 100% 0 0)',
@@ -249,11 +275,40 @@ function TimelineItem({
         <div
           ref={iconRef}
           className={cn(
-            'size-full dr-rounded-12 border border-dark-grey',
+            'size-full overflow-hidden dr-rounded-12 border border-dark-grey dr-p-4',
             last ? 'bg-ghost-mint' : 'bg-light-gray'
           )}
         >
-          {/* TODO: Video here */}
+          <div
+            ref={iconContentRef}
+            className="size-full grid place-items-center"
+          >
+            {idx === 0 && <CursorClickIcon className="dr-size-24" />}
+            {idx === 3 && <SealCheckIcon className="dr-size-24" />}
+            {idx !== 0 && idx !== 3 && (
+              <Video
+                autoPlay
+                priority
+                fallback={
+                  <Image
+                    src={`/videos/${message.video}.png`}
+                    alt={message.video}
+                    unoptimized
+                    preload
+                  />
+                }
+              >
+                <source
+                  src={`/videos/${message.video}-compressed.mov`}
+                  type='video/mp4; codecs="hvc1"'
+                />
+                <source
+                  src={`/videos/${message.video}-compressed.webm`}
+                  type="video/webm"
+                />
+              </Video>
+            )}
+          </div>
         </div>
       </div>
       <div ref={textRef} className="relative z-10 dr-p-4">

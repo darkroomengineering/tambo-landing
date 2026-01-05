@@ -16,7 +16,7 @@ export const messages = [
     tag: 'tambo',
     message:
       'Tambo connects to the relevant MCP server and inherits all its features automatically. ',
-    video: '/video/section-4-2.mp4',
+    video: 'Octo-Wave',
   },
   {
     id: 'tambo-aware-again-2',
@@ -28,7 +28,7 @@ export const messages = [
         The server asks directly via elicitation.
       </>
     ),
-    video: '/video/section-4-3.mp4',
+    video: 'Octo-Multi',
   },
   {
     id: 'no-rebuilds-again-2',

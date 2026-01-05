@@ -9,14 +9,14 @@ export const messages = [
         “What seats are available?”
       </>
     ),
-    video: '/video/section-4-1.mp4',
+    video: 'TODO: MISSING VIDEO',
   },
   {
     id: 'tambo-renders',
     tag: 'tambo',
     message:
       'Tambo renders your actual <SeatMap> component, with your styling and your logic.',
-    video: '/video/section-4-2.mp4',
+    video: 'Octo-File',
   },
   {
     id: 'tambo-aware',
@@ -28,7 +28,7 @@ export const messages = [
         with the component.
       </>
     ),
-    video: '/video/section-4-3.mp4',
+    video: 'Octo-Search',
   },
   {
     id: 'no-rebuilds',
@@ -40,6 +40,6 @@ export const messages = [
         Just your design system, AI-powered.
       </>
     ),
-    video: '/video/section-4-4.mp4',
+    video: 'TODO: MISSING VIDEO',
   },
 ]
