@@ -1,6 +1,7 @@
 'use client'
 
 import cn from 'clsx'
+import { useState } from 'react'
 import { SolidBackground } from '~/app/(pages)/home/_components/background'
 import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
@@ -10,21 +11,25 @@ import { Button, CTA } from '~/components/button'
 import { Image } from '~/components/image'
 import { Marquee } from '~/components/marquee'
 import { Video } from '~/components/video'
+import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { buttons, persons, showcaseCards } from './data'
 import s from './section-11.module.css'
 
 export function Section11() {
+  const { isMobile, isDesktop } = useDeviceDetection()
+  const [isOpenCard, setIsOpenCard] = useState<string | null>(null)
+
   return (
     <SolidBackground>
       <section
         // ref={setIntersectionRef}
         className={cn(
-          'dt:dr-pt-141 dt:dr-pb-203 relative'
+          'dt:dr-pt-141 dr-pt-120 dt:dr-pb-203 dr-pb-120 relative'
           // isInViewport && s.inViewport
         )}
       >
-        <div className="dt:dr-layout-grid-inner dt:dr-top-141 dr-mb-156">
-          <TitleBlock className="dt:col-start-4 dt:col-end-10 dt:dr-mb-40 text-teal">
+        <div className="dr-layout-grid-inner dt:dr-top-141 dr-mb-156">
+          <TitleBlock className="dt:col-start-4 dt:col-end-10 col-span-full dt:dr-mb-40 text-teal">
             <TitleBlock.LeadIn className="text-teal">
               {'<'} SHowcase {'>'}
             </TitleBlock.LeadIn>
@@ -41,16 +46,24 @@ export function Section11() {
             </TitleBlock.Button>
           </TitleBlock>
           {/* SHOWCASE CARDS */}
-          <div className="dt:col-start-2 dt:col-end-12 dr-max-h-257">
-            <div className="dt:dr-grid dt:dr-grid-cols-3 dt:dr-gap-24 relative items-start">
+          <div className="dt:col-start-2 dt:col-end-12 col-span-full dt:dr-max-h-257">
+            <div className="dt:dr-grid dt:dr-grid-cols-3 dt:dr-gap-24 flex flex-col dr-gap-y-16 relative items-start">
               {showcaseCards.map((card, i) => (
                 <Button
                   key={`${card?.title}-${i}`}
-                  href={card?.href}
+                  href={isDesktop ? card?.href : undefined}
                   className={cn(
-                    'relative border border-dark-teal/50 dt:dr-p-12 bg-black dt:dr-rounded-20 dt:dr-w-361 dt:dr-max-h-371 overflow-hidden',
-                    s.card
+                    'relative border border-dark-teal/50 dr-p-12 bg-black dr-rounded-20 dt:dr-w-361 w-full dt:dr-max-h-371 dr-max-h-389 overflow-hidden',
+                    s.card,
+                    isOpenCard === card?.title && s.cardOpen
                   )}
+                  onClick={() => {
+                    if (isMobile) {
+                      setIsOpenCard(
+                        isOpenCard === card?.title ? null : card?.title
+                      )
+                    }
+                  }}
                 >
                   <HashPattern
                     className={cn(
@@ -61,7 +74,7 @@ export function Section11() {
 
                   <div
                     className={cn(
-                      'dt:dr-w-337 dt:dr-h-189 border border-dark-teal/50 dt:dr-rounded-8 aspect-16/9 dt:dr-mb-12 relative z-1 bg-white block',
+                      'dt:dr-w-337 dt:dr-h-189 dr-h-170 border border-dark-teal/50 dr-rounded-8 aspect-16/9 dt:dr-mb-12 relative z-1 bg-white block',
                       s.cardImage
                     )}
                   >

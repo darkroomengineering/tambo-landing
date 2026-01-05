@@ -57,6 +57,12 @@
       }
     }
   }
+
+  &.cardOpen {
+    @media (--mobile) {
+      padding-bottom: mobile-vw(170px);
+    }
+  }
 }
 
 .cardImage {

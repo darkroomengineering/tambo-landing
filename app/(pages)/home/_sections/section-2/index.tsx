@@ -132,6 +132,7 @@ function Card({ data, isOpen, onToggle }: CardProps) {
 
   return (
     <div className={cn('relative', s.cardWrapper)}>
+      {/* TODO: On mobile, the button should scroll to the corresponding section */}
       <Button
         href={isDesktop ? data?.button?.href : undefined}
         className={cn(

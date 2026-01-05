@@ -30,7 +30,7 @@ const typography: TypeStyles = {
     'font-weight': 300,
     'line-height': '110%',
     'letter-spacing': '-0.05em',
-    'font-size': { mobile: 48, desktop: 48 },
+    'font-size': { mobile: 28, desktop: 48 },
   },
   h2: {
     'font-family': `var(${fonts.sentient})`,
@@ -141,7 +141,7 @@ const typography: TypeStyles = {
     'font-weight': 400,
     'line-height': '120%',
     'letter-spacing': '0em',
-    'font-size': { mobile: 16, desktop: 16 },
+    'font-size': { mobile: 14, desktop: 16 },
   },
   'p-s': {
     'font-family': `var(${fonts.geist})`,
