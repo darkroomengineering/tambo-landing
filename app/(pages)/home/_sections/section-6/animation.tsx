@@ -89,6 +89,7 @@ export function Animation() {
       return
 
     const safeZoneProgress = mapRange(0, 0.05, steps[0], 0, 1, true)
+    const containerProgress = mapRange(0.05, 0.1, steps[0], 0, 1, true)
     const addToCalendarProgress = mapRange(0.5, 1, steps[0], 0, 1, true)
     const thinkingProgress = mapRange(0, 0.4, steps[1], 0, 1, true)
     const circleFocusProgress = mapRange(0.6, 0.8, steps[1], 0, 1, true)
@@ -115,7 +116,14 @@ export function Animation() {
     const addingToCalendarProgress = mapRange(0.6, 1, steps[3], 0, 1, true)
     const addedToCalendarProgress = mapRange(0.2, 0.6, steps[4], 0, 1, true)
 
-    if (safeZoneProgress === 1) {
+    const section5Container = document.getElementById('section-5-container')
+
+    if (safeZoneProgress === 1 && section5Container) {
+      section5Container.style.display = 'none'
+      container.style.display = 'block'
+    }
+
+    if (containerProgress === 1) {
       chatMessages.style.setProperty(
         '--chat-translate-y',
         `${mapRange(0, 1, addToCalendarProgress, 0, 84, true)}`
@@ -248,7 +256,11 @@ export function Animation() {
   }, [addCallback])
 
   return (
-    <div ref={containerRef} className={cn('w-full', s.container)}>
+    <div
+      id="section-6-container"
+      ref={containerRef}
+      className={cn('w-full hidden', s.container)}
+    >
       <div ref={chatRef} className={cn('relative w-full dr-h-470', s.chat)}>
         <div
           // ref={chatBackgroundRef}
@@ -258,7 +270,7 @@ export function Animation() {
           // ref={chatBorderRef}
           className="absolute -inset-[6px] bg-white/80 -z-2 dr-rounded-26"
         />
-        <div className="size-full overflow-hidden dr-p-16 dashed-border dr-rounded-20">
+        <div className="size-full overflow-hidden dr-p-14 dashed-border dr-rounded-20">
           <div
             ref={chatMessagesRef}
             className={cn(
