@@ -160,10 +160,8 @@ export function ButtonIcon({ icon }: { icon: 'arrow' | 'github' | 'discord' }) {
   return (
     <>
       {icon === 'arrow' && <ArrowSVG className="dr-w-16 dr-h-16 z-1" />}
-      {icon === 'github' && <GithubSVG className="dt:dr-w-24 dt:dr-h-24 z-1" />}
-      {icon === 'discord' && (
-        <DiscordSVG className="dt:dr-w-24 dt:dr-h-24 z-1" />
-      )}
+      {icon === 'github' && <GithubSVG className="dr-w-24 dr-h-24 z-1" />}
+      {icon === 'discord' && <DiscordSVG className="dr-w-24 dr-h-24 z-1" />}
     </>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import cn from 'clsx'
+import { useIntersectionObserver } from 'hamo'
 import { useState } from 'react'
 import { SolidBackground } from '~/app/(pages)/home/_components/background'
 import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
@@ -15,6 +16,49 @@ import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { buttons, persons, showcaseCards } from './data'
 import s from './section-11.module.css'
 
+type PersonCardProps = {
+  person: (typeof persons)[number]
+}
+
+function PersonCard({ person }: PersonCardProps) {
+  const [setIntersectionRef, intersection] = useIntersectionObserver({
+    rootMargin: '30%',
+    threshold: 0.8,
+  })
+
+  const isInViewport = intersection?.isIntersecting
+
+  return (
+    <div ref={setIntersectionRef}>
+      <Button
+        className={cn(
+          'dt:dr-w-322 dr-w-327 dt:h-fit dr-p-16 dr-rounded-20 border border-dark-teal/50 flex dr-gap-x-16 bg-black',
+          s.personCard,
+          isInViewport && s.personInViewport
+        )}
+        href={person?.url}
+      >
+        <div className="dr-w-40 dr-h-40 dr-rounded-full relative">
+          <Image src={person?.image} alt={person?.name} fill />
+        </div>
+        <div className="flex flex-col">
+          <div className="flex items-center dr-gap-x-4 w-full dr-mb-8">
+            <p className="dt:typo-p typo-p-bold text-teal">
+              {person?.name ?? ''}
+            </p>
+            <p className="typo-label-m text-dark-teal/50">
+              {person?.account ?? ''}
+            </p>
+          </div>
+          <div className="dr-max-w-234 whitespace-normal">
+            <p className="typo-p-s text-dark-teal">{person?.tweet}</p>
+          </div>
+        </div>
+      </Button>
+    </div>
+  )
+}
+
 export function Section11() {
   const { isMobile, isDesktop } = useDeviceDetection()
   const [isOpenCard, setIsOpenCard] = useState<string | null>(null)
@@ -22,18 +66,14 @@ export function Section11() {
   return (
     <SolidBackground>
       <section
-        // ref={setIntersectionRef}
-        className={cn(
-          'dt:dr-pt-141 dr-pt-120 dt:dr-pb-203 dr-pb-120 relative'
-          // isInViewport && s.inViewport
-        )}
+        className={cn('dt:dr-pt-141 dr-pt-120 dt:dr-pb-203 dr-pb-120 relative')}
       >
-        <div className="dr-layout-grid-inner dt:dr-top-141 dr-mb-156">
-          <TitleBlock className="dt:col-start-4 dt:col-end-10 col-span-full dt:dr-mb-40 text-teal">
+        <div className="dr-layout-grid-inner dt:dr-top-141 dt:dr-mb-156 dr-mb-78">
+          <TitleBlock className="dt:col-start-4 dt:col-end-10 col-span-full dt:dr-mb-40 dr-mb-56 text-teal">
             <TitleBlock.LeadIn className="text-teal">
               {'<'} SHowcase {'>'}
             </TitleBlock.LeadIn>
-            <TitleBlock.Title level="h2" className="dt:dr-mb-8!">
+            <TitleBlock.Title level="h2" className="dr-mb-8!">
               Built with Tambo
             </TitleBlock.Title>
             <TitleBlock.Subtitle className="dt:dr-mb-40 text-dark-teal">
@@ -41,7 +81,7 @@ export function Section11() {
               <br />
               Here are some of the best apps from our developer community.
             </TitleBlock.Subtitle>
-            <TitleBlock.Button href="/" color="black">
+            <TitleBlock.Button href="/" color="black" className="desktop-only">
               Start Building
             </TitleBlock.Button>
           </TitleBlock>
@@ -74,7 +114,7 @@ export function Section11() {
 
                   <div
                     className={cn(
-                      'dt:dr-w-337 dt:dr-h-189 dr-h-170 border border-dark-teal/50 dr-rounded-8 aspect-16/9 dt:dr-mb-12 relative z-1 bg-white block',
+                      'dt:dr-w-337 dt:dr-h-189 dr-h-170 border border-dark-teal/50 dr-rounded-8 aspect-16/9 dr-mb-12 relative z-1 bg-white block',
                       s.cardImage
                     )}
                   >
@@ -94,32 +134,26 @@ export function Section11() {
 
                     <div
                       className={cn(
-                        'dt:dr-w-32 dt:dr-h-32 bg-black border border-teal flex items-center justify-center dr-rounded-10 relative',
+                        'dr-w-32 dr-h-32 bg-black border border-teal flex items-center justify-center dr-rounded-10 relative',
                         s.button
                       )}
                     >
                       <PlusSVG
-                        className={cn(
-                          'dt:dr-w-16 dt:dr-h-16 z-1 absolute ',
-                          s.plus
-                        )}
+                        className={cn('dr-w-16 dr-h-16 z-1 absolute ', s.plus)}
                       />
                       <ArrowSVG
-                        className={cn(
-                          'dt:dr-w-16 dt:dr-h-16 z-1 absolute ',
-                          s.arrow
-                        )}
+                        className={cn('dr-w-16 dr-h-16 z-1 absolute ', s.arrow)}
                       />
                     </div>
                   </div>
 
                   <div
                     className={cn(
-                      'absolute dt:dr-top-262 dt:dr-ml-12',
+                      'absolute dt:dr-top-262 dr-top-242 dt:dr-ml-12',
                       s.cardContent
                     )}
                   >
-                    <p className="typo-p text-mint dt:dr-mb-17 dt:dr-w-298">
+                    <p className="typo-p text-mint dr-mb-17 dt:dr-w-298 dr-w-263">
                       {card?.paragraph}
                     </p>
                     <p className="typo-label-m text-mint">{card?.user}</p>
@@ -131,10 +165,10 @@ export function Section11() {
         </div>
 
         {/* Marquee section */}
-        <div className="text-center dt:dr-mb-40 text-teal">
-          <h3 className="typo-h3">Backing our vision.</h3>
-          <p className="typo-p-l ">
-            Trusted by industry leaders in AI, product, and engineering.
+        <div className="text-center dr-mb-40 text-teal">
+          <h3 className="dt:typo-h3 typo-h4 dr-mb-8">Word is spreading.</h3>
+          <p className="dt:typo-p-l typo-p">
+            From developers shipping with Tambo.
           </p>
         </div>
 
@@ -143,35 +177,13 @@ export function Section11() {
           speed={0.3}
           className={cn(s.marquee, 'dt:dr-mb-40 fade-mask')}
         >
-          <div className="flex dr-gap-x-24 dr-mr-24">
+          <div className="flex dt:dr-gap-x-24 dr-gap-x-16 dt:dr-mr-24 dr-mr-16">
             {persons?.map((person) => (
-              <Button
-                key={person?.name}
-                className={cn(
-                  'dt:dr-w-322 dt:h-fit dt:dr-p-16 dt:dr-rounded-20 border border-dark-teal/50 flex dr-gap-x-16 bg-black',
-                  s.personCard
-                )}
-                href={person?.url}
-              >
-                <div className="dt:dr-w-40 dt:dr-h-40 dt:dr-rounded-full relative">
-                  <Image src={person?.image} alt={person?.name} fill />
-                </div>
-                <div className="flex flex-col">
-                  <div className="flex items-center dr-gap-x-4 w-full dr-mb-8">
-                    <p className="typo-p text-teal">{person?.name ?? ''}</p>
-                    <p className="typo-label-m text-dark-teal/50">
-                      {person?.account ?? ''}
-                    </p>
-                  </div>
-                  <div className="dt:dr-max-w-234 whitespace-normal">
-                    <p className="typo-p-s text-dark-teal">{person?.tweet}</p>
-                  </div>
-                </div>
-              </Button>
+              <PersonCard key={person?.name} person={person} />
             ))}
           </div>
         </Marquee>
-        <div className="dr-gap-x-16 flex items-center justify-center w-full dt:-dr-mt-40">
+        <div className="dr-gap-x-16 flex dt:items-center flex-col dr-gap-y-8 dt:flex-row justify-center w-full dt:-dr-mt-40 px-safe dt:px-0">
           {buttons.map((button) => (
             <CTA
               key={button.text}
@@ -179,7 +191,7 @@ export function Section11() {
               href={button?.href}
               color="black"
             >
-              {button.text}
+              {button?.text}
             </CTA>
           ))}
         </div>

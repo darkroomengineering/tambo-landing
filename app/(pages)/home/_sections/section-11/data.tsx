@@ -10,7 +10,7 @@ export const showcaseCards = [
   {
     title: 'Strudel AI',
     paragraph:
-      'Database design through conversation. Create schemas, generate ERDs, get optimization tips, export SQL.',
+      'Strudel lets you code music patterns live. You layer drums, melodies, and synths in real time, making complex electronic music using code.',
     user: '@akinloluwami',
     href: 'https://docs.tambo.co',
     image: '/videos/Octo-Juggle.webm',
