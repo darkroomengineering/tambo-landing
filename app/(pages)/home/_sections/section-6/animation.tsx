@@ -1,4 +1,5 @@
 import cn from 'clsx'
+import gsap from 'gsap'
 import Image from 'next/image'
 import { use, useEffect, useEffectEvent, useRef } from 'react'
 import {
@@ -7,6 +8,7 @@ import {
 } from '~/app/(pages)/home/_components/timeline-section'
 import Cursor from '~/assets/svgs/cursor.svg'
 import { mapRange } from '~/libs/utils'
+import { colors } from '~/styles/colors'
 import s from './animation.module.css'
 import { LogoCircle, type LogoCircleRef } from './logo-circle'
 
@@ -26,6 +28,7 @@ export function Animation() {
   const confirmingBackgroundRef = useRef<HTMLDivElement>(null)
   const confirmingTextRef = useRef<HTMLParagraphElement>(null)
   const confirmingThinkingRef = useRef<HTMLDivElement>(null)
+  const addFreedomTrailRef = useRef<HTMLParagraphElement>(null)
 
   const scrollAnimation = useEffectEvent<TimelineCallback>(({ steps }) => {
     // console.log('scrollAnimation', steps)
@@ -43,6 +46,7 @@ export function Animation() {
     const confirmingBackground = confirmingBackgroundRef.current
     const confirmingText = confirmingTextRef.current
     const confirmingThinking = confirmingThinkingRef.current
+    const addFreedomTrail = addFreedomTrailRef.current
 
     if (
       !(
@@ -58,30 +62,38 @@ export function Animation() {
         sureUpdateCalendar &&
         confirmingBackground &&
         confirmingText &&
-        confirmingThinking
+        confirmingThinking &&
+        addFreedomTrail
       )
     )
       return
 
     const safeZoneProgress = mapRange(0, 0.05, steps[0], 0, 1, true)
-    const addToCalendarProgress = mapRange(0.1, 1, steps[0], 0, 1, true)
-    const thinkingProgress = mapRange(0, 0.5, steps[1], 0, 1, true)
-    const circleFocusProgress = mapRange(0.5, 1, steps[1], 0, 1, true)
-    const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
-    const chatMessagesProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
-    const freedomTrailProgress = mapRange(0, 0.5, steps[3], 0, 1, true)
-    const freedomTrailHighlightProgress = mapRange(0.5, 1, steps[3], 0, 1, true)
-    const sureUpdateCalendarProgress = mapRange(0, 0.3, steps[4], 0, 1, true)
-    const confirmUpdateCalendarProgress = mapRange(
-      0.3,
-      0.6,
-      steps[4],
+    const addToCalendarProgress = mapRange(0.5, 1, steps[0], 0, 1, true)
+    const thinkingProgress = mapRange(0, 0.4, steps[1], 0, 1, true)
+    const circleFocusProgress = mapRange(0.6, 0.8, steps[1], 0, 1, true)
+    const highlightProgress = mapRange(0.8, 1, steps[1], 0, 1, true)
+    const chatMessagesProgress = mapRange(0.1, 0.5, steps[2], 0, 1, true)
+    const freedomTrailProgress = mapRange(0.55, 0.7, steps[2], 0, 1, true)
+    const freedomTrailHighlightProgress = mapRange(
+      0.7,
+      0.9,
+      steps[2],
       0,
       1,
       true
     )
-    const addingToCalendarProgress = mapRange(0.6, 0.8, steps[4], 0, 1, true)
-    const addedToCalendarProgress = mapRange(0.8, 1, steps[4], 0, 1, true)
+    const sureUpdateCalendarProgress = mapRange(0, 0.3, steps[3], 0, 1, true)
+    const confirmUpdateCalendarProgress = mapRange(
+      0.3,
+      0.6,
+      steps[3],
+      0,
+      1,
+      true
+    )
+    const addingToCalendarProgress = mapRange(0.6, 1, steps[3], 0, 1, true)
+    const addedToCalendarProgress = mapRange(0.2, 0.6, steps[4], 0, 1, true)
 
     if (safeZoneProgress === 1) {
       chatMessages.style.setProperty(
@@ -95,11 +107,15 @@ export function Animation() {
         '--chat-translate-y',
         `${mapRange(0, 1, thinkingProgress, 84, 164, true)}`
       )
+      addFreedomTrail.style.backgroundColor = gsap.utils.interpolate(
+        colors['ghost-mint'],
+        colors['off-white'],
+        thinkingProgress
+      )
     }
 
-    logoCircle.scrollAnimation(circleFocusProgress)
-
     if (thinkingProgress === 1) {
+      logoCircle.scrollAnimation(circleFocusProgress)
       container.style.setProperty(
         '--highlight-progress',
         `${circleFocusProgress}`
@@ -227,11 +243,14 @@ export function Animation() {
             <p className="self-start typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey dr-mb-14">
               Great pick for a history buff.
             </p>
-            <p className="self-end typo-p bg-off-white dr-rounded-12 dr-p-24 border border-dark-grey dr-mb-14">
+            <p
+              ref={addFreedomTrailRef}
+              className="self-end typo-p bg-ghost-mint dr-rounded-12 dr-p-24 border border-dark-grey dr-mb-14"
+            >
               Add the Freedom Trail Tour to my calendar
             </p>
             <div className="self-start dr-mb-6 flex dr-gap-6">
-              <div className="bg-ghost-mint dr-rounded-12 h-full aspect-square border border-dark-grey relative dr-p-10 relative z-10">
+              <div className="bg-ghost-mint dr-rounded-12 h-full aspect-square border border-dark-grey dr-p-10 relative z-10">
                 <Image
                   ref={calendarImageRef}
                   src="/assets/logos/g-cal.svg"
