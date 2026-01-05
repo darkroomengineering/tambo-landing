@@ -84,8 +84,14 @@ export function Section4() {
       messages={messages}
       title="AI-generated interfaces, powered by your own components."
       zIndex={10}
+      proxyChildren={
+        <div
+          ref={setRectRef}
+          className="opacity-0 pointer-events-none w-full aspect-668/449"
+        />
+      }
     >
-      <Animation ref={setRectRef} />
+      <Animation />
     </TimelineSection>
   )
 }

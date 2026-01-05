@@ -115,6 +115,7 @@ export function Animation() {
     )
     const addingToCalendarProgress = mapRange(0.6, 1, steps[3], 0, 1, true)
     const addedToCalendarProgress = mapRange(0.2, 0.6, steps[4], 0, 1, true)
+    const exitProgress = mapRange(0.8, 1, steps[4], 0, 1, true)
 
     const section5Container = document.getElementById('section-5-container')
 
@@ -248,6 +249,10 @@ export function Animation() {
       processBubble.animateDetail(addedToCalendarProgress)
       confirmingText.style.opacity = `${mapRange(0.4, 0.8, addedToCalendarProgress, 0, 1)}`
       confirmingThinking.style.opacity = `${mapRange(0, 0.4, addedToCalendarProgress, 1, 0)}`
+    }
+
+    if (addedToCalendarProgress === 1) {
+      container.style.opacity = `${1 - exitProgress}`
     }
   })
 

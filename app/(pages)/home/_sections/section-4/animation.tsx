@@ -91,6 +91,7 @@ export function Animation({
 
     if (safeZoneProgress === 1) {
       container.style.opacity = `${containerProgress}`
+      console.log(containerProgress)
     }
 
     if (introProgress === 1) {
@@ -179,7 +180,7 @@ export function Animation({
         ref?.(el)
       }}
       className={cn(
-        'w-full aspect-668/449 dr-rounded-20 typo-p grid grid-cols-1 grid-rows-1 opacity-0',
+        'w-full aspect-668/470 dr-rounded-20 typo-p grid grid-cols-1 grid-rows-1 opacity-0',
         s.container
       )}
     >

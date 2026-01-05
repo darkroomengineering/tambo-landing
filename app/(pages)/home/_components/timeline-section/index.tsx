@@ -45,12 +45,14 @@ export function TimelineSection({
   children,
   ref,
   zIndex,
+  proxyChildren,
 }: {
   messages: typeof messagesType
   title: string
   children?: React.ReactNode
   ref?: React.RefCallback<HTMLElement | null>
   zIndex: number
+  proxyChildren?: React.ReactNode
 }) {
   const [rectRef, rect] = useRect()
   const [messagesVisible, setMessagesVisible] = useState(0)
@@ -156,11 +158,20 @@ export function TimelineSection({
             </CTA>
           </div>
           <div
-            className="fixed dr-left-900 top-0 dr-w-col-5 h-screen flex items-center justify-center pointer-events-none"
-            style={{ zIndex }}
+            className="fixed left-1/2 -translate-x-1/2 top-0 dr-layout-grid-inner h-screen pointer-events-none"
+            style={{
+              maxWidth: `calc(var(--max-width) * 1px)`,
+            }}
           >
-            {children}
+            <div className="col-start-6 col-end-12 flex items-center justify-center">
+              {children}
+            </div>
           </div>
+          {proxyChildren && (
+            <div className="col-start-6 col-end-12 flex items-center justify-center">
+              {proxyChildren}
+            </div>
+          )}
         </div>
       </section>
     </TimelineSectionContext.Provider>
