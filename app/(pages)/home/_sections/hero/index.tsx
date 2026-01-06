@@ -317,12 +317,15 @@ export function Hero() {
           ref={titleRef}
         >
           <h1 className="dt:typo-h1 typo-h3">
-            You shouldn&apos;t need a PhD
+            Build generative UI apps.
             <br />
-            to add AI to your app.
+            No PhD required.
           </h1>
-          <p className="typo-p-l text-black/70">
-            Turn any React app into an AI-powered experience in minutes
+          <p className="dt:typo-p-l typo-p text-black/70 ">
+            Tambo is the full-stack solution handling{' '}
+            <br className="mobile-only" /> AI orchestration,
+            <br className="desktop-only" />
+            so you don't have to.
           </p>
           <div className="flex dt:flex-row flex-col dt:dr-gap-16 dr-gap-12 dt:dr-mt-40 dr-mt-24 place-items-center">
             <CTA snippet className="bg-black! text-teal border-teal">
@@ -340,7 +343,7 @@ export function Hero() {
                 <span className="text-pink">{'</TamboProvider>'}</span>
               </span>
             </CTA>
-            <CTA className={s.arrowCTA}>Try Live Demo</CTA>
+            <CTA className={cn(s.arrowCTA, 'desktop-only')}>Try Live Demo</CTA>
           </div>
         </div>
       </div>
