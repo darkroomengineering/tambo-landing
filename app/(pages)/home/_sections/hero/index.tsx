@@ -203,7 +203,7 @@ export function Hero() {
     const timeline = appear().pause()
     setTimeout(() => {
       timeline.play()
-    }, 0)
+    }, 1000)
 
     return () => {
       timeline.kill()
