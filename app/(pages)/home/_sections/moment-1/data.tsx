@@ -35,9 +35,9 @@ export const messages = [
     tag: 'benefit',
     message: (
       <>
-        No rebuilds. No generic UI.
+        Your components stay intact, AI just learns
         <br />
-        Just your design system, AI-powered.
+        to use them. No rebuilds, no generic UI.
       </>
     ),
     video: 'TODO: MISSING VIDEO',

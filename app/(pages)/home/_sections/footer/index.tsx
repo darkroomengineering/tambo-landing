@@ -204,8 +204,8 @@ export function Footer() {
             <TitleBlock.Title level="h2" className="dr-mb-8! typo-h1!">
               Ready to get started?
             </TitleBlock.Title>
-            <TitleBlock.Subtitle className="typo-p! dt:typo-p-l!">
-              Ship an ai assistant with generative UI <br /> in minutes.
+            <TitleBlock.Subtitle className="typo-p! dt:typo-p-l! text-black/70">
+              Ship an ai assistant with generative ui in minutes.
             </TitleBlock.Subtitle>
             <div className="flex dr-gap-8 dr-mt-40 dt:flex-row flex-col">
               <CTA
@@ -216,6 +216,7 @@ export function Footer() {
               >
                 START BUILDING
               </CTA>
+
               <CTA
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}

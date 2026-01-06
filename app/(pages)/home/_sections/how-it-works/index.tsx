@@ -8,7 +8,7 @@ export function HowItWorks() {
         <TitleBlock.LeadIn>
           {'<'} How It Works {'>'}
         </TitleBlock.LeadIn>
-        <TitleBlock.Title level="h2">
+        <TitleBlock.Title level="h2" className="mb-0!">
           More than a SDK.
           <br /> A complete platform.
         </TitleBlock.Title>

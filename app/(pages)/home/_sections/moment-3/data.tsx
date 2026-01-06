@@ -35,9 +35,9 @@ export const messages = [
     tag: 'benefit',
     message: (
       <>
-        One line to connect. Everything
+        One line to connect. Everything the
         <br />
-        the server offers, now in your app.
+        server offers, now in your app.
       </>
     ),
     video: '/video/section-4-4.mp4',
