@@ -96,7 +96,7 @@ export function Hero() {
     // return
 
     timeline
-      .add(timeline1, '<2')
+      .add(timeline1, '<5')
       .to(
         proxy,
         {
@@ -193,6 +193,7 @@ export function Hero() {
       )
       .call(() => {
         hasAppeared.current = true
+        console.log('hasAppeared', hasAppeared.current)
       })
 
     return timeline
