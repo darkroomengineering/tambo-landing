@@ -2,7 +2,10 @@
 .cardWrapper {
   --ease: var(--ease-gleasing);
   --transition-duration: 600ms;
-  overflow: hidden;
+
+  @media (--mobile) {
+    overflow: hidden;
+  }
 
   .card {
     width: 100%;
@@ -13,7 +16,7 @@
       height var(--ease) var(--transition-duration);
 
     @media (--desktop) {
-      width: desktop-vw(262.5px);
+      width: desktop-vw(264px);
     }
 
     &.cardOpen {
