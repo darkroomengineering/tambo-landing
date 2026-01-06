@@ -206,29 +206,15 @@ export function Footer() {
             </TitleBlock.Subtitle>
             <div className="flex dr-gap-8 dr-mt-40">
               <CTA
-                snippet
+                href="https://docs.tambo.co/"
                 className="bg-black! text-teal border-teal"
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
               >
                 START BUILDING
-                <span className="typo-code-snippet">
-                  <span className="text-pink">{'<TamboProvider'} </span>
-                  <span className="text-teal">
-                    {'components='}
-                    <span className="text-pink">{'{components}'}</span>
-                  </span>
-                  <span className="text-pink">{'>'}</span>
-                  <br />
-                  <span className="text-white dt:dr-ml-16">
-                    {'<YourApp />'}
-                  </span>
-                  <br />
-                  <span className="text-pink">{'</TamboProvider>'}</span>
-                </span>
               </CTA>
               <CTA onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-                Try Live Demo
+                components
               </CTA>
             </div>
           </TitleBlock>

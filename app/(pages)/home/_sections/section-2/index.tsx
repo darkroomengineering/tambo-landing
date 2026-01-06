@@ -20,20 +20,14 @@ export function Section2() {
   return (
     <section className="dt:dr-pt-188 dr-pt-128 dt:dr-pb-204 dr-pb-200">
       <div className="dt:dr-layout-grid-inner px-safe dt:px-0">
-        <TitleBlock className="dr-mb-56  dt:col-start-4 dt:col-end-10">
+        <TitleBlock className="dr-mb-56  dt:col-start-4 dt:col-end-10 ">
           <TitleBlock.LeadIn className="dr-mb-16 dt:dr-mb-24">
             {'<'} Meet tambo {'>'}
           </TitleBlock.LeadIn>
-          <TitleBlock.Title level="h2" className="dr-mb-0! dt:dr-mb-40!">
+          <TitleBlock.Title level="h2" className="mb-0!">
             Tambo is the React SDK that lets users control your app through
             natural language.
           </TitleBlock.Title>
-          <TitleBlock.Button
-            href="https://docs.tambo.co/"
-            className="desktop-only"
-          >
-            Read Documentation
-          </TitleBlock.Button>
         </TitleBlock>
         <div className="flex flex-col dt:flex-row gap-gap justify-center dt:dr-mb-156 dt:col-start-2 dt:col-end-12">
           {cards.map((card) => (
@@ -49,12 +43,6 @@ export function Section2() {
             />
           ))}
         </div>
-        <CTA
-          href="https://docs.tambo.co/"
-          className="mobile-only place-self-center dr-mt-56 dr-mb-80"
-        >
-          Read Documentation
-        </CTA>
       </div>
 
       <div className="text-center">

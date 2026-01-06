@@ -162,9 +162,11 @@ export function Section11() {
         </div>
 
         {/* Marquee section */}
-        <div className="text-center dr-mb-40 text-teal">
-          <h3 className="dt:typo-h3 typo-h4 dr-mb-8">Word is spreading.</h3>
-          <p className="dt:typo-p-l typo-p">
+        <div className="text-center dr-mb-40 ">
+          <h3 className="dt:typo-h3 typo-h4 dr-mb-8 text-teal">
+            Word is spreading.
+          </h3>
+          <p className="dt:typo-p-l typo-p text-dark-teal">
             From developers shipping with Tambo.
           </p>
         </div>
