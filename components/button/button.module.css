@@ -60,7 +60,7 @@
     color: var(--color-teal);
 
     svg path {
-      transition: stroke var(--duration) var(--ease);
+      transition: fill var(--duration) var(--ease);
     }
 
     @media (--hover) {
@@ -72,7 +72,7 @@
           background-color: var(--color-black);
 
           svg path {
-            stroke: var(--color-teal);
+            fill: var(--color-teal);
           }
 
           &::before,
