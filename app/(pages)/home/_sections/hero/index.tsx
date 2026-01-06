@@ -42,6 +42,7 @@ export function Hero() {
       ease: 'linear',
       onUpdate: () => {
         const items = getItems()
+        // console.log('update', proxy.progress1, items, desktopVW(310))
         // const elements = items.map((item) => item?.getElement()).filter(Boolean)
 
         fromTo(
@@ -200,13 +201,13 @@ export function Hero() {
   })
 
   useEffect(() => {
-    const timeline = appear().pause()
+    let timeline: gsap.core.Timeline | null = null
     setTimeout(() => {
-      timeline.play()
-    }, 1000)
+      timeline = appear()
+    }, 0)
 
     return () => {
-      timeline.kill()
+      timeline?.kill()
     }
   }, [])
 
