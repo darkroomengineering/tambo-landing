@@ -3,7 +3,7 @@ import { TimelineSection } from '~/app/(pages)/home/_components/timeline-section
 import { Animation } from './animation'
 import { messages } from './data'
 
-export function Section6() {
+export function Moment3() {
   return (
     <TimelineSection
       messages={messages}

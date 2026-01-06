@@ -14,9 +14,9 @@ import { Video } from '~/components/video'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
 import { fromTo } from '~/libs/utils'
-import s from './section1.module.css'
+import s from './hero.module.css'
 
-export function Section1() {
+export function Hero() {
   const { getItems } = useContext(BackgroundContext)
 
   const [setRectRef, rect] = useRect()

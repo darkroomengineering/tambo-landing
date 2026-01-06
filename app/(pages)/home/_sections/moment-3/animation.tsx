@@ -13,7 +13,7 @@ import { colors } from '~/styles/colors'
 import {
   ProcessBubble,
   type ProcessBubbleAnimateRef,
-} from '../section-5/animation'
+} from '../moment-2/animation'
 import s from './animation.module.css'
 import CalendarIcon from './calendar.svg'
 import ClockIcon from './clock.svg'
@@ -425,19 +425,19 @@ export function Animation() {
                 width1={239}
                 width2={185}
               />
-              <p
+              <div
                 ref={confirmingBackgroundRef}
                 className={cn(
                   'typo-p-sentient bg-light-gray dr-rounded-12 dr-p-24 border border-dark-grey relative',
                   s.confirmingBackground
                 )}
               >
-                <span
+                <p
                   ref={confirmingTextRef}
                   className="whitespace-nowrap opacity-0"
                 >
                   You're all set for Tuesday. Enjoy the tour!
-                </span>
+                </p>
                 <div
                   ref={confirmingThinkingRef}
                   className="absolute dr-left-40 top-1/2 -translate-1/2 flex dr-gap-4 items-center"
@@ -446,7 +446,7 @@ export function Animation() {
                   <div className="dr-size-4 rounded-full bg-black" />
                   <div className="dr-size-4 rounded-full bg-black" />
                 </div>
-              </p>
+              </div>
             </div>
           </div>
         </div>

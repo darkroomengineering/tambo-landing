@@ -18,7 +18,7 @@ import Cursor from '~/assets/svgs/cursor.svg'
 import { Image } from '~/components/image'
 import { mapRangeWithSnap as mapRange } from '~/libs/utils'
 import { colors } from '~/styles/colors'
-import { SeatMap } from '../section-4/seat-map'
+import { SeatMap } from '../moment-1/seat-map'
 import s from './animation.module.css'
 
 export function Animation() {

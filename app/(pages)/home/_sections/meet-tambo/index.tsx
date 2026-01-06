@@ -12,21 +12,23 @@ import { Marquee } from '~/components/marquee'
 import { Video } from '~/components/video'
 import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { cards, persons } from './data'
-import s from './section-2.module.css'
+import s from './meet-tambo.module.css'
 
-export function Section2() {
+export function MeetTambo() {
   const [openCardTitle, setOpenCardTitle] = useState<string | null>(null)
 
   return (
     <section className="dt:dr-pt-188 dr-pt-128 dt:dr-pb-204 dr-pb-200">
-      <div className="dt:dr-layout-grid-inner px-safe dt:px-0">
-        <TitleBlock className="dr-mb-56  dt:col-start-4 dt:col-end-10 ">
+      <div className="dt:dr-layout-grid px-safe dt:px-0">
+        <TitleBlock className="dr-mb-56  dt:col-start-3 dt:col-end-11">
           <TitleBlock.LeadIn className="dr-mb-16 dt:dr-mb-24">
             {'<'} Meet tambo {'>'}
           </TitleBlock.LeadIn>
           <TitleBlock.Title level="h2" className="mb-0!">
-            Tambo is the React SDK that lets users control your app through
-            natural language.
+            Tambo bridges your app and LLMs, so you can ship generative UIs
+            faster,
+            <br />
+            without the boilerplate.
           </TitleBlock.Title>
         </TitleBlock>
         <div className="flex flex-col dt:flex-row gap-gap justify-center dt:dr-mb-156 dt:col-start-2 dt:col-end-12">

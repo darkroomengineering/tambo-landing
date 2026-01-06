@@ -9,7 +9,7 @@ import { fromTo } from '~/libs/utils'
 import { Animation } from './animation'
 import { messages } from './data'
 
-export function Section4() {
+export function Moment1() {
   const [setRectRef, rect] = useRect()
 
   const { getItems, getBackground } = useContext(BackgroundContext)

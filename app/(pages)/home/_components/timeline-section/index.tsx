@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import type { messages as messagesType } from '~/app/(pages)/home/_sections/section-4/data'
+import type { messages as messagesType } from '~/app/(pages)/home/_sections/moment-1/data'
 import { CTA } from '~/components/button'
 import { Image } from '~/components/image'
 import { Video } from '~/components/video'
@@ -66,7 +66,7 @@ export function TimelineSection({
   useScrollTrigger({
     rect,
     start: 'top top',
-    end: `${(rect?.bottom ?? 0) * 0.9} bottom`,
+    end: `${(rect?.bottom ?? 0) * 0.95} bottom`,
     onProgress: ({ progress, steps }) => {
       const currentStep = Math.max(0, steps.lastIndexOf(1) + 1)
       setMessagesVisible(currentStep)
