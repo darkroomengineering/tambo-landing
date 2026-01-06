@@ -87,11 +87,9 @@ export function Animation({
     const highlightProgress = mapRange(0, 0.5, steps[2], 0, 1, true)
     const swapProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
     const selectProgress = mapRange(0.3, 1, steps[3], 0, 1, true)
-    const exitProgress = mapRange(0.8, 1, steps[4], 0, 1, true)
 
     if (safeZoneProgress === 1) {
       container.style.opacity = `${containerProgress}`
-      console.log(containerProgress)
     }
 
     if (introProgress === 1) {

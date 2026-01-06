@@ -66,7 +66,7 @@ export function TimelineSection({
   useScrollTrigger({
     rect,
     start: 'top top',
-    end: 'bottom bottom',
+    end: `${(rect?.bottom ?? 0) * 0.9} bottom`,
     onProgress: ({ progress, steps }) => {
       const currentStep = Math.max(0, steps.lastIndexOf(1) + 1)
       setMessagesVisible(currentStep)
@@ -99,15 +99,16 @@ export function TimelineSection({
       >
         <div className="sticky top-0 dr-layout-grid-inner h-screen">
           <div className="col-span-4 flex flex-col dr-mt-112">
-            <h3
-              className="typo-h2"
-              style={{
-                background:
-                  'linear-gradient(to bottom, transparent 0%, #E5F0ED 10%, #E5F0ED 90%, transparent 97%)',
-              }}
-            >
-              {title}
-            </h3>
+            <div className="relative">
+              <h3 className="relative typo-h2 z-10">{title}</h3>
+              <div
+                className="absolute -dr-inset-20"
+                style={{
+                  background:
+                    'linear-gradient(to bottom, transparent 0%, #E5F0ED 10%, #E5F0ED 90%, transparent 97%)',
+                }}
+              />
+            </div>
             <div
               className="relative dr-py-40"
               style={{
@@ -150,11 +151,24 @@ export function TimelineSection({
               }}
             />
             <CTA
+              snippet
+              className="bg-black! text-teal border-teal"
               wrapperRef={buttonRef}
-              wrapperClassName="opacity-0 transition-opacity duration-300 ease-gleasing"
-              color="black"
+              wrapperClassName="opacity-0 transition-opacity duration-300 ease-gleasing dr-max-w-321"
             >
-              Start building
+              START BUILDING
+              <span className="typo-code-snippet">
+                <span className="text-pink">{'<TamboProvider'} </span>
+                <span className="text-teal">
+                  {'components='}
+                  <span className="text-pink">{'{components}'}</span>
+                </span>
+                <span className="text-pink">{'>'}</span>
+                <br />
+                <span className="text-white dt:dr-ml-16">{'<YourApp />'}</span>
+                <br />
+                <span className="text-pink">{'</TamboProvider>'}</span>
+              </span>
             </CTA>
           </div>
           <div
