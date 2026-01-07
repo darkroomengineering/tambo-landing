@@ -294,7 +294,9 @@ export function Hero() {
             <div className="dr-h-26 dr-mb-8">
               <TamboLetters className="h-full" />
             </div>
-            <div className="typo-surtitle">{'< REACT SDK >'}</div>
+            <div className="whitespace-nowrap typo-surtitle">
+              {'< REACT SDK >'}
+            </div>
           </div>
         </div>
         <div

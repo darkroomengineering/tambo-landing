@@ -71,13 +71,13 @@ export function Section11() {
       >
         <div className="dr-layout-grid-inner dt:dr-top-141 dt:dr-mb-156 dr-mb-78">
           <TitleBlock className="dt:col-start-4 dt:col-end-10 col-span-full dt:dr-mb-40 dr-mb-56 text-teal">
-            <TitleBlock.LeadIn className="text-teal">
+            <TitleBlock.LeadIn className="text-dark-teal">
               {'<'} SHowcase {'>'}
             </TitleBlock.LeadIn>
             <TitleBlock.Title level="h2" className="dr-mb-8!">
               Built with Tambo
             </TitleBlock.Title>
-            <TitleBlock.Subtitle className="dt:dr-mb-40 text-dark-teal">
+            <TitleBlock.Subtitle className="dt:dr-mb-40 text-dark-teal typo-p! dt:typo-p-l!">
               Generative UI unlocks new possibilities.
               <br />
               Here are some of the best apps from our developer community.

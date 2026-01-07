@@ -8,14 +8,15 @@ export function HowItWorks() {
         <TitleBlock.LeadIn>
           {'<'} How It Works {'>'}
         </TitleBlock.LeadIn>
-        <TitleBlock.Title level="h2" className="mb-0!">
+        <TitleBlock.Title level="h2" className="dt:mb-0! dr-mb-8">
           More than a SDK.
           <br /> A complete platform.
         </TitleBlock.Title>
-        <TitleBlock.Subtitle>
+        <TitleBlock.Subtitle className="typo-p! dt:typo-p-l!">
           SDK + UI components, backed by hosted API and dashboard.
-          <br />
-          Everything you need to add AI to your app.
+          <br className="desktop-only" />
+          Everything you need to add AI to your
+          <br className="mobile-only" /> app.
         </TitleBlock.Subtitle>
       </TitleBlock>
       <div className="dr-px-40 dr-pb-40">

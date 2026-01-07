@@ -248,14 +248,7 @@ export function Section10() {
               />
             </Video>
           </div>
-          {/* <div className="text-center flex flex-col items-center dr-gap-24">
-          <h3 className="typo-surtitle text-black/70">{'< features >'}</h3>
-          <h2 className="typo-h1">
-            One SDK,
-            <br />
-            orchestrating <br /> everything
-          </h2>
-        </div> */}
+
           <TitleBlock>
             <TitleBlock.LeadIn>
               {'<'} FEATURES {'>'}
@@ -274,10 +267,12 @@ export function Section10() {
             </TitleBlock.Title>
           </TitleBlock>
         </Kinesis>
-        <div className="absolute bottom-0 w-full dr-p-24 mobile-only">
+        <div className=" w-full dr-p-24 mobile-only">
           {BUTTONS.map((button, index) => (
-            <div className="w-full" key={button.title + index.toString()}>
-              <CTA href={button.href}>{button.title}</CTA>
+            <div className="w-full " key={button.title + index.toString()}>
+              <CTA className="flex! justify-between" href={button.href}>
+                {button.title}
+              </CTA>
             </div>
           ))}
         </div>

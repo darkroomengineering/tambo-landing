@@ -55,8 +55,10 @@ export function Section12() {
           </TitleBlock.LeadIn>
           <TitleBlock.Title level="h2" className="dr-mb-0!">
             Simple pricing
-            <br />
-            from hobbyists to enterprise
+            <br className="desktop-only" />
+            from
+            <br className="mobile-only" />
+            hobbyists to enterprise
           </TitleBlock.Title>
         </TitleBlock>
         <div className="dt:col-start-2 dt:col-end-12 col-span-full">

@@ -241,7 +241,8 @@ export function Footer() {
               Ready to get started?
             </TitleBlock.Title>
             <TitleBlock.Subtitle className="typo-p! dt:typo-p-l! text-black/70">
-              Ship an ai assistant with generative ui in minutes.
+              Ship an ai assistant with generative UI{' '}
+              <br className="mobile-only" /> in minutes.
             </TitleBlock.Subtitle>
             <div className="flex dr-gap-8 dr-mt-40 dt:flex-row flex-col">
               <CTA
@@ -271,15 +272,24 @@ export function Footer() {
           />
         </div>
         <div className="mobile-only flex dr-gap-12 dr-mb-32">
-          <div className="dr-size-32 rounded-full bg-grey grid place-items-center">
-            <DiscordSVG className="dr-w-16 dr-h-16" />
-          </div>
-          <div className="dr-size-32 rounded-full bg-grey grid place-items-center">
+          <Link
+            href="https://github.com/tambo-ai/tambo"
+            className="dr-size-32 rounded-full bg-grey grid place-items-center"
+          >
             <GithubSVG className="dr-w-16 dr-h-16" />
-          </div>
-          <div className="dr-size-32 rounded-full bg-grey grid place-items-center">
+          </Link>
+          <Link
+            href="https://discord.com/invite/dJNvPEHth6"
+            className="dr-size-32 rounded-full bg-grey grid place-items-center"
+          >
+            <DiscordSVG className="dr-w-16 dr-h-16" />
+          </Link>
+          <Link
+            href="https://x.com/tambo_ai"
+            className="dr-size-32 rounded-full bg-grey grid place-items-center"
+          >
             <XSVG className="dr-w-16 dr-h-16" />
-          </div>
+          </Link>
         </div>
 
         <div className="dt:absolute dt:dr-layout-grid-inner dr-px-0 flex flex-col-reverse w-full dr-bottom-16 typo-label-m dr-mb-16 dt:dr-mb-0">
