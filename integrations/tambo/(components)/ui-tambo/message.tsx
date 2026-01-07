@@ -263,7 +263,7 @@ const MessageContent = React.forwardRef<HTMLDivElement, MessageContentProps>(
       <div
         ref={ref}
         className={cn(
-          'relative block dr-p-24 typo-p transition-all duration-200 dr-max-w-400 [&_p]:py-1 [&_li]:list-item',
+          'relative block dr-p-24 typo-p transition-all duration-200  [&_p]:py-1 [&_li]:list-item',
           className
         )}
         data-slot="message-content"

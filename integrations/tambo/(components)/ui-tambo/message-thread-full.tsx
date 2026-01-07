@@ -129,9 +129,12 @@ export function MessageThreadFull({
         </MessageSuggestions>
 
         {/* Message input */}
-        <div className="dr-px-4 dr-pb-4">
+        <div className="dr-px-8 dr-mb-8">
           <MessageInput contextKey={contextKey}>
-            <MessageInputTextarea placeholder="Lets pick your plane seat..." />
+            <MessageInputTextarea
+              placeholder="Lets pick your plane seat..."
+              className="typo-p"
+            />
             <MessageInputToolbar>
               {showFileInput && <MessageInputFileButton />}
               <MessageInputMcpPromptButton />

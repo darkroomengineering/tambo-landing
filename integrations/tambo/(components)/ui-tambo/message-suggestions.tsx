@@ -205,7 +205,7 @@ const MessageSuggestions = React.forwardRef<
         <TooltipProvider>
           <div
             ref={ref}
-            className={cn('dr-px-4 dr-pb-2', className)}
+            className={cn('dr-px-8 dr-pb-8', className)}
             data-slot="message-suggestions-container"
             {...props}
           >
@@ -245,7 +245,8 @@ const MessageSuggestionsStatus = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('dr-p-2 dr-rounded-6 dr-text-14 bg-transparent',
+      className={cn(
+        'dr-p-2 dr-rounded-6 dr-text-14 bg-transparent',
         !(error || isGenerating) &&
           (!thread?.generationStage || thread.generationStage === 'COMPLETE')
           ? 'dr-p-0 dr-min-h-0 dr-mb-0'
@@ -312,7 +313,8 @@ const MessageSuggestionsList = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('flex dr-gap-12 overflow-x-auto dr-pb-2 dr-rounded-6 bg-transparent min-h-[2.5rem]',
+      className={cn(
+        'flex dr-gap-12 overflow-x-auto dr-pb-2 dr-rounded-6 bg-transparent min-h-[2.5rem]',
         isGenerating ? 'opacity-70' : '',
         className
       )}
@@ -331,8 +333,9 @@ const MessageSuggestionsList = React.forwardRef<
               side="top"
             >
               <button
-                className={cn('dr-p-4 dr-rounded-8 typo-p transition-colors',
-                  'border border-flat',
+                className={cn(
+                  'dr-px-12 dr-py-7 dr-rounded-8 typo-label-m transition-colors',
+                  'border border-dark-grey',
                   isGenerating
                     ? 'bg-muted/50 text-muted-foreground'
                     : selectedSuggestionId === suggestion.id

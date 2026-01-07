@@ -366,7 +366,8 @@ const MessageInputInternal = React.forwardRef<
         {...props}
       >
         <div
-          className={cn('relative flex flex-col dr-rounded-12 bg-background shadow-md dr-p-2 dr-px-3',
+          className={cn(
+            'relative flex flex-col dr-rounded-8 bg-background shadow-md dr-p-16',
             isDragging
               ? 'border border-dashed border-emerald-400'
               : 'border border-border'
@@ -494,7 +495,8 @@ const MessageInputTextarea = ({
       onChange={handleChange}
       onKeyDown={handleKeyDown}
       onPaste={handlePaste}
-      className={cn('flex-1 dr-p-4 dr-rounded-t-8 bg-background text-foreground resize-none typo-p min-h-[82px] max-h-[40vh] focus:outline-none placeholder:text-muted-foreground/50',
+      className={cn(
+        'flex-1 dr-rounded-t-8 bg-background text-foreground resize-none typo-p min-h-[82px] max-h-[40vh] focus:outline-none placeholder:text-muted-foreground/50',
         className
       )}
       disabled={isPending || isUpdatingToken}
@@ -551,7 +553,8 @@ const MessageInputSubmitButton = React.forwardRef<
       type={isPending ? 'button' : 'submit'}
       disabled={isUpdatingToken}
       onClick={isPending ? handleCancel : undefined}
-      className={cn('dr-w-32 aspect-square dr-p-4 bg-black/80 text-white dr-rounded-8 hover:bg-black/70 disabled:opacity-50 flex items-center justify-center enabled:cursor-pointer',
+      className={cn(
+        'dr-w-32 aspect-square dr-p-4 bg-black/80 text-white dr-rounded-8 hover:bg-black/70 disabled:opacity-50 flex items-center justify-center enabled:cursor-pointer',
         className
       )}
       aria-label={isPending ? 'Cancel message' : 'Send message'}
@@ -618,7 +621,8 @@ const MessageInputMcpConfigButton = React.forwardRef<
 >(({ className, ...props }, ref) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
 
-  const buttonClasses = cn('dr-w-20 dr-h-20 dr-rounded-8 border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+  const buttonClasses = cn(
+    'dr-w-20 dr-h-20 dr-rounded-8 border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
     className
   )
 
@@ -737,7 +741,8 @@ const MessageInputFileButton = React.forwardRef<
         ref={ref}
         type="button"
         onClick={handleClick}
-        className={cn('dr-w-32 aspect-square dr-p-4 dr-rounded-8 border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+        className={cn(
+          'dr-w-32 aspect-square dr-p-4 dr-rounded-8 border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           className
         )}
         aria-label="Attach Images"
@@ -876,15 +881,19 @@ const ImageContextBadge: React.FC<ImageContextBadgeProps> = ({
       type="button"
       onClick={onToggle}
       aria-expanded={isExpanded}
-      className={cn('relative flex items-center dr-rounded-8 border overflow-hidden',
+      className={cn(
+        'relative flex items-center dr-rounded-8 border overflow-hidden',
         'border-border bg-background hover:bg-muted cursor-pointer',
         'transition-[width,height,padding] duration-200 ease-in-out',
-        isExpanded ? 'dr-w-40 dr-h-28 dr-p-0' : 'dr-w-32 dr-h-9 dr-pl-3 dr-pr-8 dr-gap-2'
+        isExpanded
+          ? 'dr-w-40 dr-h-28 dr-p-0'
+          : 'dr-w-32 dr-h-9 dr-pl-3 dr-pr-8 dr-gap-2'
       )}
     >
       {isExpanded && (
         <div
-          className={cn('absolute dr-inset-0 transition-opacity duration-150',
+          className={cn(
+            'absolute dr-inset-0 transition-opacity duration-150',
             'opacity-100 delay-100'
           )}
         >
@@ -904,7 +913,8 @@ const ImageContextBadge: React.FC<ImageContextBadgeProps> = ({
         </div>
       )}
       <span
-        className={cn('flex items-center dr-gap-1 dr-text-14 text-foreground truncate leading-none transition-opacity duration-150',
+        className={cn(
+          'flex items-center dr-gap-1 dr-text-14 text-foreground truncate leading-none transition-opacity duration-150',
           isExpanded ? 'opacity-0' : 'opacity-100 delay-100'
         )}
       >
@@ -958,7 +968,8 @@ const MessageInputStagedImages = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('flex flex-wrap items-center dr-gap-2 dr-pb-2 dr-pt-1 border-b border-border',
+      className={cn(
+        'flex flex-wrap items-center dr-gap-2 dr-pb-2 dr-pt-1 border-b border-border',
         className
       )}
       data-slot="message-input-staged-images"
@@ -1004,7 +1015,8 @@ const MessageInputToolbar = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('flex justify-between items-center dr-mt-2 dr-p-1 dr-gap-2',
+      className={cn(
+        'flex justify-between items-center dr-mt-2 dr-p-1 dr-gap-2',
         className
       )}
       data-slot="message-input-toolbar"
