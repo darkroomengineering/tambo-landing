@@ -103,7 +103,7 @@ function CollapsibleContainer({
       onOpenChange={onOpenChange}
       //:TODO i've changed the width to 277 for dev, originally was 177
       className={cn(
-        'flex flex-col dr-w-277 dr-rounded-12 shadow-lg bg-background border border-border',
+        'flex flex-col dr-w-346 dr-rounded-12 shadow-lg bg-background border border-border',
         'transition-all duration-300 ease-in-out',
         className
       )}
