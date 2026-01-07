@@ -2,6 +2,7 @@
 
 import cn from 'clsx'
 import { useIntersectionObserver } from 'hamo'
+import { useLenis } from 'lenis/react'
 import { useState } from 'react'
 import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
@@ -19,7 +20,7 @@ export function MeetTambo() {
 
   return (
     <section className="dt:dr-pt-188 dr-pt-128 dt:dr-pb-204 dr-pb-200">
-      <div className="dt:dr-layout-grid px-safe dt:px-0">
+      <div className="dt:dr-layout-grid px-safe dt:px-0 dr-mb-120 dt:dr-mb-0">
         <TitleBlock className="dr-mb-56  dt:col-start-3 dt:col-end-11">
           <TitleBlock.LeadIn className="dr-mb-16 dt:dr-mb-24">
             {'<'} Meet tambo {'>'}
@@ -123,6 +124,7 @@ type CardProps = {
 
 function Card({ data, isOpen, onToggle }: CardProps) {
   const { isDesktop, isMobile } = useDeviceDetection()
+  const lenis = useLenis()
 
   return (
     <div className={cn('relative', s.cardWrapper)}>
@@ -216,7 +218,11 @@ function Card({ data, isOpen, onToggle }: CardProps) {
       <CTA
         type="secondary"
         wrapperClassName={s.cardCTA}
-        href={data?.button?.href}
+        onClick={() => {
+          if (isOpen) {
+            lenis?.scrollTo(`#${data?.anchor}`)
+          }
+        }}
       >
         {data?.button?.text}
       </CTA>

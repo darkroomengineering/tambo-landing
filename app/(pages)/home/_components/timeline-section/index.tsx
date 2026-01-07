@@ -42,12 +42,14 @@ type CallbackParams = {
 export type TimelineCallback = (params: CallbackParams) => void
 
 export function TimelineSection({
+  id,
   messages,
   title,
   children,
   ref,
   proxyChildren,
 }: {
+  id: string
   messages: typeof messagesType
   title: string
   children?: React.ReactNode
@@ -95,6 +97,7 @@ export function TimelineSection({
   return (
     <TimelineSectionContext.Provider value={{ callbacks, addCallback }}>
       <section
+        id={id}
         ref={(node) => {
           rectRef(node)
           if (ref) {

@@ -10,6 +10,7 @@ export const cards = [
       text: 'See more',
       href: 'https://docs.tambo.co/concepts/components',
     },
+    anchor: 'moment-1',
   },
   {
     title: 'custom context',
@@ -22,6 +23,7 @@ export const cards = [
       text: 'See more',
       href: 'https://docs.tambo.co',
     },
+    anchor: 'moment-2',
   },
   {
     title: 'Local Tools',
@@ -34,6 +36,7 @@ export const cards = [
       text: 'See more',
       href: 'https://docs.tambo.co',
     },
+    anchor: 'moment-2',
   },
   {
     title: 'MCP Native',
@@ -46,6 +49,7 @@ export const cards = [
       text: 'See more',
       href: 'https://docs.tambo.co',
     },
+    anchor: 'moment-3',
   },
 ] as const
 

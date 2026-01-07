@@ -9,6 +9,7 @@ export function Moment3() {
       messages={messages}
       title="Native MCP support, hard wiring done for you."
       zIndex={3}
+      id="moment-3"
     >
       <Animation />
     </TimelineSection>
