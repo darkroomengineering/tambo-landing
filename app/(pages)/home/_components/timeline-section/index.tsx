@@ -336,7 +336,8 @@ function TimelineItem({
     }
   })
 
-  useEffect(() => (visible ? showItem() : hideItem()), [visible])
+  // biome-ignore lint/correctness/useExhaustiveDependencies: We need to re-run the effect when the desktop state changes
+  useEffect(() => (visible ? showItem() : hideItem()), [visible, isDesktop])
 
   return (
     <li className="relative dr-w-328 shrink-0 dt:w-auto dr-h-84 dr-p-8 flex dr-gap-4">
