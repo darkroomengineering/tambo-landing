@@ -10,6 +10,7 @@ import GithubSVG from '~/assets/svgs/github.svg'
 import XSVG from '~/assets/svgs/X.svg'
 import { CTA } from '~/components/button'
 import { Image } from '~/components/image'
+import { Kinesis } from '~/components/kinesis'
 import { Link } from '~/components/link'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
@@ -219,7 +220,10 @@ export function Footer() {
             fill
           />
         </div>
-        <div className="text-center flex flex-col items-center relative dr-mb-30 dt:dr-mb-0">
+        <Kinesis
+          getIndex={() => 50}
+          className="text-center flex flex-col items-center relative dr-mb-30 dt:dr-mb-0"
+        >
           <div className="dr-w-172 aspect-square">
             {/* <Video
             autoPlay
@@ -263,7 +267,7 @@ export function Footer() {
               </CTA>
             </div>
           </TitleBlock>
-        </div>
+        </Kinesis>
         <div className="mobile-only dr-h-156 w-full relative dr-mb-40">
           <Image
             src="/assets/mobile-background/footer-bottom.png"

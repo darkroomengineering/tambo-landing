@@ -261,7 +261,8 @@ export function SolidBackground({ children }: { children?: React.ReactNode }) {
     rect,
     start: 'bottom bottom',
     end: 'bottom center',
-    onProgress: ({ progress }) => {
+    onProgress: ({ progress, isActive }) => {
+      if (!isActive) return
       const solidBackground = getSolidBackground()
       if (solidBackground) {
         const r = mapRange(0, 1, progress, 15, 255)
