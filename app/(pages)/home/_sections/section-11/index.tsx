@@ -174,7 +174,7 @@ export function Section11() {
                   </Button>
                   <Link
                     className={cn(
-                      'absolute dr-top-193 w-full dr-px-12 flex items-center justify-between mobile-only',
+                      'absolute dr-top-193 w-full dr-px-12 flex items-center justify-between z-1 mobile-only',
                       isOpenCard === null && 'pointer-events-none'
                     )}
                     href={card?.href}

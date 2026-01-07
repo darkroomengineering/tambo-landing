@@ -47,6 +47,12 @@
       .cardRing {
         opacity: 0.2;
       }
+
+      .title {
+        &::before {
+          transform: scaleX(1);
+        }
+      }
     }
   }
 }
@@ -139,6 +145,7 @@
 
 .title {
   position: relative;
+  z-index: 1;
   transition: color 0.3s ease;
 
   &::before {
