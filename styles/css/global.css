@@ -104,7 +104,7 @@ html.screenshot {
 
 .shadow-m {
   /* box-shadow: 0 desktop-vw(64px) 56px desktop-vw(48px) rgba(127, 255, 195, 0.25); */
-  box-shadow: 0 desktop-vw(64px) 56px desktop-vw(48px) rgba(127, 255, 195, 0.5);
+  box-shadow: 0 desktop-vw(64px) 56px desktop-vw(8px) rgba(127, 255, 195, 0.5);
 }
 
 .fullwidth {

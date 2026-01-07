@@ -54,6 +54,7 @@ export function Hero() {
             // height: (index) => 25 + (items.length - 1 - index) * 10,
             boxShadowOpacity: 0,
             y: 0,
+            greyBackgroundOpacity: 1,
           },
           {
             y: 0,
@@ -61,11 +62,15 @@ export function Hero() {
             // width: (index) => 35 + (items.length - 1 - index) * 8,
             width: (index) =>
               desktopVW(480 + (items.length - 1 - index) * 100, true),
+            greyBackgroundOpacity: 0,
           },
           proxy.progress1,
           {
             ease: 'easeOutQuad',
-            render: (item, { width, y, boxShadowOpacity }) => {
+            render: (
+              item,
+              { width, y, boxShadowOpacity, greyBackgroundOpacity }
+            ) => {
               // @ts-expect-error
               const element = item?.getElement()
               // @ts-expect-error
@@ -78,10 +83,16 @@ export function Hero() {
               // @ts-expect-error
               item?.setBorderRadius(`${width * 2}px`)
 
-              if (element instanceof HTMLElement) {
+              if (element) {
                 element.style.width = `${width}px`
                 element.style.height = `${width}px`
                 element.style.transform = `translateY(${y}px)`
+              }
+
+              //@ts-expect-error
+              const greyBackground = item?.getGreyBackground()
+              if (greyBackground) {
+                greyBackground.style.opacity = `${greyBackgroundOpacity}`
               }
             },
           }
