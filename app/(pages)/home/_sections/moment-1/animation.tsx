@@ -12,6 +12,7 @@ import {
   TimelineSectionContext,
 } from '~/app/(pages)/home/_components/timeline-section'
 import Cursor from '~/assets/svgs/cursor.svg'
+import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { mapRangeWithSnap as mapRange } from '~/libs/utils'
 import { colors } from '~/styles/colors'
 import s from './animation.module.css'
@@ -25,6 +26,7 @@ export function Animation({
   ref?: React.RefCallback<HTMLDivElement>
 }) {
   const { addCallback } = use(TimelineSectionContext)
+  const { isDesktop } = useDeviceDetection()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const introCardRef = useRef<HTMLDivElement>(null)
@@ -99,7 +101,7 @@ export function Animation({
     seatsQuestion.style.transform = `translateY(${seatsQuestionTransformIntro + seatsQuestionTransformSeatsThinking}%)`
 
     // Intro
-    container.style.opacity = `${containerProgress}`
+    container.style.opacity = `${isDesktop ? containerProgress : 1}`
 
     // Seats Question
     sharedVariables.seatsQuestionTransformIntro = mapRange(

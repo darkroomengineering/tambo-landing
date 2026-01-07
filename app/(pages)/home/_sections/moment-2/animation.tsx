@@ -16,6 +16,7 @@ import {
 } from '~/app/(pages)/home/_components/timeline-section'
 import Cursor from '~/assets/svgs/cursor.svg'
 import { Image } from '~/components/image'
+import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { mapRangeWithSnap as mapRange } from '~/libs/utils'
 import { colors } from '~/styles/colors'
 import { SeatMap } from '../moment-1/seat-map'
@@ -23,6 +24,7 @@ import s from './animation.module.css'
 
 export function Animation() {
   const { addCallback } = use(TimelineSectionContext)
+  const { isDesktop } = useDeviceDetection()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<HTMLDivElement>(null)
@@ -132,7 +134,7 @@ export function Animation() {
     const section4Container = document.getElementById('section-4-container')
 
     if (transitionProgress === 1 && section4Container) {
-      section4Container.style.display = 'none'
+      section4Container.style.display = isDesktop ? 'none' : 'block'
       container.style.display = 'block'
     }
 
@@ -264,7 +266,7 @@ export function Animation() {
     if (greatPickProgress === 1 && section6Container) {
       container.style.setProperty('--intro-progress', `${1 - exitProgress}`)
       map.style.opacity = `${1 - exitProgress}`
-      section6Container.style.display = 'none'
+      section6Container.style.display = isDesktop ? 'none' : 'block'
     }
   })
 
@@ -276,7 +278,7 @@ export function Animation() {
     <div
       id="section-5-container"
       ref={containerRef}
-      className={cn('dr-w-668 hidden', s.container)}
+      className={cn('dr-w-668 dt:hidden', s.container)}
     >
       <div className={cn('relative w-full shadow-m -z-3', s.map)}>
         <div ref={mapRef} className="relative size-full">

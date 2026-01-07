@@ -8,6 +8,7 @@ import {
 } from '~/app/(pages)/home/_components/timeline-section'
 import Cursor from '~/assets/svgs/cursor.svg'
 import PlusIcon from '~/assets/svgs/plus.svg'
+import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { mapRange } from '~/libs/utils'
 import { colors } from '~/styles/colors'
 import {
@@ -22,6 +23,7 @@ import QuestionMarkIcon from './question-mark.svg'
 
 export function Animation() {
   const { addCallback } = use(TimelineSectionContext)
+  const { isDesktop } = useDeviceDetection()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const chatRef = useRef<HTMLDivElement>(null)
@@ -120,7 +122,7 @@ export function Animation() {
     const section5Container = document.getElementById('section-5-container')
 
     if (safeZoneProgress === 1 && section5Container) {
-      section5Container.style.display = 'none'
+      section5Container.style.display = isDesktop ? 'none' : 'block'
       container.style.display = 'block'
     }
 
@@ -252,7 +254,7 @@ export function Animation() {
     }
 
     if (addedToCalendarProgress === 1) {
-      container.style.opacity = `${1 - exitProgress}`
+      container.style.opacity = isDesktop ? `${1 - exitProgress}` : '1'
     }
   })
 
@@ -264,7 +266,7 @@ export function Animation() {
     <div
       id="section-6-container"
       ref={containerRef}
-      className={cn('dr-w-668 hidden', s.container)}
+      className={cn('dr-w-668 dt:hidden', s.container)}
     >
       <div ref={chatRef} className={cn('relative w-full dr-h-470', s.chat)}>
         <div
