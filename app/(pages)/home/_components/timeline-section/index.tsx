@@ -104,7 +104,7 @@ export function TimelineSection({
         className="h-[800svh] overflow-x-clip"
       >
         <div className="sticky top-0 dr-layout-grid-inner h-screen">
-          <div className="col-span-4 flex flex-col dr-pt-112 max-dt:h-screen">
+          <div className="col-span-4 flex flex-col dr-pt-80 dt:dr-pt-112 max-dt:h-screen">
             <div className="relative">
               <h3 className="relative typo-h1 dt:typo-h2 text-center dt:text-left z-10">
                 {title}
@@ -195,8 +195,9 @@ export function TimelineSection({
           </div>
           {proxyChildren && (
             <div
+              data-proxy-children
               className={cn(
-                'col-start-6 col-end-12 max-dt:col-span-full flex items-center justify-center',
+                'absolute dt:relative col-start-6 col-end-12 max-dt:col-span-full flex items-center justify-center',
                 s.dynamicScale
               )}
             >

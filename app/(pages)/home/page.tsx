@@ -17,7 +17,7 @@ export default function Home() {
     <Wrapper
       theme="light"
       lenis={{}}
-      className="mx-auto bg-primary max-w-screen dt:max-w-[calc(var(--max-width)*1px)] overflow-x-hidden"
+      className="mx-auto bg-primary max-w-screen dt:max-w-[calc(var(--max-width)*1px)] overflow-x-clip"
     >
       <Background>
         <Hero />

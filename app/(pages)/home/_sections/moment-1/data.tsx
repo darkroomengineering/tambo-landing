@@ -36,7 +36,7 @@ export const messages = [
     message: (
       <>
         Your components stay intact, AI just learns
-        <br />
+        <br className="hidden dt:block" />
         to use them. No rebuilds, no generic UI.
       </>
     ),
