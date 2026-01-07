@@ -43,11 +43,6 @@ export function Animation({
   const bookingConfirmedRef = useRef<HTMLParagraphElement>(null)
   const cursorRef = useRef<SVGSVGElement>(null)
 
-  const sharedVariablesRef = useRef({
-    seatsQuestionTransformIntro: 150,
-    seatsQuestionTransformSeatsThinking: 0,
-  })
-
   const scrollAnimation = useEffectEvent<TimelineCallback>(({ steps }) => {
     // Elements
     const container = containerRef.current
@@ -64,7 +59,6 @@ export function Animation({
     const bookingConfirmed = bookingConfirmedRef.current
     const cursor = cursorRef.current
     const seatMapComponent = seatMapComponentRef.current
-    const sharedVariables = sharedVariablesRef.current
 
     if (
       !(
@@ -81,8 +75,7 @@ export function Animation({
         availableSeats &&
         bookingConfirmed &&
         cursor &&
-        seatMapComponent &&
-        sharedVariables
+        seatMapComponent
       )
     )
       return
@@ -95,33 +88,22 @@ export function Animation({
     const swapProgress = mapRange(0.5, 1, steps[2], 0, 1, true)
     const selectProgress = mapRange(0.3, 1, steps[3], 0, 1, true)
 
-    // Multi animation variables
-    const { seatsQuestionTransformIntro, seatsQuestionTransformSeatsThinking } =
-      sharedVariables
-    seatsQuestion.style.transform = `translateY(${seatsQuestionTransformIntro + seatsQuestionTransformSeatsThinking}%)`
-
     // Intro
     container.style.opacity = `${isDesktop ? containerProgress : 1}`
 
     // Seats Question
-    sharedVariables.seatsQuestionTransformIntro = mapRange(
-      0,
-      1,
-      seatsQuestionProgress,
-      150,
-      0
+    seatsQuestion.style.setProperty(
+      '--sq-transform-intro',
+      `${mapRange(0, 1, seatsQuestionProgress, 150, 0)}`
     )
     seatsQuestion.style.opacity = `${mapRange(0, 1, seatsQuestionProgress, 0, 1)}`
 
     // Seats Thinking
     seatsThinking.style.transform = `translateY(${mapRange(0, 1, seatsThinkingProgress, 150, 0)}%)`
     seatsThinking.style.opacity = `${mapRange(0, 1, seatsThinkingProgress, 0, 1)}`
-    sharedVariables.seatsQuestionTransformSeatsThinking = mapRange(
-      0,
-      1,
-      seatsThinkingProgress,
-      0,
-      -100
+    seatsQuestion.style.setProperty(
+      '--sq-transform-seats-thinking',
+      `${mapRange(0, 1, seatsThinkingProgress, 0, -100)}`
     )
     seatsQuestion.style.backgroundColor = gsap.utils.interpolate(
       colors['ghost-mint'],
@@ -129,65 +111,49 @@ export function Animation({
       seatsThinkingProgress
     )
 
+    // Skew
     container.style.setProperty('--skew-progress', `${skewProgress}`)
     container.style.setProperty('--deg-progress', `${skewProgress * -10}deg`)
-    if (seatsThinkingProgress === 1) {
-      yourApp.style.opacity = `${mapRange(0, 1, skewProgress, 0, 1)}`
-      introCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
-      emptyCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
+    yourApp.style.transform = `translateY(${mapRange(0, 1, skewProgress, 100, 0)}%)`
+    backgroundCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
 
-      yourApp.style.transform = `translateY(${mapRange(0, 1, skewProgress, 100, 0)}%)`
-      backgroundCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2)}`
-    }
+    // Skew and swap affected elements
+    yourApp.style.opacity = `${skewProgress - swapProgress}`
+    introCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2) - mapRange(0, 1, swapProgress, 0, 0.2)}`
+    emptyCard.style.opacity = `${mapRange(0, 1, skewProgress, 1, 0.2) - mapRange(0, 1, swapProgress, 0, 0.2)}`
 
-    if (skewProgress === 1) {
-      selectionCard.style.setProperty(
-        '--highlight-progress',
-        `${highlightProgress}`
-      )
-      seatMapContainer.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
-      seatMapComponent.highlightTitleAnimation(highlightProgress)
-    }
+    // Highlight
+    selectionCard.style.setProperty(
+      '--highlight-progress',
+      `${highlightProgress - swapProgress}`
+    )
+    seatMapContainer.style.opacity = `${mapRange(0, 1, highlightProgress, 0, 1)}`
+    seatMapComponent.highlightTitleAnimation(highlightProgress)
 
-    if (highlightProgress === 1) {
-      container.style.setProperty('--deskew-progress', `${swapProgress}`)
-      selectionCard.style.setProperty(
-        '--highlight-progress',
-        `${1 - swapProgress}`
-      )
-      container.style.setProperty(
-        '--dedeg-progress',
-        `${swapProgress * -10}deg`
-      )
-      introCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
-      emptyCard.style.opacity = `${mapRange(0, 1, swapProgress, 0.2, 0)}`
-      selection.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
-      seatMapContainer.style.transform = `translate(${mapRange(0, 1, swapProgress, 1.2, 0)}%, ${mapRange(0, 1, swapProgress, 0.2, 26)}%)`
-      // seatMap.style.outlineWidth = `${mapRange(0, 1, swapProgress, 4, 0)}px`
-      // seatMap.style.setProperty('--size-progress', `${swapProgress}`)
-      seatMapContainer.style.scale = `${mapRange(0, 1, swapProgress, 0.65, 1)}`
-      seatMapComponent.highlightSeatsAnimation(swapProgress)
-      yourApp.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
-      availableSeats.style.opacity = `${mapRange(0.6, 1, swapProgress, 0, 1)}`
-      selectionCard.style.overflow = 'visible'
-    }
+    // Swap
+    container.style.setProperty('--deskew-progress', `${swapProgress}`)
+    container.style.setProperty('--dedeg-progress', `${swapProgress * -10}deg`)
+    selection.style.opacity = `${mapRange(0, 1, swapProgress, 1, 0)}`
+    seatMapContainer.style.scale = `${mapRange(0, 1, swapProgress, 0.65, 1)}`
+    seatMapComponent.highlightSeatsAnimation(swapProgress)
 
+    // Swap and select affected elements
+    seatMapContainer.style.transform = `translate(${mapRange(0, 1, swapProgress, 1.2, 0)}%, ${mapRange(0, 1, swapProgress, 0.2, 26) - mapRange(0.6, 1, selectProgress, 0, 24, true)}%)`
+    availableSeats.style.opacity = `${mapRange(0.6, 1, swapProgress, 0, 1) - mapRange(0.6, 1, selectProgress, 0, 1)}`
+
+    // Select
+    cursor.style.transform = `translate(${mapRange(0, 0.5, selectProgress, 150, 0, true) + mapRange(0.6, 1, selectProgress, 0, 150, true)}px, ${mapRange(0, 0.5, selectProgress, 150, 0, true) + mapRange(0.6, 1, selectProgress, 0, 150, true)}px)`
+    cursor.style.opacity = `${mapRange(0, 0.5, selectProgress, 0, 1, true) - mapRange(0.6, 1, selectProgress, 0, 1, true)}`
+    bookingConfirmed.style.opacity = `${mapRange(0.6, 1, selectProgress, 0, 1)}`
+    seatMapComponent.highlightSeatAnimation(
+      mapRange(0, 0.5, selectProgress, 0, 1)
+    )
+
+    // EXIT
     const section5Container = document.getElementById('section-5-container')
     if (swapProgress === 1 && section5Container) {
       section5Container.style.display = 'none'
       container.style.display = 'grid'
-      selectionCard.style.overflow = 'hidden'
-      cursor.style.transform = `translate(${mapRange(0, 0.5, selectProgress, 150, 0, true)}px, ${mapRange(0, 0.5, selectProgress, 150, 0, true)}px)`
-      cursor.style.opacity = `${mapRange(0, 0.5, selectProgress, 0, 1)}`
-      seatMapContainer.style.transform = `translateY(${mapRange(0.6, 1, selectProgress, 26, 2, true)}%)`
-      seatMapComponent.highlightSeatAnimation(
-        mapRange(0, 0.5, selectProgress, 0, 1)
-      )
-      if (selectProgress < 0.6) return
-      bookingConfirmed.style.opacity = `${mapRange(0.6, 1, selectProgress, 0, 1)}`
-      availableSeats.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
-      cursor.style.transform = `translate(${mapRange(0.6, 1, selectProgress, 0, 150, true)}px, ${mapRange(0.6, 1, selectProgress, 0, 150, true)}px)`
-      cursor.style.opacity = `${mapRange(0.6, 1, selectProgress, 1, 0)}`
     }
   })
 
@@ -216,7 +182,10 @@ export function Animation({
       >
         <p
           ref={seatsQuestionRef}
-          className="absolute dr-p-24 dr-rounded-12 bg-ghost-mint border border-dark-grey self-end opacity-0"
+          className={cn(
+            'absolute dr-p-24 dr-rounded-12 bg-ghost-mint border border-dark-grey self-end opacity-0',
+            s.seatsQuestion
+          )}
         >
           What seats are available on my flight to Boston?
         </p>

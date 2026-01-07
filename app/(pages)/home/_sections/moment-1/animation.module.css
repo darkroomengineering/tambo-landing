@@ -39,3 +39,12 @@
 .card:nth-of-type(4) {
   --index: 1;
 }
+
+.seatsQuestion {
+  transform: translateY(
+    calc(
+      (var(--sq-transform-intro, 150) + var(--sq-transform-seats-thinking, 0)) *
+      1%
+    )
+  );
+}
