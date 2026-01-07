@@ -188,6 +188,7 @@ export default function Background({
   const itemsRef = useRef<BackgroundItemRef[] | null[]>([])
   const solidBackgroundRef = useRef<HTMLDivElement>(null)
   const backgroundRef = useRef<HTMLDivElement>(null)
+  const elementRef = useRef<HTMLDivElement>(null)
 
   return (
     <BackgroundContext
@@ -195,9 +196,10 @@ export default function Background({
         getItems: () => itemsRef.current,
         getSolidBackground: () => solidBackgroundRef.current,
         getBackground: () => backgroundRef.current,
+        getElement: () => elementRef.current,
       }}
     >
-      <div className="fixed inset-0">
+      <div className="fixed inset-0" ref={elementRef}>
         <div
           className="absolute inset-0 flex flex-col items-center justify-center"
           ref={backgroundRef}

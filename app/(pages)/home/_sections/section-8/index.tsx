@@ -1,7 +1,7 @@
 'use client'
 
 import { useRect, useWindowSize } from 'hamo'
-import { useContext } from 'react'
+import { useContext, useRef } from 'react'
 import { useLenisSnap } from '~/app/(pages)/_components/lenis/snap'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
@@ -23,14 +23,17 @@ export function Section8() {
   const [setRectRef, rect] = useRect()
   const [setTitleBlockRef, titleBlockRect] = useRect()
   const [setTamboRectRef, tamboRect] = useRect({ ignoreTransform: true })
+  const [setTamboSectionRectRef, tamboSectionRect] = useRect({
+    ignoreTransform: true,
+  })
 
-  const { getItems, getBackground } = useContext(BackgroundContext)
+  const { getItems, getBackground, getElement } = useContext(BackgroundContext)
 
   const { width: windowWidth = 0 } = useWindowSize()
 
   const desktopVW = useDesktopVW()
 
-  const setSnapRef = useLenisSnap('center')
+  const setSnapRef = useLenisSnap('end')
 
   useScrollTrigger(
     {
@@ -158,27 +161,37 @@ export function Section8() {
     },
   })
 
-  useScrollTrigger({
-    rect: tamboRect,
-    start: `${titleBlockRect?.top === undefined ? 'bottom' : titleBlockRect.top} top`,
-    end: `center center`,
-    onProgress: ({ progress, height, isActive }) => {
-      if (!isActive) return
+  const demoRef = useRef<HTMLDivElement>(null)
 
-      if (tamboRect?.element) {
-        tamboRect.element.style.opacity = `${progress}`
-        tamboRect.element.style.pointerEvents = isActive ? 'auto' : 'none'
-        const y = -height * (1 - progress)
-        if (y !== 0) {
-          tamboRect.element.style.transform = `translateY(${y}px) translateZ(0)`
-        } else {
-          tamboRect.element.style.removeProperty('transform')
-        }
+  useScrollTrigger({
+    rect: tamboSectionRect,
+    start: `${titleBlockRect?.top === undefined ? 'bottom' : titleBlockRect.top} top`,
+    end: `bottom bottom`,
+    onProgress: ({ progress, height, isActive }) => {
+      // console.log('progress2', progress)
+      // if (!isActive) return
+
+      if (demoRef?.current) {
+        demoRef.current.style.opacity = `${progress}`
+
+        demoRef.current.style.pointerEvents = progress === 1 ? 'auto' : 'none'
+        // const y = -height * (1 - progress)
+        // if (y !== 0) {
+        //   tamboRect.element.style.transform = `translateY(${y}px) translateZ(0)`
+        // } else {
+        //   tamboRect.element.style.removeProperty('transform')
+        // }
       }
 
       const background = getBackground()
+
       if (background) {
         background.style.opacity = progress === 1 ? '0' : '1'
+      }
+
+      const backgroundElement = getElement()
+      if (backgroundElement) {
+        backgroundElement.style.backgroundColor = `rgba(255, 255, 255, ${progress})`
       }
     },
   })
@@ -202,25 +215,35 @@ export function Section8() {
       </section>
       <TamboIntegration>
         <section
-          ref={setSnapRef}
-          className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen"
+          // className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen"
+          className="h-[150svh] mt-[-50vh]"
+          ref={(node) => {
+            setSnapRef(node)
+            setTamboSectionRectRef(node)
+          }}
         >
-          <AssistantNotifications className="col-span-2" />
-          {/* TODO: Dashed border style*/}
-          <div
-            ref={setTamboRectRef}
-            className="col-start-3 col-end-10 card-outline outline-off-white/80 dr-rounded-20 aspect-898/597 dr-h-597"
-          >
-            <div className="relative z-1 size-full dr-rounded-20 shadow-m dashed-border bg-white overflow-hidden">
-              <InterctableMap
-                height={650}
-                center={{ lng: -74.00594, lat: 40.71278 }}
-                zoom={12}
-              />
-              <BackgroundAssistant />
-              <IntroAssistant />
-              <SeatAssistant />
-              <MapAssistant />
+          <div className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen sticky top-0">
+            <AssistantNotifications className="col-span-2" />
+            {/* TODO: Dashed border style*/}
+            <div
+              ref={(node) => {
+                setTamboRectRef(node)
+                demoRef.current = node
+              }}
+              // ref={demoRef}
+              className="col-start-3 col-end-10 card-outline outline-off-white/80 dr-rounded-20 aspect-898/597 dr-h-597"
+            >
+              <div className="relative z-1 size-full dr-rounded-20 shadow-m dashed-border bg-white overflow-hidden">
+                <InterctableMap
+                  height={650}
+                  center={{ lng: -74.00594, lat: 40.71278 }}
+                  zoom={12}
+                />
+                <BackgroundAssistant />
+                <IntroAssistant />
+                <SeatAssistant />
+                <MapAssistant />
+              </div>
             </div>
           </div>
         </section>

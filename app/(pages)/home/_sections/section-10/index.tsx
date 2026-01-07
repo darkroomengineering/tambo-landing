@@ -86,7 +86,7 @@ export function Section10() {
 
   const [setRectRef, rect] = useRect()
 
-  const { getItems, getBackground } = useContext(BackgroundContext)
+  const { getItems, getBackground, getElement } = useContext(BackgroundContext)
 
   const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize()
 
@@ -98,6 +98,11 @@ export function Section10() {
     end: 'top top',
     onProgress: ({ progress, isActive }) => {
       if (!isActive) return
+
+      const backgroundElement = getElement()
+      if (backgroundElement) {
+        backgroundElement.style.backgroundColor = `rgba(255, 255, 255, ${1 - progress})`
+      }
 
       const background = getBackground()
       if (progress > 0 && background) {
@@ -212,7 +217,10 @@ export function Section10() {
   return (
     <section
       ref={setRectRef}
-      className="relative overflow-x-clip h-[200vh] dr-mb-400"
+      className="relative overflow-x-clip dr-mb-400"
+      style={{
+        height: `${BUTTONS.length * 500}px`,
+      }}
     >
       <div className="h-screen sticky top-0 w-full flex flex-col items-center justify-center">
         <Kinesis
