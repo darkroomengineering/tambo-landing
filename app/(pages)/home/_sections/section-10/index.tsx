@@ -77,7 +77,6 @@ const BUTTONS = [
 
 export function Section10() {
   const buttonsRefs = useRef<(HTMLDivElement | null)[]>([])
-  const innerRef = useRef<HTMLDivElement>(null)
 
   const [setRectRef, rect] = useRect()
 
