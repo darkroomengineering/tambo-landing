@@ -43,7 +43,7 @@ export function Footer() {
 
   const { getItems, getBackground } = useContext(BackgroundContext)
 
-  const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize()
+  const { height: windowHeight = 0 } = useWindowSize()
 
   const desktopVW = useDesktopVW()
 
@@ -60,8 +60,6 @@ export function Footer() {
       items.forEach((item, index) => {
         const width = desktopVW(666 + (items.length - 1 - index) * 260, true)
 
-        const element = item?.getElement()
-
         const boxShadow = item?.getBoxShadow()
         if (boxShadow) {
           boxShadow.style.opacity = '0'
@@ -69,10 +67,25 @@ export function Footer() {
 
         item?.setBorderRadius(`${width * 2}px`)
 
-        if (element instanceof HTMLElement) {
+        const element = item?.getElement()
+        if (element) {
           element.style.width = `${width}px`
           element.style.height = `${width}px`
           element.style.transform = `translateY(0px)`
+        }
+
+        const greyBackground = item?.getGreyBackground()
+        if (greyBackground) {
+          greyBackground.style.opacity = '1'
+        }
+      })
+    },
+    onLeave: () => {
+      const items = getItems()
+      items.forEach((item) => {
+        const greyBackground = item?.getGreyBackground()
+        if (greyBackground) {
+          greyBackground.style.opacity = '0'
         }
       })
     },
@@ -130,7 +143,7 @@ export function Footer() {
       }
 
       const element = item?.getElement()
-      if (element instanceof HTMLElement) {
+      if (element) {
         const width = desktopVW(596 + (items.length - 1 - index) * 260, true)
 
         gsap.to(element, {
@@ -140,14 +153,18 @@ export function Footer() {
           ease: 'expo.out',
         })
       }
-    })
 
-    // gsap.to(hoverProgressRef, {
-    //   current: 1,
-    //   duration: 1,
-    //   ease: 'expo.out',
-    // })
+      const greyBackground = item?.getGreyBackground()
+      if (greyBackground) {
+        gsap.to(greyBackground, {
+          opacity: 0,
+          duration: 1,
+          ease: 'expo.out',
+        })
+      }
+    })
   })
+
   const onMouseLeave = useEffectEvent(() => {
     const items = getItems()
     items.forEach((item, index) => {
@@ -161,12 +178,22 @@ export function Footer() {
       }
 
       const element = item?.getElement()
-      if (element instanceof HTMLElement) {
+
+      if (element) {
         const width = desktopVW(666 + (items.length - 1 - index) * 260, true)
 
         gsap.to(element, {
           width: width,
           height: width,
+          duration: 1,
+          ease: 'expo.out',
+        })
+      }
+
+      const greyBackground = item?.getGreyBackground()
+      if (greyBackground) {
+        gsap.to(greyBackground, {
+          opacity: 1,
           duration: 1,
           ease: 'expo.out',
         })

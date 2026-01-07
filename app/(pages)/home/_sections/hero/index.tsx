@@ -216,7 +216,8 @@ export function Hero() {
       rect,
       start: 'top top',
       end: 'bottom top',
-      onProgress: ({ progress }) => {
+      onProgress: ({ progress, isActive }) => {
+        if (!isActive) return
         if (!hasAppeared.current) return
 
         const items = getItems()

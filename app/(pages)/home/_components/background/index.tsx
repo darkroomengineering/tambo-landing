@@ -11,46 +11,48 @@ import { DashedBorder } from '../dashed-border'
 import s from './background.module.css'
 import { BackgroundContext } from './context'
 
-function BoxShadow({
-  x = 0,
-  y = 0,
-  blur: _blur = 0,
-  opacity: _opacity = 1,
-}: {
-  x?: number
-  y?: number
-  blur?: number
-  opacity?: number
-}) {
-  return (
-    <>
-      <div
-        className={cn('absolute inset-[-5%] rounded-[inherit]', s.boxShadow)}
-        style={{
-          transform: `translate(${x}%, ${y}%)`,
-          // filter: `blur(${blur}px)`,
-          // filter: `blur(${blur}px)`,
-          // opacity: opacity * 2,
-          // backgroundColor: `rgba(127, 255, 195, 1)`,
-          backgroundImage: `radial-gradient(circle at center, rgba(127, 255, 195, 1) 50%, rgba(127, 255, 195, 0) 70%)`,
-        }}
-      />
-      {/* <div
-        className={cn('absolute inset-[-5%] rounded-[inherit]')}
-        style={{
-          transform: `translate(${x}%, ${y}%)`,
-          // filter: `blur(${50}px)`,
-          backgroundImage: `linear-gradient(to top, rgba(127, 255, 195, 1) 50%, rgba(127, 255, 195, 0) 70%)`,
-        }}
-      /> */}
-    </>
-  )
-}
+// function BoxShadow({
+//   x = 0,
+//   y = 0,
+//   blur: _blur = 0,
+//   opacity: _opacity = 1,
+// }: {
+//   x?: number
+//   y?: number
+//   blur?: number
+//   opacity?: number
+// }) {
+//   return (
+//     <>
+//       <div
+//         className={cn('absolute inset-[-5%] rounded-[inherit]', s.boxShadow)}
+//         style={{
+//           transform: `translate(${x}%, ${y}%)`,
+//           // filter: `blur(${blur}px)`,
+//           // filter: `blur(${blur}px)`,
+//           // opacity: opacity * 2,
+//           // backgroundColor: `rgba(127, 255, 195, 1)`,
+//           backgroundImage: `radial-gradient(circle at center, rgba(127, 255, 195, 1) 50%, rgba(127, 255, 195, 0) 70%)`,
+//         }}
+//       />
+//       {/* <div
+//         className={cn('absolute inset-[-5%] rounded-[inherit]')}
+//         style={{
+//           transform: `translate(${x}%, ${y}%)`,
+//           // filter: `blur(${50}px)`,
+//           backgroundImage: `linear-gradient(to top, rgba(127, 255, 195, 1) 50%, rgba(127, 255, 195, 0) 70%)`,
+//         }}
+//       /> */}
+//     </>
+//   )
+// }
 
 export type BackgroundItemRef = {
   getElement: () => HTMLDivElement | null
   getBoxShadow: () => HTMLDivElement | null
+  getGreyBackground: () => HTMLDivElement | null
   setBorderRadius: (borderRadius: string) => void
+  setKinesis: (value: number) => void
 }
 
 export function BackgroundItem({
@@ -73,6 +75,7 @@ export function BackgroundItem({
   const elementRef = useRef<HTMLDivElement>(null)
   const boxShadowRef = useRef<HTMLDivElement>(null)
   const dashedBorderRef = useRef<SVGRectElement>(null)
+  const greyBackgroundRef = useRef<HTMLDivElement>(null)
   const kinesisRef = useRef<number>(1)
 
   const { dpr, isWindows } = useDeviceDetection()
@@ -80,6 +83,7 @@ export function BackgroundItem({
   useImperativeHandle(ref, () => ({
     getElement: () => elementRef.current,
     getBoxShadow: () => boxShadowRef.current,
+    getGreyBackground: () => greyBackgroundRef.current,
     setBorderRadius: (borderRadius: string) => {
       if (elementRef.current) {
         elementRef.current.style.borderRadius = borderRadius
@@ -119,11 +123,13 @@ export function BackgroundItem({
           {/* <BoxShadow y={4} blur={56} opacity={0.25} /> */}
         </div>
         <div
-          className={cn(
-            'absolute inset-0 rounded-[inherit] bg-[white]',
-            s.opacity
-          )}
+          className={cn('absolute inset-0 rounded-[inherit] bg-white')}
           style={{ opacity: opacity }}
+        />
+        <div
+          className={cn('absolute inset-0 rounded-[inherit] bg-light-gray')}
+          ref={greyBackgroundRef}
+          style={{ opacity: 0 }}
         />
         {hashed && (
           <div
