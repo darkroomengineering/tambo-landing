@@ -233,7 +233,7 @@ export function useScrollTrigger(
     (progress: number, lastProgress: number) => {
       onProgress?.({
         height: endValue - startValue,
-        isActive: progress >= 0 && progress <= 1,
+        isActive: lastProgress >= 0 && lastProgress <= 1,
         progress: clamp(0, progress, 1),
         lastProgress: lastProgress,
         steps: Array.from({ length: steps }).map((_, i) =>
