@@ -165,7 +165,7 @@ export function Section8() {
 
       if (tamboRect?.element) {
         tamboRect.element.style.opacity = `${progress}`
-        tamboRect.element.style.pointerEvents = progress === 1 ? 'auto' : 'none'
+        tamboRect.element.style.pointerEvents = isActive ? 'auto' : 'none'
         const y = -height * (1 - progress)
         if (y !== 0) {
           tamboRect.element.style.transform = `translateY(${y}px) translateZ(0)`
@@ -220,64 +220,8 @@ export function Section8() {
               <MapAssistant />
             </div>
           </div>
-          {/* <div className="relative z-1 dr-rounded-20 border border-dark-grey outline-6 outline-off-white/80 dr-p-8 bg-white">
-            <ThreadsOptions
-            />
-          </div> */}
         </section>
       </TamboIntegration>
     </>
   )
 }
-
-// export function ThreadsOptions() {
-//   const {
-//     selectedDemo,
-//     setSelectedDemo,
-//     switchToSeatThread,
-//     switchToMapThread,
-//   } = useAssitant()
-
-//   return (
-//     <div
-//       className={cn(
-//         s.tabs,
-//         'relative grid grid-flow-col dr-rounded-12 typo-h5 uppercase bg-off-white'
-//       )}
-//     >
-//       {demos.map((demo) => (
-//         <Fragment key={demo.id}>
-//           <input
-//             name="demo"
-//             type="radio"
-//             id={demo.id}
-//             value={demo.id}
-//             checked={selectedDemo === demo.id}
-//             onChange={() => {
-//               setSelectedDemo(demo.id as 'seat' | 'map')
-
-//               // Switch to the seat thread if it exists
-//               if (demo.id === 'seat') {
-//                 switchToSeatThread()
-//               }
-
-//               // Switch to the map thread if it exists
-//               if (demo.id === 'map') {
-//                 switchToMapThread()
-//               }
-//             }}
-//           />
-//           <label
-//             htmlFor={demo.id}
-//             className="flex dr-gap-16 items-center justify-center dr-h-60"
-//           >
-//             <div className="dr-size-32 grid place-items-center rounded-full">
-//               <demo.icon className="dr-size-16 icon text-black" />
-//             </div>
-//             <span className="block typo-h5">{demo.label}</span>
-//           </label>
-//         </Fragment>
-//       ))}
-//     </div>
-//   )
-// }

@@ -403,7 +403,9 @@ export const mapTools: TamboTool[] = [
         .describe('The point of interest to add to the itinerary'),
       selectedDate: z
         .string()
-        .describe('Date for when to visit this location (YYYY-MM-DD format)'),
+        .describe(
+          'Date for when to visit this location (YYYY-MM-DD HH:MM format)'
+        ),
     }),
     outputSchema: z.object({
       success: z.boolean(),

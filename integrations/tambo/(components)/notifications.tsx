@@ -1,8 +1,25 @@
 import cn from 'clsx'
 import { useAssitant } from '~/integrations/tambo'
 
+/**
+Itinerary item schema:
+itinerary [
+  {
+    poi: {
+      id: 'dXJuOm1ieHBvaTo1YzlhNmI1OC00ZWQ5LTQxNzItOWJiNS1iYmVkODAyNDBjZDU',
+      lat: 48.854256,
+      lon: 2.350285,
+      name: "Au Vieux Paris d'Arcole",
+      type: 'poi'
+    },
+    selectedDate: '2026-07-01 21:00'
+  }
+]
+ */
+
 export function AssistantNotifications({ className }: { className: string }) {
-  const { finishSeatSelection, choosedSeat, itinerary, destination } = useAssitant()
+  const { finishSeatSelection, choosedSeat, itinerary, destination } =
+    useAssitant()
 
   return (
     <ul
@@ -36,7 +53,21 @@ export function AssistantNotifications({ className }: { className: string }) {
       </li>
       <li>
         <span className="typo-label-m">Itinerary: </span>
-        <span className="typo-label-s">{itinerary.length > 0 ? itinerary.sort((a,b) => new Date(a.selectedDate).getTime() - new Date(b.selectedDate).getTime()).map((item) => `${item.poi.name} ${item.selectedDate ? `(Selected date: ${item.selectedDate})` : ''}`).join(', ') : 'Empty'}</span>
+        <span className="typo-label-s">
+          {itinerary.length > 0
+            ? itinerary
+                .sort(
+                  (a, b) =>
+                    new Date(a.selectedDate).getTime() -
+                    new Date(b.selectedDate).getTime()
+                )
+                .map(
+                  (item) =>
+                    `${item.poi.name} ${item.selectedDate ? `(Selected date: ${item.selectedDate})` : ''}`
+                )
+                .join(', ')
+            : 'Empty'}
+        </span>
       </li>
     </ul>
   )
