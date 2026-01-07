@@ -213,9 +213,13 @@ export function Footer() {
         ref={innerRef}
       >
         <div className="mobile-only dr-h-280 w-full relative dr-mt-250">
-          <Image src="/assets/footer-top.png" alt="Footer" fill />
+          <Image
+            src="/assets/mobile-background/footer-top.png"
+            alt="Footer"
+            fill
+          />
         </div>
-        <div className="text-center flex flex-col items-center relative dr-mb-156 dt:dr-mb-0">
+        <div className="text-center flex flex-col items-center relative dr-mb-30 dt:dr-mb-0">
           <div className="dr-w-172 aspect-square">
             {/* <Video
             autoPlay
@@ -260,7 +264,11 @@ export function Footer() {
           </TitleBlock>
         </div>
         <div className="mobile-only dr-h-156 w-full relative dr-mb-40">
-          <Image src="/assets/footer-bottom.png" alt="Footer" fill />
+          <Image
+            src="/assets/mobile-background/footer-bottom.png"
+            alt="Footer"
+            fill
+          />
         </div>
         <div className="mobile-only flex dr-gap-12 dr-mb-32">
           <div className="dr-size-32 rounded-full bg-grey grid place-items-center">
