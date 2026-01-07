@@ -128,11 +128,10 @@ function Card({ data, isOpen, onToggle }: CardProps) {
 
   return (
     <div className={cn('relative', s.cardWrapper)}>
-      {/* TODO: On mobile, the button should scroll to the corresponding section */}
       <Button
         href={isDesktop ? data?.button?.href : undefined}
         className={cn(
-          'dt:dr-h-420 dr-h-155 shrink-0 dr-p-8 dr-rounded-20 bg-off-white/80 border border-dark-grey flex flex-col relative',
+          'dt:dr-h-420 dr-h-155 shrink-0 dr-p-8 dr-rounded-20 bg-off-white/80 border border-dark-grey flex flex-col relative overflow-hidden',
           isOpen && s.cardOpen,
           s.card
         )}
