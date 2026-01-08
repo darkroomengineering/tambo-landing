@@ -1,5 +1,6 @@
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import HowItWorksSVG from '~/assets/svgs/how-it-works.svg'
+import HowItWorksMobileSVG from '~/assets/svgs/how-it-works-mobile.svg'
 
 export function HowItWorks() {
   return (
@@ -19,9 +20,10 @@ export function HowItWorks() {
           <br className="mobile-only" /> app.
         </TitleBlock.Subtitle>
       </TitleBlock>
-      <div className="dr-px-40">
-        <div className="dr-py-94 dr-px-145 bg-grey dr-rounded-20">
-          <HowItWorksSVG className="dr-w-full dr-h-full skew-x-[-10deg] rotate-[5deg]" />
+      <div className="dt:dr-px-40 dr-px-8">
+        <div className="dt:dr-py-94 dt:dr-px-145 dr-px-16 dr-py-16 bg-grey dr-rounded-20">
+          <HowItWorksSVG className="desktop-only dr-w-full dr-h-full skew-x-[-10deg] rotate-[5deg]" />
+          <HowItWorksMobileSVG className="mobile-only dr-w-full dr-h-504  " />
         </div>
       </div>
     </section>
