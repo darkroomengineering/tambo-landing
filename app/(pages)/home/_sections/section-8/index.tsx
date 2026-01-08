@@ -21,7 +21,7 @@ import { fromTo } from '~/libs/utils'
 
 export function Section8() {
   const [setRectRef, rect] = useRect()
-  const [setTitleBlockRef, titleBlockRect] = useRect()
+  // const [setTitleBlockRef, titleBlockRect] = useRect()
   const [setTamboRectRef, tamboRect] = useRect({ ignoreTransform: true })
   const [setTamboSectionRectRef, tamboSectionRect] = useRect({
     ignoreTransform: true,
@@ -35,63 +35,63 @@ export function Section8() {
 
   const setSnapRef = useLenisSnap('end')
 
-  useScrollTrigger(
-    {
-      rect,
-      start: 'top top',
-      end: `${titleBlockRect?.top === undefined || titleBlockRect.height === undefined ? 'bottom' : titleBlockRect.top + titleBlockRect.height * 0.5} center`,
-      onProgress: ({ progress, isActive }) => {
-        if (!isActive) return
+  // useScrollTrigger(
+  //   {
+  //     rect,
+  //     start: 'top top',
+  //     end: `center center`,
+  //     onProgress: ({ progress, isActive }) => {
+  //       if (!isActive) return
 
-        const background = getBackground()
-        if (background && progress >= 0) {
-          background.style.opacity = '1'
-        }
+  //       const background = getBackground()
+  //       if (background && progress >= 0) {
+  //         background.style.opacity = '1'
+  //       }
 
-        const items = getItems()
-        fromTo(
-          items,
-          {
-            borderRadius: desktopVW(20),
-            width: desktopVW(704, true),
-            height: desktopVW(497, true),
-            y: 0,
-          },
-          {
-            borderRadius: desktopVW(20),
-            width: (index) =>
-              desktopVW(704, true) -
-              desktopVW((index - (items.length - 1)) * 105 * 2, true),
-            height: (index) =>
-              desktopVW(497, true) -
-              desktopVW((index - (items.length - 1)) * 74 * 2, true),
-            y: 0,
-          },
-          progress,
-          {
-            ease: 'linear',
-            render: (item, { borderRadius, width, height, y }) => {
-              // @ts-expect-error
-              const element = item?.getElement()
-              // @ts-expect-error
-              item?.setBorderRadius(`${borderRadius}px`)
+  //       const items = getItems()
+  //       fromTo(
+  //         items,
+  //         {
+  //           borderRadius: desktopVW(20),
+  //           width: desktopVW(704, true),
+  //           height: desktopVW(497, true),
+  //           y: 0,
+  //         },
+  //         {
+  //           borderRadius: desktopVW(20),
+  //           width: (index) =>
+  //             desktopVW(704, true) -
+  //             desktopVW((index - (items.length - 1)) * 105 * 2, true),
+  //           height: (index) =>
+  //             desktopVW(497, true) -
+  //             desktopVW((index - (items.length - 1)) * 74 * 2, true),
+  //           y: 0,
+  //         },
+  //         progress,
+  //         {
+  //           ease: 'linear',
+  //           render: (item, { borderRadius, width, height, y }) => {
+  //             // @ts-expect-error
+  //             const element = item?.getElement()
+  //             // @ts-expect-error
+  //             item?.setBorderRadius(`${borderRadius}px`)
 
-              if (element instanceof HTMLElement) {
-                element.style.width = `${width}px`
-                element.style.height = `${height}px`
-                element.style.transform = `translateY(${y}px)`
-              }
-            },
-          }
-        )
-      },
-    },
-    []
-  )
+  //             if (element instanceof HTMLElement) {
+  //               element.style.width = `${width}px`
+  //               element.style.height = `${height}px`
+  //               element.style.transform = `translateY(${y}px)`
+  //             }
+  //           },
+  //         }
+  //       )
+  //     },
+  //   },
+  //   []
+  // )
 
   useScrollTrigger({
-    rect: titleBlockRect,
-    start: `${titleBlockRect?.top === undefined || titleBlockRect.height === undefined ? 'bottom' : titleBlockRect.top + titleBlockRect.height * 0.5} center`,
+    rect: rect,
+    start: `center center`,
     end: `top top`,
     onProgress: ({ progress, isActive }) => {
       if (!isActive) return
@@ -165,7 +165,7 @@ export function Section8() {
 
   useScrollTrigger({
     rect: tamboSectionRect,
-    start: `${titleBlockRect?.top === undefined ? 'bottom' : titleBlockRect.top} top`,
+    start: `${rect?.top === undefined ? 'bottom' : rect.top} top`,
     end: `bottom bottom`,
     onProgress: ({ progress, height, isActive }) => {
       // console.log('progress2', progress)
@@ -199,10 +199,12 @@ export function Section8() {
   return (
     <>
       <section
-        className="h-screen flex flex-col items-center justify-end"
+        className="flex flex-col items-center justify-end"
         ref={setRectRef}
       >
-        <TitleBlock ref={setTitleBlockRef}>
+        <TitleBlock
+        // ref={setTitleBlockRef}
+        >
           <TitleBlock.LeadIn>
             {'<'} Live Demo {'>'}
           </TitleBlock.LeadIn>
@@ -216,33 +218,35 @@ export function Section8() {
       <TamboIntegration>
         <section
           // className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen"
-          className="h-[150svh] mt-[-50vh]"
+          className="h-screen relative"
           ref={(node) => {
             setSnapRef(node)
             setTamboSectionRectRef(node)
           }}
         >
-          <div className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen sticky top-0">
-            <AssistantNotifications className="col-span-2" />
-            {/* TODO: Dashed border style*/}
-            <div
-              ref={(node) => {
-                setTamboRectRef(node)
-                demoRef.current = node
-              }}
-              // ref={demoRef}
-              className="col-start-3 col-end-10 card-outline outline-off-white/80 dr-rounded-20 aspect-898/597 dr-h-597"
-            >
-              <div className="relative z-1 size-full dr-rounded-20 shadow-m dashed-border bg-white overflow-hidden">
-                <InterctableMap
-                  height={650}
-                  center={{ lng: -74.00594, lat: 40.71278 }}
-                  zoom={12}
-                />
-                <BackgroundAssistant />
-                <IntroAssistant />
-                <SeatAssistant />
-                <MapAssistant />
+          <div className="absolute bottom-0 left-0 right-0 h-[150vh]">
+            <div className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen sticky top-0">
+              <AssistantNotifications className="col-span-2" />
+              {/* TODO: Dashed border style*/}
+              <div
+                ref={(node) => {
+                  setTamboRectRef(node)
+                  demoRef.current = node
+                }}
+                // ref={demoRef}
+                className="col-start-3 col-end-10 card-outline outline-off-white/80 dr-rounded-20 aspect-898/597 dr-h-597"
+              >
+                <div className="relative z-1 size-full dr-rounded-20 shadow-m dashed-border bg-white overflow-hidden">
+                  <InterctableMap
+                    height={650}
+                    center={{ lng: -74.00594, lat: 40.71278 }}
+                    zoom={12}
+                  />
+                  <BackgroundAssistant />
+                  <IntroAssistant />
+                  <SeatAssistant />
+                  <MapAssistant />
+                </div>
               </div>
             </div>
           </div>

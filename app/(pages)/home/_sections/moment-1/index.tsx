@@ -51,8 +51,8 @@ export function Moment1() {
             kinesis: 1,
           },
           {
-            width: desktopVW(668),
-            height: desktopVW(470),
+            width: rect?.width ?? 0,
+            height: rect?.height ?? 0,
             borderRadius: desktopVW(20),
             x: -windowWidth / 2 + (rect?.left ?? 0) + desktopVW(668 / 2),
             kinesis: 0,

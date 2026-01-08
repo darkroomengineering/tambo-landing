@@ -48,6 +48,7 @@ export function TimelineSection({
   children,
   ref,
   proxyChildren,
+  proxyPosition = 'start',
 }: {
   id: string
   messages: typeof messagesType
@@ -56,6 +57,7 @@ export function TimelineSection({
   ref?: React.RefCallback<HTMLElement | null>
   zIndex: number
   proxyChildren?: React.ReactNode
+  proxyPosition?: 'start' | 'end'
 }) {
   const [rectRef, rect] = useRect()
   const [messagesVisible, setMessagesVisible] = useState(0)
@@ -202,7 +204,20 @@ export function TimelineSection({
               {children}
             </div>
           </div>
-          {proxyChildren && (
+        </div>
+        {proxyChildren && (
+          <div
+            className="absolute h-svh left-0 right-0 dr-layout-grid-inner"
+            style={
+              proxyPosition === 'start'
+                ? {
+                    top: '0',
+                  }
+                : {
+                    bottom: '0',
+                  }
+            }
+          >
             <div
               data-proxy-children
               className={cn(
@@ -212,8 +227,8 @@ export function TimelineSection({
             >
               {proxyChildren}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </section>
     </TimelineSectionContext.Provider>
   )
