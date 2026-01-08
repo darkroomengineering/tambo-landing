@@ -18,6 +18,12 @@ export function Section12() {
 
   const { getSolidBackground } = useContext(BackgroundContext)
 
+  const [setIntersectionRef, intersection] = useIntersectionObserver({
+    rootMargin: '-20%',
+    threshold: 0.4,
+  })
+  const isActive = intersection?.isIntersecting
+
   const desktopVW = useDesktopVW()
 
   useScrollTrigger(
@@ -69,8 +75,10 @@ export function Section12() {
           <div
             className={cn(
               'w-full dr-p-8 border border-dark-grey dr-rounded-20',
-              s.banner
+              s.banner,
+              isActive && s.active
             )}
+            ref={setIntersectionRef}
           >
             <div className="bg-black w-full dr-rounded-12 dr-p-24 relative overflow-hidden flex flex-col dt:flex-row dt:justify-between dt:items-center">
               <div className="absolute inset-0 dark-teal-pattern z-0" />

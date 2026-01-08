@@ -8,6 +8,14 @@
       }
     }
   }
+
+  @media (--mobile) {
+    &:has(.card.active) {
+      .cardRing {
+        opacity: 0.8;
+      }
+    }
+  }
 }
 
 .banner,
