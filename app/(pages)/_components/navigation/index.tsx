@@ -11,6 +11,7 @@ import NavMobile from '~/assets/svgs/nav-mobile.svg'
 import TamboLogo from '~/assets/svgs/tambo.svg'
 import { Button, CTA } from '~/components/button'
 import { Link } from '~/components/link'
+import { useStore } from '~/libs/store'
 import s from './navigation.module.css'
 
 const LEFT_LINKS = [
@@ -25,9 +26,13 @@ const RIGHT_LINKS = [
 ] as const
 
 export function Navigation() {
-  const [isVisible, setIsVisible] = useState(true)
+  // const [isVisible, setIsVisible] = useState(true)
   const [isHovered, setIsHovered] = useState(false)
   const [isMobileNavOpened, setIsMobileNavOpened] = useState(false)
+  const [hasScrolledUpwards, setHasScrolledUpwards] = useState(false)
+  const [hasReachedLimits, setHasReachedLimits] = useState(false)
+  // const [isFirstScroll, setIsFirstScroll] = useState(false)
+  const hasAppeared = useStore((state) => state.hasAppeared)
 
   const centerRef = useRef<HTMLDivElement>(null)
   const leftRef = useRef<HTMLUListElement>(null)
@@ -36,22 +41,33 @@ export function Navigation() {
   const githubRef = useRef<HTMLAnchorElement>(null)
   const discordRef = useRef<HTMLAnchorElement>(null)
 
-  const lenis = useLenis(({ lastVelocity, progress }) => {
-    if (lastVelocity === 0) return
-    toggleNavigation(lastVelocity > 0 && progress < 0.99 ? 'hide' : 'show')
+  useLenis(({ lastVelocity, progress, scroll }) => {
+    // if (lastVelocity === 0) return
+    // toggleNavigation(lastVelocity > 0 && progress < 0.99 ? 'hide' : 'show')
+    // console.log('lastVelocity', lastVelocity)
+    if (lastVelocity !== 0) setHasScrolledUpwards(lastVelocity < 0)
+
+    setHasReachedLimits(scroll < 100 || progress > 0.99)
   })
 
-  function toggleNavigation(action: 'show' | 'hide') {
-    if (!lenis) return
-    if (lenis.scroll < 100) {
-      setIsVisible(true)
-    } else {
-      setIsVisible(action === 'show')
-    }
-  }
+  const isVisible =
+    hasAppeared && (hasScrolledUpwards || hasReachedLimits || isHovered)
+
+  // useEffect(() => {
+  //   console.log('isVisible', isVisible)
+  // }, [isVisible])
+
+  // function toggleNavigation(action: 'show' | 'hide') {
+  //   if (!lenis) return
+  //   if (lenis.scroll < 100) {
+  //     setIsVisible(true)
+  //   } else {
+  //     setIsVisible(action === 'show')
+  //   }
+  // }
 
   const hideNavigation = useEffectEvent(() => {
-    if (isHovered) return
+    // if (isHovered) return
     const tl = gsap.timeline()
 
     tl.to(centerRef.current, {
@@ -198,18 +214,19 @@ export function Navigation() {
     <nav
       className={cn(
         'fixed top-0 z-100 dr-layout-grid-inner pt-gap uppercase typo-button dt:left-1/2 dt:-translate-x-1/2',
-        isVisible && 'opacity-100'
+        !hasAppeared && 'opacity-0',
+        'transition-opacity duration-600 ease-out-expo'
       )}
       style={{
         maxWidth: `calc(var(--max-width) * 1px)`,
       }}
       onMouseEnter={() => {
         setIsHovered(true)
-        toggleNavigation('show')
+        // toggleNavigation('show')
       }}
       onMouseLeave={() => {
         setIsHovered(false)
-        toggleNavigation('hide')
+        // toggleNavigation('hide')
       }}
     >
       <Link

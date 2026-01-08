@@ -13,6 +13,7 @@ import { Image } from '~/components/image'
 import { Video } from '~/components/video'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
+import { useStore } from '~/libs/store'
 import { fromTo } from '~/libs/utils'
 import s from './hero.module.css'
 
@@ -29,6 +30,8 @@ export function Hero() {
   const desktopVW = useDesktopVW()
 
   const hasAppeared = useRef(false)
+
+  const setHasAppeared = useStore((state) => state.setHasAppeared)
 
   const appear = useEffectEvent(() => {
     const proxy = {
@@ -204,8 +207,10 @@ export function Hero() {
         }
       )
       .call(() => {
-        hasAppeared.current = true
-        console.log('hasAppeared', hasAppeared.current)
+        // hasAppeared.current = true
+        // console.log('hasAppeared', hasAppeared.current)
+
+        setHasAppeared(true)
       })
 
     return timeline
@@ -227,7 +232,10 @@ export function Hero() {
     start: 'top top',
     end: 'bottom center',
     onProgress: ({ progress }) => {
-      if (!hasAppeared.current) return
+      // if (!hasAppeared.current) return
+
+      const hasAppeared = useStore.getState().hasAppeared
+      if (!hasAppeared) return
 
       fromTo(
         arrowDownRef.current,

@@ -6,6 +6,8 @@ type Store = {
   setIsNavOpened: (value: boolean) => void
   lenisSnap: LenisSnap | null
   setLenisSnap: (value: LenisSnap) => void
+  hasAppeared: boolean
+  setHasAppeared: (value: boolean) => void
 }
 
 export const useStore = create<Store>((set) => ({
@@ -13,4 +15,6 @@ export const useStore = create<Store>((set) => ({
   setIsNavOpened: (value: boolean) => set({ isNavOpened: value }),
   lenisSnap: null,
   setLenisSnap: (value: LenisSnap) => set({ lenisSnap: value }),
+  hasAppeared: false,
+  setHasAppeared: (value: boolean) => set({ hasAppeared: value }),
 }))
