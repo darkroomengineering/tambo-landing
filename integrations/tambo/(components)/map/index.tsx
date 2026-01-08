@@ -3,11 +3,14 @@ import {
   useTamboThread,
   withInteractable,
 } from '@tambo-ai/react'
+import cn from 'clsx'
 import { useEffect } from 'react'
+import InfoSVG from '~/assets/svgs/info.svg'
 import { useAssitant } from '~/integrations/tambo'
 import { MapBox } from '~/integrations/tambo/(components)/map/mapbox'
 import { DEMOS } from '~/integrations/tambo/constants'
 import { MessageThreadCollapsible } from '../ui-tambo/message-thread-collapsible'
+import s from './map.module.css'
 import { MapSchema, mapExampleContext } from './schema'
 
 const introMessages = {
@@ -90,11 +93,21 @@ export function MapAssistant() {
   if (selectedDemo !== demo) return null
 
   return (
-    <MessageThreadCollapsible
-      contextKey={selectedDemo}
-      variant="compact"
-      defaultOpen={true}
-      className="absolute dr-bottom-6 dr-right-4 dr-mr-8"
-    />
+    <>
+      <MessageThreadCollapsible
+        contextKey={selectedDemo}
+        variant="compact"
+        defaultOpen={true}
+        className="absolute dr-bottom-6 dr-right-4 dr-mr-8"
+      />
+      <div className={s.mapTooltip}>
+        <div className={s.icon}>
+          <InfoSVG className="dr-w-16 dr-h-16 " />
+        </div>
+        <span className={cn(s.tooltipText, 'typo-p-s')}>
+          Hold Cmd/Ctrl to drag around the map.
+        </span>
+      </div>
+    </>
   )
 }

@@ -1,0 +1,42 @@
+.mapTooltip {
+  position: absolute;
+  bottom: desktop-vw(8px);
+  left: desktop-vw(8px);
+  width: desktop-vw(227px);
+  height: desktop-vw(32px);
+  border-radius: desktop-vw(16px);
+  padding-left: desktop-vw(4px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: var(--color-white);
+  overflow: hidden;
+  clip-path: inset(0 calc(100% - desktop-vw(32px)) 0 0 round desktop-vw(16px));
+  transition: clip-path 0.3s ease-in-out;
+
+  .tooltipText {
+    position: absolute;
+    left: desktop-vw(36px);
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-size: desktop-vw(10px);
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: desktop-vw(24px);
+    height: desktop-vw(24px);
+    background-color: var(--color-off-white);
+    border-radius: desktop-vw(12px);
+    z-index: 1;
+  }
+
+  @media (--hover) {
+    &:hover {
+      clip-path: inset(0 0 0 0 round desktop-vw(16px));
+    }
+  }
+}
