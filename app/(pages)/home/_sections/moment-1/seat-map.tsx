@@ -13,6 +13,8 @@ import { colors } from '~/styles/colors'
 const letters1 = ['A', 'B', 'C']
 const letters2 = ['D', 'E', 'F']
 const SEAT_AMOUNT = 12
+const SEAT_ARRAY = Array.from({ length: SEAT_AMOUNT }, (_, idx) => idx)
+const SEAT_NUMBERS = [10, 11, 12, 13]
 
 const highlightedSeats1 = [0, 1, 2, 5, 9, 10]
 const highlightedSeats2 = [1, 6, 8, 9, 10, 11]
@@ -120,12 +122,9 @@ export function SeatMap({ ref, selected }: SeatMapProps) {
               {letter}
             </p>
           ))}
-          {Array.from({ length: SEAT_AMOUNT }, (_, idx) => (
+          {SEAT_ARRAY.map((idx) => (
             <Seat
-              key={`col1-${
-                // biome-ignore lint/suspicious/noArrayIndexKey: leave me alone
-                idx
-              }`}
+              key={`col1-${idx}`}
               idx={idx}
               letters={letters1}
               highlighted={highlightedSeats1.includes(idx)}
@@ -143,18 +142,22 @@ export function SeatMap({ ref, selected }: SeatMapProps) {
             />
           ))}
         </div>
+        <div className="w-full h-full flex flex-col items-center justify-between dr-pt-46 dr-pb-24">
+          {SEAT_NUMBERS.map((number) => (
+            <p key={number} className="font-mono dr-text-10">
+              {number}
+            </p>
+          ))}
+        </div>
         <div className="col-start-3 grid grid-cols-3 items-center justify-items-center gap-x-px dr-gap-y-5">
           {letters2.map((letter) => (
             <p key={letter} className="typo-label-m dr-mb-8">
               {letter}
             </p>
           ))}
-          {Array.from({ length: SEAT_AMOUNT }, (_, idx) => (
+          {SEAT_ARRAY.map((idx) => (
             <Seat
-              key={`col2-${
-                // biome-ignore lint/suspicious/noArrayIndexKey: leave me alone
-                idx
-              }`}
+              key={`col2-${idx}`}
               idx={idx}
               letters={letters2}
               highlighted={highlightedSeats2.includes(idx)}
