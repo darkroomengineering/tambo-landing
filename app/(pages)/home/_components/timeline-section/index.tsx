@@ -168,12 +168,12 @@ export function TimelineSection({
             />
             <CTA
               snippet
-              className="bg-black! text-teal border-teal "
+              className="bg-black! text-teal border-teal w-full dt:w-auto"
               wrapperRef={buttonRef}
               wrapperClassName="dt:opacity-0 transition-opacity duration-300 ease-gleasing dt:dr-max-w-321"
             >
               START BUILDING
-              <span className="typo-code-snippet">
+              <span className="typo-code-snippet dr-pt-12 block">
                 <span className="text-pink">{'<TamboProvider'} </span>
                 <span className="text-teal">
                   {'components='}

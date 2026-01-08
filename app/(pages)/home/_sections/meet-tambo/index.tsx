@@ -279,9 +279,8 @@ function Card({ data, isOpen, onToggle }: CardProps) {
       <CTA
         type="secondary"
         wrapperClassName={s.cardCTA}
-        href={isDesktop ? data?.button?.href : undefined}
         onClick={() => {
-          if (isOpen) {
+          if (isDesktop || isOpen) {
             lenis?.scrollTo(`#${data?.anchor}`)
           }
         }}

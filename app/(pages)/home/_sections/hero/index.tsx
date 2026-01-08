@@ -327,9 +327,7 @@ export function Hero() {
             >
               START BUILDING
               <span className="typo-code-snippet">
-                <span className="text-white typo-p-s">
-                  npm create tambo-app
-                </span>
+                <span className="text-white">npm create tambo-app</span>
               </span>
             </CTA>
             <CTA className={cn(s.arrowCTA, 'desktop-only')}>Try Live Demo</CTA>
