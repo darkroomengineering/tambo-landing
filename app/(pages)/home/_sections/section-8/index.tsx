@@ -248,7 +248,7 @@ export function Section8() {
                   <IntroAssistant />
                   <SeatAssistant />
                   <MapAssistant />
-                  <div className="absolute inset-0 rounded-[inherit] dashed-border" />
+                  <div className="absolute inset-0 rounded-[inherit] dashed-border pointer-events-none" />
                 </div>
               </div>
             </div>
