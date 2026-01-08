@@ -6,7 +6,7 @@ import { useContext, useImperativeHandle, useRef } from 'react'
 import { Kinesis } from '~/components/kinesis'
 import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
-import { mapRange } from '~/libs/utils'
+import { ease, mapRange } from '~/libs/utils'
 import { DashedBorder } from '../dashed-border'
 import s from './background.module.css'
 import { BackgroundContext } from './context'
@@ -263,11 +263,14 @@ export function SolidBackground({ children }: { children?: React.ReactNode }) {
     end: 'bottom center',
     onProgress: ({ progress, isActive }) => {
       if (!isActive) return
+
+      const easedProgress = ease(progress, 'easeOutQuad')
+
       const solidBackground = getSolidBackground()
       if (solidBackground) {
-        const r = mapRange(0, 1, progress, 15, 255)
-        const g = mapRange(0, 1, progress, 26, 255)
-        const b = mapRange(0, 1, progress, 23, 255)
+        const r = mapRange(0, 1, easedProgress, 15, 255)
+        const g = mapRange(0, 1, easedProgress, 26, 255)
+        const b = mapRange(0, 1, easedProgress, 23, 255)
         const bgColor = `rgba(${r}, ${g}, ${b}, ${1})`
         solidBackground.style.backgroundColor = bgColor
       }
@@ -278,10 +281,14 @@ export function SolidBackground({ children }: { children?: React.ReactNode }) {
     rect,
     start: 'top bottom',
     end: 'top center',
-    onProgress: ({ progress }) => {
+    onProgress: ({ progress, isActive }) => {
+      if (!isActive) return
+
+      const easedProgress = ease(progress, 'easeOutQuad')
+
       const solidBackground = getSolidBackground()
       if (solidBackground) {
-        const bgColor = `rgba(15, 26, 23, ${progress})`
+        const bgColor = `rgba(15, 26, 23, ${easedProgress})`
         solidBackground.style.backgroundColor = bgColor
         solidBackground.style.opacity = '1'
       }
