@@ -146,7 +146,7 @@ export function Animation({
     cursor.style.opacity = `${mapRange(0, 0.5, selectProgress, 0, 1, true) - mapRange(0.6, 1, selectProgress, 0, 1, true)}`
     bookingConfirmed.style.opacity = `${mapRange(0.6, 1, selectProgress, 0, 1)}`
     seatMapComponent.highlightSeatAnimation(
-      mapRange(0, 0.5, selectProgress, 0, 1)
+      mapRange(0.48, 0.6, selectProgress, 0, 1, true)
     )
 
     // EXIT
