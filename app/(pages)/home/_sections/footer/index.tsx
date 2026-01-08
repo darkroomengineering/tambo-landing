@@ -73,6 +73,7 @@ export function Footer() {
           element.style.width = `${width}px`
           element.style.height = `${width}px`
           element.style.transform = `translateY(0px)`
+          element.style.opacity = `1`
         }
 
         const greyBackground = item?.getGreyBackground()
@@ -87,6 +88,11 @@ export function Footer() {
         const greyBackground = item?.getGreyBackground()
         if (greyBackground) {
           greyBackground.style.opacity = '0'
+        }
+
+        const element = item?.getElement()
+        if (element) {
+          element.style.opacity = `0`
         }
       })
     },

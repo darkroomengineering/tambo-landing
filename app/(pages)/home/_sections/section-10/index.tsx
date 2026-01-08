@@ -190,6 +190,7 @@ export function Section10() {
         {
           y: 0,
           boxShadowOpacity: 1,
+          opacity: 1,
         },
         {
           y: (index) => {
@@ -199,11 +200,12 @@ export function Section10() {
             // (items.length - index) * -height
           },
           boxShadowOpacity: 1,
+          opacity: 1,
         },
         progress,
         {
           ease: 'linear',
-          render: (item, { y, boxShadowOpacity }) => {
+          render: (item, { y, boxShadowOpacity, opacity }) => {
             // @ts-expect-error
             const boxShadow = item?.getBoxShadow()
             if (boxShadow) {
@@ -216,6 +218,7 @@ export function Section10() {
             const element = item?.getElement()
             if (element instanceof HTMLElement) {
               element.style.transform = `translateY(${y}px)`
+              element.style.opacity = `${opacity}`
             }
           },
         }
