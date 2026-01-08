@@ -10,6 +10,7 @@ import ArrowDownSVG from '~/assets/svgs/arrow-down.svg'
 import TamboLetters from '~/assets/svgs/tambo-letters.svg'
 import { CTA } from '~/components/button'
 import { Image } from '~/components/image'
+import { Kinesis } from '~/components/kinesis'
 import { Video } from '~/components/video'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
@@ -264,7 +265,10 @@ export function Hero() {
       className="flex flex-col items-center justify-center h-screen relative  dt:px-0"
     >
       {/* <div className="dt:dr-w-480 dt:aspect-square dt:border dt:border-[red] dt:rounded-full dt:absolute dt:left-[50%] dt:translate-x-[-50%] dt:top-[50%] dt:translate-y-[-50%]" /> */}
-      <div className="dt:dr-w-col-8 flex flex-col dt:dr-gap-8 text-center items-center dt:relative dt:top-[-2%]">
+      <Kinesis
+        getIndex={() => 50}
+        className="dt:dr-w-col-8 flex flex-col dt:dr-gap-8 text-center items-center dt:relative dt:top-[-2%]"
+      >
         <div className="relative">
           <div
             className={cn(
@@ -341,7 +345,7 @@ export function Hero() {
             <CTA className={cn(s.arrowCTA, 'desktop-only')}>Try Live Demo</CTA>
           </div>
         </div>
-      </div>
+      </Kinesis>
       <div
         ref={arrowDownRef}
         className="dt:dr-w-136 dt:aspect-square dt:bg-white dt:bottom-0 dt:left-[50%] dt:translate-x-[-50%] dt:translate-y-[50%] dt:rounded-full dt:fixed dt:opacity-0"
