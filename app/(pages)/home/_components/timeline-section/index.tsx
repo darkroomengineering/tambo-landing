@@ -168,7 +168,7 @@ export function TimelineSection({
             />
             <CTA
               snippet
-              className="bg-black! text-teal border-teal w-full"
+              className="bg-black! text-teal border-teal "
               wrapperRef={buttonRef}
               wrapperClassName="dt:opacity-0 transition-opacity duration-300 ease-gleasing dt:dr-max-w-321"
             >

@@ -320,19 +320,16 @@ export function Hero() {
             so you don't have to.
           </p>
           <div className="flex dt:flex-row flex-col dt:dr-gap-16 dr-gap-12 dt:dr-mt-40 dr-mt-24 place-items-center">
-            <CTA snippet className="bg-black! text-teal border-teal">
+            <CTA
+              snippet
+              snippetEyebrow="NPM"
+              className="bg-black! text-teal border-teal"
+            >
               START BUILDING
               <span className="typo-code-snippet">
-                <span className="text-pink">{'<TamboProvider'} </span>
-                <span className="text-teal">
-                  {'components='}
-                  <span className="text-pink">{'{components}'}</span>
+                <span className="text-white typo-p-s">
+                  npm create tambo-app
                 </span>
-                <span className="text-pink">{'>'}</span>
-                <br />
-                <span className="text-white dt:dr-ml-16">{'<YourApp />'}</span>
-                <br />
-                <span className="text-pink">{'</TamboProvider>'}</span>
               </span>
             </CTA>
             <CTA className={cn(s.arrowCTA, 'desktop-only')}>Try Live Demo</CTA>
