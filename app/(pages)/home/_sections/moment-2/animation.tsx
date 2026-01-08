@@ -269,7 +269,10 @@ export function Animation() {
     cursorPin.style.transform = `translate(${1000 * (1 - hoverPinProgress + greatPickProgress)}%, ${-200 * (1 - hoverPinProgress - greatPickProgress)}%)`
 
     // Pin Animate Animation
-    pinAnimate.animateDetail(hoverPinProgress)
+    pinAnimate.animateDetail(
+      mapRange(0.9, 1, hoverPinProgress, 0, 0.1, true) +
+        mapRange(0, 0.5, greatPickProgress, 0, 0.9, true)
+    )
 
     // Great Pick Text Animation
     greatPickText.style.opacity = `${greatPickProgress}`
