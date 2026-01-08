@@ -44,6 +44,7 @@ export const cards = [
     video: {
       mp4: '/videos/Octo-Multi-compressed.mov',
       webm: '/videos/Octo-Multi-compressed.webm',
+      png: '/videos/Octo-Multi.png',
     },
     button: {
       text: 'See more',

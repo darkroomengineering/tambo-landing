@@ -8,7 +8,7 @@ import { BackgroundContext } from '~/app/(pages)/home/_components/background/con
 import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import PlusIcon from '~/assets/svgs/plus.svg'
-import { Button, CTA } from '~/components/button'
+import { CTA } from '~/components/button'
 import { Image } from '~/components/image'
 import { Marquee } from '~/components/marquee'
 import { Video } from '~/components/video'
@@ -190,8 +190,9 @@ function Card({ data, isOpen, onToggle }: CardProps) {
         s.cardWrapper
       )}
     >
-      <Button
-        // href={isDesktop ? data?.button?.href : undefined}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: <explanation> */}
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+      <div
         className={cn(
           'dt:dr-h-420 dr-h-155 shrink-0 dr-p-8 dr-rounded-20 bg-off-white/80 border border-dark-grey flex flex-col relative overflow-hidden',
           isOpen && s.cardOpen,
@@ -200,12 +201,6 @@ function Card({ data, isOpen, onToggle }: CardProps) {
         onClick={() => {
           if (isMobile) {
             onToggle()
-          }
-
-          if (isDesktop || isOpen) {
-            lenis?.scrollTo(`#${data?.anchor}`, {
-              // duration: 2,
-            })
           }
         }}
       >
@@ -236,7 +231,6 @@ function Card({ data, isOpen, onToggle }: CardProps) {
             <div className="aspect-square dt:dr-w-144 dr-w-80">
               <Video
                 autoPlay
-                priority
                 fallback={
                   <Image
                     src={data?.video?.png}
@@ -281,15 +275,15 @@ function Card({ data, isOpen, onToggle }: CardProps) {
         >
           <PlusIcon className="dr-size-16 icon" />
         </div>
-      </Button>
+      </div>
       <CTA
         type="secondary"
         wrapperClassName={s.cardCTA}
-        // onClick={() => {
-        //   if (isDesktop || isOpen) {
-        //     lenis?.scrollTo(`#${data?.anchor}`)
-        //   }
-        // }}
+        onClick={() => {
+          if (isDesktop || isOpen) {
+            lenis?.scrollTo(`#${data?.anchor}`)
+          }
+        }}
       >
         {data?.button?.text}
       </CTA>
