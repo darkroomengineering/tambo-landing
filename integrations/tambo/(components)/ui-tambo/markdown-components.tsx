@@ -194,7 +194,9 @@ export const createMarkdownComponents = (): Record<
    * Ordered list component with decimal numbering
    * Indented from the left margin
    */
-  ol: ({ children }) => <ol className="list-decimal">{children}</ol>,
+  ol: ({ children }) => (
+    <ol className="list-decimal flex flex-col dr-gap-24">{children}</ol>
+  ),
 
   /**
    * List item component with normal line height

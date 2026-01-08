@@ -132,8 +132,6 @@ const ThreadContentMessages = React.forwardRef<
     (message) => message.role !== 'system' && !message.parentMessageId
   )
 
-  // console.log('thread messages', messages)
-
   return (
     <div
       ref={ref}
@@ -156,14 +154,14 @@ const ThreadContentMessages = React.forwardRef<
               variant={variant}
               isLoading={isGenerating && index === filteredMessages.length - 1}
               className={cn(
-                'flex w-full',
+                'w-full',
                 message.role === 'assistant' ? 'justify-start' : 'justify-end'
               )}
             >
               <div
                 className={cn(
-                  'flex flex-col'
-                  // message.role === 'assistant' ? 'w-full' : 'max-w-[70%]'
+                  'flex flex-col min-w-0'
+                  // message.role === 'assistant' ? 'w-full' : 'max-w-[60%]'
                 )}
               >
                 <ReasoningInfo />
