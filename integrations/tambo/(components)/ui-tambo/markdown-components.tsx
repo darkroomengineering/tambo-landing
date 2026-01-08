@@ -205,7 +205,7 @@ export const createMarkdownComponents = (): Record<
    * Used within both ordered and unordered lists
    */
   li: ({ children }) => (
-    <li className="leading-normal list-disc">{children}</li>
+    <li className="leading-normal list-disc last:dr-mb-24">{children}</li>
   ),
 
   /**

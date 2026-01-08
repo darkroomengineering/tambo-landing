@@ -561,12 +561,7 @@ const MessageInputSubmitButton = React.forwardRef<
       data-slot={isPending ? 'message-input-cancel' : 'message-input-submit'}
       {...props}
     >
-      {children ??
-        (isPending ? (
-          <Square className="w-full h-full" fill="currentColor" />
-        ) : (
-          <ArrowUp className="w-full h-full" />
-        ))}
+      {children ?? <ArrowUp className="w-full h-full" />}
     </button>
   )
 })
