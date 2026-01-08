@@ -83,6 +83,7 @@ const BUTTONS = [
 
 export function Section10() {
   const buttonsRefs = useRef<(HTMLDivElement | null)[]>([])
+  const buttonsWrapperRef = useRef<HTMLDivElement | null>(null)
 
   const [setRectRef, rect] = useRect()
 
@@ -179,6 +180,10 @@ export function Section10() {
     onProgress: ({ progress, height, isActive }) => {
       if (!isActive) return
 
+      if (buttonsWrapperRef.current) {
+        buttonsWrapperRef.current.style.transform = `translateY(${-height * progress * 0.5}px)`
+      }
+
       const items = getItems()
       fromTo(
         items,
@@ -187,16 +192,18 @@ export function Section10() {
           boxShadowOpacity: 1,
         },
         {
-          y: -height,
+          y: (index) => {
+            if (index === items.length - 1) return -height
+
+            return -height - (items.length - index) * height * 0.15
+            // (items.length - index) * -height
+          },
           boxShadowOpacity: 1,
         },
         progress,
         {
           ease: 'linear',
           render: (item, { y, boxShadowOpacity }) => {
-            // @ts-expect-error
-            const element = item?.getElement()
-
             // @ts-expect-error
             const boxShadow = item?.getBoxShadow()
             if (boxShadow) {
@@ -205,6 +212,8 @@ export function Section10() {
 
             // item?.setBorderRadius(`${width * 2}px`)
 
+            // @ts-expect-error
+            const element = item?.getElement()
             if (element instanceof HTMLElement) {
               element.style.transform = `translateY(${y}px)`
             }
@@ -217,7 +226,7 @@ export function Section10() {
   return (
     <section
       ref={setRectRef}
-      className="relative overflow-x-clip dr-mb-400"
+      className="relative overflow-x-clip dr-mb-256"
       style={{
         height: `${BUTTONS.length * 500}px`,
       }}
@@ -276,7 +285,10 @@ export function Section10() {
             </div>
           ))}
         </div>
-        <div className="absolute inset-0 pointer-events-none desktop-only">
+        <div
+          className="absolute inset-0 pointer-events-none desktop-only"
+          ref={buttonsWrapperRef}
+        >
           {BUTTONS.map((button, index) => (
             <div
               className="absolute pointer-events-auto"
