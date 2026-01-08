@@ -54,9 +54,7 @@ export function Section12() {
             {'<'} PRICING {'>'}
           </TitleBlock.LeadIn>
           <TitleBlock.Title level="h2" className="dr-mb-0!">
-            Simple pricing
-            <br className="desktop-only" />
-            from
+            Simple pricing <br className="desktop-only" /> from{' '}
             <br className="mobile-only" />
             hobbyists to enterprise
           </TitleBlock.Title>
