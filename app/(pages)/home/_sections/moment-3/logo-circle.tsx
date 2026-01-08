@@ -8,6 +8,10 @@ import {
 import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import { Image } from '~/components/image'
 import { mapRange, truncate } from '~/libs/utils'
+import ArrowsClockwiseIcon from './arrows-clockwise.svg'
+import ChatDotsIcon from './chat-dots.svg'
+import FilesIcon from './files.svg'
+import QuestionMarkIcon from './question-mark.svg'
 
 export type LogoCircleRef = {
   scrollAnimation: (progress: number) => void
@@ -317,19 +321,27 @@ function Highlight({ ref }: { ref?: React.RefObject<HTMLDivElement | null> }) {
       className="absolute w-[181%] border border-dashed border-dark-teal rounded-full aspect-square"
     >
       <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey bg-white dr-p-2 dr-pr-12 left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 absolute shadow-xs">
-        <div className="dr-size-24 bg-mint rounded-full" />
+        <div className="dr-size-24 bg-mint rounded-full grid place-items-center">
+          <ChatDotsIcon className="icon dr-size-16 text-black" />
+        </div>
         <p className="typo-button">Prompts</p>
       </div>
       <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey bg-white dr-p-2 dr-pr-12  left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 absolute shadow-xs">
-        <div className="dr-size-24 bg-mint rounded-full" />
+        <div className="dr-size-24 bg-mint rounded-full grid place-items-center">
+          <QuestionMarkIcon className="icon dr-size-16 text-black" />
+        </div>
         <p className="typo-button">Elicitation</p>
       </div>
       <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey bg-white dr-p-2 dr-pr-12  left-1/2 top-full -translate-x-1/2 -translate-y-1/2 absolute shadow-xs">
-        <div className="dr-size-24 bg-mint rounded-full" />
+        <div className="dr-size-24 bg-mint rounded-full grid place-items-center">
+          <FilesIcon className="icon dr-size-16 text-black" />
+        </div>
         <p className="typo-button">Resources</p>
       </div>
       <div className="flex items-center dr-gap-4 rounded-full border-2 border-dark-grey bg-white dr-p-2 dr-pr-12   left-full top-1/2 -translate-x-1/2 -translate-y-1/2 absolute shadow-xs">
-        <div className="dr-size-24 bg-mint rounded-full" />
+        <div className="dr-size-24 bg-mint rounded-full grid place-items-center">
+          <ArrowsClockwiseIcon className="icon dr-size-16 text-black" />
+        </div>
         <p className="typo-button">Sampling</p>
       </div>
     </div>
