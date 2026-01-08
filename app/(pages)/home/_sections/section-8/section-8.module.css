@@ -94,3 +94,11 @@
   box-shadow: 0 0 24px 8px rgba(127, 255, 195, 0.7);
   border-radius: desktop-vw(12);
 }
+
+.rim {
+  position: absolute;
+  inset: calc(-1 * mobile-vw(8px));
+  background-color: var(--color-off-white);
+  border-radius: mobile-vw(28px);
+  opacity: 0.8;
+}

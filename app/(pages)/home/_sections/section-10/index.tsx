@@ -234,7 +234,7 @@ export function Section10() {
         height: `${BUTTONS.length * 500}px`,
       }}
     >
-      <div className="h-screen sticky top-0 w-full flex flex-col items-center justify-center">
+      <div className="dt:h-screen sticky top-0 w-full flex flex-col items-center justify-center">
         <Kinesis
           getIndex={() => 50}
           className="text-center flex flex-col items-center relative -dr-top-48"

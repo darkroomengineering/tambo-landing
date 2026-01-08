@@ -1,10 +1,14 @@
 'use client'
 
+import cn from 'clsx'
 import { useRect, useWindowSize } from 'hamo'
 import { useContext, useRef } from 'react'
 import { useLenisSnap } from '~/app/(pages)/_components/lenis/snap'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
+import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
+import MonitorSVG from '~/assets/svgs/monitor.svg'
+import PlaneSVG from '~/assets/svgs/plane.svg'
 import { Image } from '~/components/image'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
@@ -18,6 +22,7 @@ import { AssistantNotifications } from '~/integrations/tambo/(components)/notifi
 import { SeatAssistant } from '~/integrations/tambo/(components)/seat-selector/index'
 import { DEMOS } from '~/integrations/tambo/constants'
 import { fromTo } from '~/libs/utils'
+import s from './section-8.module.css'
 
 export function Section8() {
   const [setRectRef, rect] = useRect()
@@ -221,7 +226,7 @@ export function Section8() {
   return (
     <>
       <section
-        className="flex flex-col items-center justify-end"
+        className="flex flex-col items-center justify-end dr-pt-120 dt:dr-pt-0 dr-mb-51 dt:dr-mb-0"
         ref={setRectRef}
       >
         <TitleBlock
@@ -237,45 +242,84 @@ export function Section8() {
           </TitleBlock.Title>
         </TitleBlock>
       </section>
-      <TamboIntegration>
-        <section
-          id="demo"
-          // className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen"
-          className="h-screen relative"
-          ref={(node) => {
-            setSnapRef(node)
-            setTamboSectionRectRef(node)
-          }}
-        >
-          <div className="absolute bottom-0 left-0 right-0 h-[150vh]">
-            <div className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen sticky top-0">
-              <AssistantNotifications className="col-span-2" />
-              {/* TODO: Dashed border style*/}
-              <div
-                ref={(node) => {
-                  setTamboRectRef(node)
-                  demoRef.current = node
-                }}
-                // ref={demoRef}
-                className="col-start-3 col-end-10 card-outline outline-off-white/80 dr-rounded-20 aspect-898/597 dr-h-597"
-              >
-                <div className="relative z-1 size-full dr-rounded-20 shadow-m overflow-clip bg-white ">
-                  <InterctableMap
-                    height={650}
-                    center={{ lng: -74.00594, lat: 40.71278 }}
-                    zoom={12}
-                  />
-                  <BackgroundAssistant />
-                  <IntroAssistant />
-                  <SeatAssistant />
-                  <MapAssistant />
-                  <div className="absolute inset-0 rounded-[inherit] dashed-border pointer-events-none" />
+      <div className="desktop-only">
+        <TamboIntegration>
+          <section
+            id="demo"
+            // className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen"
+            className="h-screen relative"
+            ref={(node) => {
+              setSnapRef(node)
+              setTamboSectionRectRef(node)
+            }}
+          >
+            <div className="absolute bottom-0 left-0 right-0 h-[150vh]">
+              <div className="dr-layout-grid-inner dr-gap-20 items-center justify-center h-screen sticky top-0">
+                <AssistantNotifications className="col-span-2" />
+                {/* TODO: Dashed border style*/}
+                <div
+                  ref={(node) => {
+                    setTamboRectRef(node)
+                    demoRef.current = node
+                  }}
+                  // ref={demoRef}
+                  className="col-start-3 col-end-10 card-outline outline-off-white/80 dr-rounded-20 aspect-898/597 dr-h-597"
+                >
+                  <div className="relative z-1 size-full dr-rounded-20 shadow-m overflow-clip bg-white ">
+                    <InterctableMap
+                      height={650}
+                      center={{ lng: -74.00594, lat: 40.71278 }}
+                      zoom={12}
+                    />
+                    <BackgroundAssistant />
+                    <IntroAssistant />
+                    <SeatAssistant />
+                    <MapAssistant />
+                    <div className="absolute inset-0 rounded-[inherit] dashed-border pointer-events-none" />
+                  </div>
                 </div>
               </div>
             </div>
+          </section>
+        </TamboIntegration>
+      </div>
+      <section className="mobile-only dr-pb-120 px-safe">
+        <div className="relative">
+          <div className={s.rim} />
+          <div
+            className={cn(
+              'dr-h-500 relative dr-rounded-20 border border-forest/50 border-dashed shadow-m ',
+              s.demoBackground
+            )}
+          >
+            <Image
+              src="/assets/mobile-background/demo-background.png"
+              alt="Demo"
+              fill
+            />
+
+            <div className="absolute  dr-top-8 dr-left-28 dr-right-28 dr-h-28 bg-white dr-rounded-20 dr-py-2 dr-pl-2 flex items-center dr-gap-8 outline-2 outline-dark-grey">
+              <div className="dr-size-24 bg-black relative rounded-full overflow-hidden grid place-items-center">
+                <HashPattern className="absolute inset-0 text-dark-teal/20 " />
+                <PlaneSVG className="dr-size-16 text-teal z-1" />
+              </div>
+              <p className="typo-label-m ">
+                {'< '}my goated travel assistant{' >'}
+              </p>
+            </div>
+
+            <div className="absolute dr-bottom-8 dr-left-8 dr-right-8 dr-h-56  bg-white dr-rounded-20 dr-py-8 dr-pl-8 dr-pr-16 flex items-center dr-gap-16">
+              <div className="dr-size-40 grid place-items-center dr-rounded-12 bg-off-white">
+                <MonitorSVG className="dr-size-24" />
+              </div>
+              <p className="typo-p-s dr-w-228">
+                To view the live demo, open Tambo on a desktop or larger
+                display.
+              </p>
+            </div>
           </div>
-        </section>
-      </TamboIntegration>
+        </div>
+      </section>
     </>
   )
 }
