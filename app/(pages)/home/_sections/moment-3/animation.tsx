@@ -133,7 +133,10 @@ export function Animation() {
 
     // MCP Features Animation
     mcpFeatures.style.opacity = `${mapRange(0.5, 1, chatMessagesProgress, 0, 1) - exitProgress}`
-    mcpFeatures.style.transform = `translateY(${mapRange(0.5, 1, chatMessagesProgress, 100, 0) + mapRange(0, 1, exitProgress, 0, 100, true)}%)`
+    mcpFeatures.style.setProperty(
+      '--mcp-appear-progress',
+      `${mapRange(0.5, 1, chatMessagesProgress, 0, 1) - exitProgress}`
+    )
     mcpFeatures.style.setProperty(
       '--mcp-update-calendar-progress',
       `${mapRange(0.5, 1, sureUpdateCalendarProgress, 0, 1) - addingToCalendarProgress}`
@@ -292,6 +295,9 @@ export function Animation() {
             'flex items-center dr-gap-4 rounded-full border-2 border-dark-grey dr-p-2 dr-pr-12 text-black',
             s.mcpFeature
           )}
+          style={{
+            '--index': 0,
+          }}
         >
           <div className="dr-size-24 bg-white rounded-full grid place-items-center">
             <ChatDotsIcon className="icon dr-size-16" />
@@ -303,6 +309,9 @@ export function Animation() {
             'flex items-center dr-gap-4 rounded-full border-2 border-dark-grey dr-p-2 dr-pr-12 text-black',
             s.mcpFeature
           )}
+          style={{
+            '--index': 1,
+          }}
         >
           <div className="dr-size-24 bg-white rounded-full grid place-items-center">
             <QuestionMarkIcon className="icon dr-size-16" />
@@ -314,6 +323,9 @@ export function Animation() {
             'flex items-center dr-gap-4 rounded-full border-2 border-dark-grey dr-p-2 dr-pr-12 text-black',
             s.mcpFeature
           )}
+          style={{
+            '--index': 2,
+          }}
         >
           <div className="dr-size-24 bg-white rounded-full grid place-items-center">
             <FilesIcon className="icon dr-size-16" />
@@ -325,6 +337,9 @@ export function Animation() {
             'flex items-center dr-gap-4 rounded-full border-2 border-dark-grey dr-p-2 dr-pr-12 text-black',
             s.mcpFeature
           )}
+          style={{
+            '--index': 3,
+          }}
         >
           <div className="dr-size-24 bg-white rounded-full grid place-items-center">
             <ArrowsClockwiseIcon className="icon dr-size-16" />
