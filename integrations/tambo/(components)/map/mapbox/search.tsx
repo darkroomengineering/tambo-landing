@@ -40,7 +40,8 @@ export function useMapSearch({
   // Cleanup helper
   const clearMarkers = useCallback(() => {
     markersRef.current.forEach(({ marker, root }) => {
-      root.unmount()
+      // Defer unmount to avoid conflict with React render cycle
+      queueMicrotask(() => root.unmount())
       marker.remove()
     })
     markersRef.current = []
@@ -128,11 +129,7 @@ export function useMapSearch({
 
     map.addControl(new mapboxgl.AttributionControl({ compact: true }))
     new mapboxgl.Marker().setLngLat(center).addTo(map)
-
-    return () => {
-      clearMarkers()
-    }
-  }, [map, center, clearMarkers])
+  }, [map, center])
 
   // Listen for search events from tools
   useMapSearchListener(handleSearch)
@@ -148,8 +145,13 @@ function PoiMarker({
   onClick: (poi: POI) => void
 }) {
   return (
-    <div className={s.mapMarkerContainer}>
-      <div className={s.mapMarkerPin}>
+    <div
+      className={cn(
+        s.pois,
+        'flex flex-col items-center justify-center dr-gap-9'
+      )}
+    >
+      <div className={s.pin}>
         <PinSVG className="dr-size-full" />
       </div>
       <button
@@ -157,22 +159,29 @@ function PoiMarker({
         onClick={() => onClick(poi)}
         aria-label={`Action for ${poi.name ?? 'POI'}`}
         className={cn(
-          s.mapMarker,
-          'flex items-center justify-center dr-gap-4 relative'
+          s.button,
+          'dr-size-20 flex items-center justify-center dr-gap-4 relative dr-rounded-12 dr-border dr-border-dark-teal dr-p-2 dr-py-4 dr-pr-4 dr-bg-white'
         )}
       >
         <HashPattern
           className={cn('absolute inset-0 text-dark-teal/50 ', s.hashPattern)}
         />
-        <span className={cn(s.mapMarkerText, 'typo-label-s')}>{poi.name}</span>
+        <span
+          className={cn(
+            s.text,
+            'typo-label-s dr-pl-8 leading-none dr-max-w-200 overflow-hidden'
+          )}
+        >
+          {poi.name}
+        </span>
         <span
           className={cn(
             'dr-size-16 bg-teal rounded-full grid place-items-center',
             s.icon
           )}
         >
-          <ArrowSVG className="dr-size-8 absolute top-[50%] translate-y-[-50%]" />
-          <PlusIcon className="dr-size-8 text-teal absolute top-[50%] translate-y-[-50%]" />
+          <ArrowSVG className="dr-size-8 absolute top-1/2 -translate-y-1/2" />
+          <PlusIcon className="dr-size-8 text-teal absolute top-1/2 -translate-y-1/2" />
         </span>
       </button>
     </div>

@@ -1,9 +1,12 @@
 'use client'
 
+import cn from 'clsx'
 import { useLenis } from 'lenis/react'
 import mapboxgl from 'mapbox-gl'
 import { useEffect, useRef, useState } from 'react'
+import InfoSVG from '~/assets/svgs/info.svg'
 import { useAssitant } from '~/integrations/tambo'
+import s from '../map.module.css'
 import { useRectangleMapDrawing } from './drawing'
 import { useMapNavigationListener } from './events'
 import { useMapSearch } from './search'
@@ -69,40 +72,62 @@ export function MapBox({
       zoom: fallbackZoom,
     })
 
+    // Store reference immediately to ensure cleanup works even before load
+    mapRef.current = map
+
     map.on('load', () => {
-      mapRef.current = map
       setMap(map)
     })
 
     return () => {
-      if (mapRef.current) {
-        mapRef.current.remove()
-        mapRef.current = null
-      }
+      // Use closure variable to ensure we remove the exact map we created
+      map.remove()
+      mapRef.current = null
+      setMap(undefined)
     }
   }, [setMap])
 
   return (
-    <div
-      className={className}
-      style={{ width: '100%' }}
-      data-lenis-prevent
-      onMouseEnter={() => {
-        lenis?.stop()
-      }}
-      onMouseLeave={() => {
-        lenis?.start()
-      }}
-      role="region"
-      aria-label="Area Select Map"
-    >
+    <>
       <div
-        ref={(el: HTMLDivElement | null) => {
-          containerRef.current = el
+        className={className}
+        style={{ width: '100%' }}
+        data-lenis-prevent
+        onMouseEnter={() => {
+          lenis?.stop()
         }}
-        style={{ height, width: '100%' }}
-      />
-    </div>
+        onMouseLeave={() => {
+          lenis?.start()
+        }}
+        role="region"
+        aria-label="Area Select Map"
+      >
+        <div
+          ref={(el: HTMLDivElement | null) => {
+            containerRef.current = el
+          }}
+          style={{ height, width: '100%' }}
+        />
+      </div>
+      <div
+        className={cn(
+          s.mapTooltip,
+          'absolute dr-bottom-8 dr-left-8 dr-w-227 dr-h-32 dr-rounded-16 dr-pl-4 flex items-center justify-start bg-white overflow-hidden'
+        )}
+      >
+        <div className="dr-size-24 bg-off-white dr-rounded-12 flex items-center justify-center">
+          <InfoSVG className="dr-w-16 dr-h-16 " />
+        </div>
+        <span
+          className={cn(
+            s.tooltipText,
+            'typo-p-s absolute dr-left-36 top-1/2 -translate-y-1/2 whitespace-nowrap dr-text-10'
+          )}
+        >
+          Hold Cmd/Ctrl to drag around the map.
+        </span>
+      </div>
+    </>
   )
 }
 

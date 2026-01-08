@@ -124,6 +124,14 @@ export function useRectangleMapDrawing({
         'line-cap': 'round',
       },
     })
+
+    return () => {
+      // Remove layers first (they depend on the source)
+      if (map.getLayer('selection-line')) map.removeLayer('selection-line')
+      if (map.getLayer('selection-fill')) map.removeLayer('selection-fill')
+      // Then remove source
+      if (map.getSource('selection')) map.removeSource('selection')
+    }
   }, [map, center])
 }
 
@@ -170,29 +178,6 @@ function isClickOnPOI(map: mapboxgl.Map, point: mapboxgl.Point): boolean {
 
 function isPanModeActive(e: mapboxgl.MapMouseEvent, panMode: boolean): boolean {
   return e.originalEvent.metaKey || e.originalEvent.ctrlKey || panMode
-}
-
-/** Log bbox selection details to console */
-function logBBoxSelection(bbox: BBox): void {
-  const centerLng = (bbox.west + bbox.east) / 2
-  const centerLat = (bbox.south + bbox.north) / 2
-  const widthKm = (
-    (bbox.east - bbox.west) *
-    111 *
-    Math.cos((centerLat * Math.PI) / 180)
-  ).toFixed(2)
-  const heightKm = ((bbox.north - bbox.south) * 111).toFixed(2)
-
-  console.log('📍 Area selected:', {
-    center: `${centerLat.toFixed(4)}°N, ${centerLng.toFixed(4)}°E`,
-    size: `${widthKm} × ${heightKm} km`,
-    bounds: {
-      north: bbox.north.toFixed(4),
-      south: bbox.south.toFixed(4),
-      east: bbox.east.toFixed(4),
-      west: bbox.west.toFixed(4),
-    },
-  })
 }
 
 function isValidBBox(bbox: BBox): boolean {

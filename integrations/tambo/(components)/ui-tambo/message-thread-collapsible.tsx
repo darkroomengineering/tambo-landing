@@ -147,7 +147,7 @@ function CollapsibleTrigger({
           <button
             type="button"
             className={cn(
-              'flex items-center justify-between w-full dr-p-4',
+              'flex items-center justify-between w-full dr-p-12',
               'hover:bg-muted/50 transition-colors'
             )}
             aria-expanded={isOpen}
@@ -164,19 +164,17 @@ function CollapsibleTrigger({
         </Collapsible.Trigger>
       )}
       {isOpen && (
-        <div className="flex items-center justify-between w-full dr-p-4">
-          <button
-            type="button"
-            className="rounded-full hover:bg-muted/70 transition-colors cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation()
-              onClose()
-            }}
-            aria-label="Close"
-          >
-            <XIcon className="dr-h-16 aspect-square" />
-          </button>
-        </div>
+        <button
+          type="button"
+          className="dr-mt-8 dr-ml-8 bg-dark-grey w-fit dr-p-2 dr-py-4 flex items-center justify-center rounded-full hover:bg-muted/70 transition-colors cursor-pointer hover:[&>svg]:rotate-180"
+          onClick={(e) => {
+            e.stopPropagation()
+            onClose()
+          }}
+          aria-label="Close"
+        >
+          <XIcon className="dr-h-16 aspect-square transition-transform duration-200" />
+        </button>
       )}
     </>
   )

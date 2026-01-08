@@ -56,7 +56,7 @@ export function MessageGenerationStage({
       )}
       {...props}
     >
-      <Loader2Icon className="dr-h-3 dr-w-3 animate-spin" />
+      <Loader2Icon className="dr-h-12 dr-w-12 animate-spin" />
       {showLabel && <span className="typo-p-s">{label}</span>}
     </div>
   )

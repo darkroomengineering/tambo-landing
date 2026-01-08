@@ -1,38 +1,6 @@
 .mapTooltip {
-  position: absolute;
-  bottom: desktop-vw(8px);
-  left: desktop-vw(8px);
-  width: desktop-vw(227px);
-  height: desktop-vw(32px);
-  border-radius: desktop-vw(16px);
-  padding-left: desktop-vw(4px);
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: var(--color-white);
-  overflow: hidden;
   clip-path: inset(0 calc(100% - desktop-vw(32px)) 0 0 round desktop-vw(16px));
   transition: clip-path 0.3s ease-in-out;
-
-  .tooltipText {
-    position: absolute;
-    left: desktop-vw(36px);
-    top: 50%;
-    transform: translateY(-50%);
-    white-space: nowrap;
-    font-size: desktop-vw(10px);
-  }
-
-  .icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: desktop-vw(24px);
-    height: desktop-vw(24px);
-    background-color: var(--color-off-white);
-    border-radius: desktop-vw(12px);
-    z-index: 1;
-  }
 
   @media (--hover) {
     &:hover {
@@ -41,14 +9,8 @@
   }
 }
 
-.mapMarkerContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: desktop-vw(9px);
-
-  .mapMarkerPin {
+.pois {
+  .pin {
     svg {
       path {
         fill: var(--color-mint);
@@ -57,14 +19,7 @@
     }
   }
 
-  .mapMarker {
-    /* opacity: 0; */
-    border-radius: desktop-vw(12px);
-    border: 1px solid var(--color-dark-teal);
-    padding-left: desktop-vw(8px);
-    padding-block: desktop-vw(2px);
-    padding-right: desktop-vw(2px);
-    background-color: var(--color-white);
+  .button {
     transition:
       opacity 0.3s ease-in-out,
       width 0.3s ease-in-out,
@@ -72,10 +27,8 @@
       background-color 0.3s ease-in-out,
       border-color 0.3s ease-in-out,
       box-shadow 0.3s ease-in-out;
-    width: desktop-vw(20px);
-    height: desktop-vw(20px);
 
-    .mapMarkerText {
+    .text {
       color: var(--color-teal);
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
@@ -109,15 +62,14 @@
 
   @media (--hover) {
     &:hover {
-      .mapMarker {
+      .button {
         background-color: var(--color-black);
         border-color: var(--color-teal);
         box-shadow: 0 0 16px 0px rgba(127, 255, 195, 0.7);
-        opacity: 1;
         width: 100%;
         padding-right: desktop-vw(24px);
 
-        .mapMarkerText {
+        .text {
           opacity: 1;
         }
 
@@ -136,11 +88,11 @@
         }
 
         .hashPattern {
-          opacity: 1;
+          opacity: 0.2;
         }
       }
 
-      .mapMarkerPin {
+      .pin {
         svg {
           path {
             fill: var(--color-teal);
