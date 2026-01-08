@@ -91,17 +91,24 @@ export function WeatherWidget() {
   const { weather } = useAssitant()
   const [currentTime, setCurrentTime] = useState<string | null>(null)
 
+  const timezone = weather?.timezone
+
   useEffect(() => {
+    if (!timezone) return
+
+    // Set initial time immediately
+    setCurrentTime(formatTime(new Date(), timezone))
+
     const interval = setInterval(() => {
-      setCurrentTime(formatTime(new Date()))
+      setCurrentTime(formatTime(new Date(), timezone))
     }, 30000) // Update every 30 seconds
 
     return () => clearInterval(interval)
-  }, [])
+  }, [timezone])
 
-  if (!weather || weather.length === 0) return null
+  if (!weather?.forecast || isEmptyArray(weather.forecast)) return null
 
-  const today = weather[0]
+  const today = weather.forecast[0]
   const temp = Math.round(today.temperatureMax)
   const unit = today.temperatureUnit
   const description = today.weatherDescription
@@ -142,12 +149,13 @@ function getWeatherIcon(description: string) {
   }
 }
 
-function formatTime(date: Date): string {
+function formatTime(date: Date, timezone: string): string {
   return date
     .toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
       hour12: true,
+      timeZone: timezone,
     })
     .toLowerCase()
 }

@@ -22,7 +22,10 @@ export type Destination = {
   name: string | null
   center: [number, number]
 }
-export type WeatherResult = ForecastDay[]
+export type WeatherResult = {
+  timezone: string
+  forecast: ForecastDay[]
+}
 export type POI = {
   id: string | number
   type: string

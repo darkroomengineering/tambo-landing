@@ -61,6 +61,7 @@ export type ForecastDay = {
 
 type WeatherResult = {
   message: string
+  timezone: string
   forecast: ForecastDay[]
   units: {
     temperature: string
@@ -289,6 +290,7 @@ export async function getWeather(params: {
 
     return {
       message,
+      timezone: data.timezone,
       forecast: data.forecast,
       units: data.units,
     }
@@ -445,6 +447,7 @@ export const mapTools: TamboTool[] = [
     }),
     outputSchema: z.object({
       message: z.string(),
+      timezone: z.string(),
       forecast: z.array(
         z.object({
           date: z.string(),

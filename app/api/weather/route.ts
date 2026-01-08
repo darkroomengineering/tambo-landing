@@ -4,6 +4,9 @@ import { fetchWithTimeout } from '~/libs/fetch-with-timeout'
 type OpenMeteoResponse = {
   latitude: number
   longitude: number
+  timezone: string
+  timezone_abbreviation: string
+  utc_offset_seconds: number
   daily: {
     time: string[]
     temperature_2m_max: number[]
@@ -132,6 +135,9 @@ export async function GET(request: Request) {
     return NextResponse.json({
       latitude: data.latitude,
       longitude: data.longitude,
+      timezone: data.timezone,
+      timezoneAbbreviation: data.timezone_abbreviation,
+      utcOffsetSeconds: data.utc_offset_seconds,
       forecast,
       units: {
         temperature: daily_units.temperature_2m_max,

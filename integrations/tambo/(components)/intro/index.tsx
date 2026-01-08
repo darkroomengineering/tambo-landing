@@ -23,7 +23,10 @@ export function IntroAssistant() {
       latitude: params.center.lat,
       longitude: params.center.lng,
     }).then((result) => {
-      setWeather(result.forecast)
+      setWeather({
+        timezone: result.timezone,
+        forecast: result.forecast,
+      })
     })
   })
 
