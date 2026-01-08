@@ -187,7 +187,7 @@ export const createMarkdownComponents = (): Record<
    * Indented from the left margin
    */
   ul: ({ children }) => (
-    <ul className="list-disc flex flex-col dr-gap-8">{children}</ul>
+    <ul className="list-disc flex flex-col dr-gap-8 dr-pl-16">{children}</ul>
   ),
 
   /**
@@ -195,7 +195,9 @@ export const createMarkdownComponents = (): Record<
    * Indented from the left margin
    */
   ol: ({ children }) => (
-    <ol className="list-decimal flex flex-col dr-gap-24">{children}</ol>
+    <ol className="list-decimal flex flex-col dr-gap-24 dr-pl-16">
+      {children}
+    </ol>
   ),
 
   /**
@@ -203,7 +205,7 @@ export const createMarkdownComponents = (): Record<
    * Used within both ordered and unordered lists
    */
   li: ({ children }) => (
-    <li className="leading-normal list-none">{children}</li>
+    <li className="leading-normal list-disc">{children}</li>
   ),
 
   /**
