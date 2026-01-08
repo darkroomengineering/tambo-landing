@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { useLenis } from 'lenis/react'
 import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
+import CloseIcon from '~/assets/svgs/close.svg'
 import DiscordIcon from '~/assets/svgs/discord.svg'
 import GithubIcon from '~/assets/svgs/github.svg'
 import NavMobile from '~/assets/svgs/nav-mobile.svg'
@@ -28,7 +29,8 @@ const RIGHT_LINKS = [
 export function Navigation() {
   // const [isVisible, setIsVisible] = useState(true)
   const [isHovered, setIsHovered] = useState(false)
-  const [isMobileNavOpened, setIsMobileNavOpened] = useState(false)
+  const isMobileNavOpened = useStore((state) => state.isMobileNavOpened)
+  const setIsMobileNavOpened = useStore((state) => state.setIsMobileNavOpened)
   const [hasScrolledUpwards, setHasScrolledUpwards] = useState(false)
   const [hasReachedLimits, setHasReachedLimits] = useState(false)
   // const [isFirstScroll, setIsFirstScroll] = useState(false)
@@ -290,7 +292,7 @@ export function Navigation() {
         {/* Mobile Nav */}
         <div
           className={cn(
-            'mobile-only border border-dark-grey w-full dr-h-48 dr-rounded-24 relative overflow-hidden bg-white',
+            'mobile-only border border-dark-grey w-full dr-h-48 dr-rounded-24 relative overflow-hidden bg-white/80',
             s.mobileNavContainer,
             isMobileNavOpened && s.mobileNavOpened
           )}
@@ -299,12 +301,16 @@ export function Navigation() {
             <TamboLogo className="dr-h-24" ref={logoRef} />
             <Button
               onClick={() => {
-                setIsMobileNavOpened((prev) => !prev)
+                setIsMobileNavOpened(!isMobileNavOpened)
               }}
               className="flex dr-gap-4"
             >
               {isMobileNavOpened ? 'Close' : 'Menu'}
-              <NavMobile className="dr-w-16" />
+              {isMobileNavOpened ? (
+                <CloseIcon className="dr-w-16" />
+              ) : (
+                <NavMobile className="dr-w-16" />
+              )}
             </Button>
           </div>
           {/* Mobile content */}

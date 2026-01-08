@@ -18,6 +18,7 @@ export function Lenis({ root, options }: LenisProps) {
   const lenisRef = useRef<LenisRef>(null)
   const setLenisSnap = useStore((state) => state.setLenisSnap)
   const isNavOpened = useStore((state) => state.isNavOpened)
+  const isMobileNavOpened = useStore((state) => state.isMobileNavOpened)
 
   useTempus((time: number) => {
     if (lenisRef.current?.lenis) {
@@ -26,12 +27,12 @@ export function Lenis({ root, options }: LenisProps) {
   })
 
   useEffect(() => {
-    const isOverflowHidden = isNavOpened
+    const isOverflowHidden = isNavOpened || isMobileNavOpened
     document.documentElement.classList.toggle(
       'overflow-hidden',
-      isOverflowHidden
+      isOverflowHidden || isMobileNavOpened
     )
-  }, [isNavOpened])
+  }, [isNavOpened, isMobileNavOpened])
 
   const lenis = useLenis()
 
