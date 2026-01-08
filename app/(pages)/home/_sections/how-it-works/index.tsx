@@ -19,9 +19,9 @@ export function HowItWorks() {
           <br className="mobile-only" /> app.
         </TitleBlock.Subtitle>
       </TitleBlock>
-      <div className="dr-px-40 dr-pb-40">
-        <div className="aspect-[1360/790] bg-grey dr-rounded-20">
-          <HowItWorksSVG className="dr-w-full dr-h-full" />
+      <div className="dr-px-40">
+        <div className="dr-py-94 dr-px-145 bg-grey dr-rounded-20">
+          <HowItWorksSVG className="dr-w-full dr-h-full skew-x-[-10deg] rotate-[5deg]" />
         </div>
       </div>
     </section>
