@@ -233,8 +233,8 @@ function Card({ data, isOpen, onToggle }: CardProps) {
                 priority
                 fallback={
                   <Image
-                    src="/videos/Octo-Juggle.png"
-                    alt="Octo Juggle"
+                    src={data?.video?.png}
+                    alt={data?.title}
                     unoptimized
                     preload
                   />
