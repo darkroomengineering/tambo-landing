@@ -24,7 +24,7 @@ export function Moment3() {
       rect,
       start: 'center center',
       end: `${timelineRect?.bottom === undefined ? 'bottom' : timelineRect.bottom} center`,
-      onProgress: ({ progress, isActive, lastProgress }) => {
+      onProgress: ({ progress, isActive }) => {
         console.log('moment-3 progress', progress)
         if (!isActive) return
 
