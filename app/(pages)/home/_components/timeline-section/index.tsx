@@ -93,7 +93,7 @@ export function TimelineSection({
         if (!isDesktop) {
           messagesRef.current.style.transform = `translateX(${(-messagesRef.current.scrollWidth / 4) * Math.min(3, Math.max(0, currentStep - 1))}px)`
         } else {
-          messagesRef.current.style.transform = `translateX(0px)`
+          messagesRef.current.style.transform = `none`
         }
       }
     },

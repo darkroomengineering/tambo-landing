@@ -98,7 +98,10 @@ export function Animation({
     }
 
     // Intro
-    container.style.opacity = `${isDesktop ? containerProgress : 1}`
+    container.style.opacity = `${
+      // biome-ignore lint/style/noNestedTernary: needed
+      isDesktop ? (containerProgress > 0 ? 1 : 0) : 1
+    }`
 
     // Seats Question
     seatsQuestion.style.setProperty(
@@ -185,7 +188,7 @@ export function Animation({
       <Card
         ref={introCardRef}
         className={cn(
-          'z-50 flex flex-col justify-end dr-gap-14 overflow-hidden',
+          'z-50 flex flex-col justify-end dr-gap-14 overflow-hidden shadow-m',
           s.card
         )}
       >
@@ -261,7 +264,7 @@ function Card({ children, className, ...props }: ComponentProps<'div'>) {
   return (
     <div
       className={cn(
-        'relative z-20 size-full col-start-1 col-end-1 row-start-1 row-end-1 dashed-border bg-white dr-p-16 dr-rounded-20 shadow-m',
+        'relative z-20 size-full col-start-1 col-end-1 row-start-1 row-end-1 dashed-border bg-white dr-p-16 dr-rounded-20',
         s.card,
         className
       )}
