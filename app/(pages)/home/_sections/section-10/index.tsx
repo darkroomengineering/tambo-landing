@@ -64,7 +64,7 @@ const BUTTONS = [
   },
   {
     title: 'Tool Orchestration',
-    href: 'Automatic tool call coordination during response generation',
+    href: 'Ahttps://docs.tambo.co/#why-tambo',
     top: 40,
     left: 15,
   },
