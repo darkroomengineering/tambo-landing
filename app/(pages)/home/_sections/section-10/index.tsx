@@ -243,7 +243,7 @@ export function Section10() {
           fill
         />
       </div>
-      <div className="dt:h-screen dt:sticky dt:top-0 w-full flex flex-col items-center justify-center ">
+      <div className="dt:h-screen dt:sticky dt:top-0 w-full flex flex-col items-center justify-center dt:bg-transparent bg-white ">
         <Kinesis
           getIndex={() => 50}
           className="text-center flex flex-col items-center relative dt:-dr-top-48"
@@ -298,6 +298,7 @@ export function Section10() {
           ))}
         </div>
         <div className="mobile-only w-full  dr-h-280 relative">
+          <div className="absolute bottom-0 left-0 right-0 bg-light-gray dr-h-280 w-full mobile-only dr-mb-[-1]" />
           <Image
             src="/assets/mobile-background/section-10Bottom.png"
             alt="Section 10 Background"
