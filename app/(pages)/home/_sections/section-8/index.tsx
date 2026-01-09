@@ -225,6 +225,7 @@ export function Section8() {
 
   return (
     <div className="max-dt:bg-white">
+      <div className="desktop-only h-[50vh]" />
       <section
         className="flex flex-col items-center justify-end dr-pt-120 dt:dr-pt-0 dr-mb-51 dt:dr-mb-0"
         ref={setRectRef}

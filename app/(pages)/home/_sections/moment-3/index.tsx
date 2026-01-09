@@ -18,7 +18,7 @@ export function Moment3() {
   const desktopVW = useDesktopVW()
   const { getItems, getBackground } = useContext(BackgroundContext)
 
-  const { width: windowWidth = 0 } = useWindowSize()
+  const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize()
 
   useScrollTrigger(
     {
@@ -70,6 +70,83 @@ export function Moment3() {
               }
               return 0
             },
+          },
+          {
+            borderRadius: desktopVW(20),
+            // width: (index) =>
+            //   desktopVW(704, true) -
+            //   desktopVW((index - (items.length - 1)) * 105 * 2, true),
+            // height: (index) =>
+            //   desktopVW(497, true) -
+            //   desktopVW((index - (items.length - 1)) * 74 * 2, true),
+            width: rect?.width ?? 0,
+            height: rect?.height ?? 0,
+            x: 0,
+            kinesis: 0,
+            opacity: 1,
+            boxShadowOpacity: 1,
+          },
+          progress,
+          {
+            ease: 'easeOutSine',
+            render: (
+              item,
+              {
+                borderRadius,
+                width,
+                height,
+                x,
+                kinesis,
+                opacity,
+                boxShadowOpacity,
+              }
+            ) => {
+              // @ts-expect-error
+              const element = item?.getElement()
+              // @ts-expect-error
+              item?.setBorderRadius(`${borderRadius}px`)
+              // @ts-expect-error
+              item?.setKinesis(kinesis)
+              // @ts-expect-error
+              const boxShadow = item?.getBoxShadow()
+              if (boxShadow) {
+                boxShadow.style.opacity = `${boxShadowOpacity}`
+              }
+              if (element instanceof HTMLElement) {
+                element.style.width = `${width}px`
+                element.style.height = `${height}px`
+                element.style.transform = `translateX(${x}px)`
+                element.style.opacity = `${opacity}`
+              }
+            },
+          }
+        )
+      },
+    },
+    []
+  )
+
+  useScrollTrigger(
+    {
+      rect,
+      start: `${timelineRect?.bottom === undefined ? 'bottom' : timelineRect.bottom} center`,
+      end: `${timelineRect?.bottom === undefined ? 'bottom' : timelineRect.bottom + windowHeight * 0.5} center`,
+      onProgress: ({ progress, isActive }) => {
+        console.log(progress)
+        if (!isActive) return
+
+        const items = getItems()
+        fromTo(
+          items,
+
+          {
+            borderRadius: desktopVW(20),
+            width: rect?.width ?? 0,
+            height: rect?.height ?? 0,
+            x: 0,
+            kinesis: 0,
+            opacity: 1,
+            boxShadowOpacity: 1,
           },
           {
             borderRadius: desktopVW(20),
