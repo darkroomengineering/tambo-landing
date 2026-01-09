@@ -232,7 +232,7 @@ export function Hero() {
     return () => {
       timeline?.kill()
     }
-  }, [isDesktop])
+  }, [isDesktop, setHasAppeared])
 
   useScrollTrigger({
     rect,

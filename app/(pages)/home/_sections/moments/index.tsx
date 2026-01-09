@@ -4,7 +4,7 @@ import { Moment3 } from '../moment-3'
 
 export function Moments() {
   return (
-    <div className="relative">
+    <div className="relative max-dt:bg-light-gray max-dt:dr-pb-140">
       <div className="hidden dt:block absolute inset-0 z-20 pointer-events-none">
         <div className="sticky top-0 h-screen dr-w-480">
           <div

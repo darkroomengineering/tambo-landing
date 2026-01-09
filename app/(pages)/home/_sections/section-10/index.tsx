@@ -231,7 +231,7 @@ export function Section10() {
   return (
     <section
       ref={setRectRef}
-      className="relative overflow-x-clip dt:dr-mb-256"
+      className="relative overflow-x-clip dt:dr-mb-256 max-dt:bg-white"
       style={{
         height: isDesktop ? `${BUTTONS.length * 500}px` : 'auto',
       }}

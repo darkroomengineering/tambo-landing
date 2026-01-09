@@ -68,7 +68,9 @@ export function Section11() {
   return (
     <SolidBackground>
       <section
-        className={cn('dt:dr-pt-141 dr-pt-120 dt:dr-pb-203 dr-pb-120 relative')}
+        className={cn(
+          'dt:dr-pt-141 dr-pt-120 dt:dr-pb-203 dr-pb-120 relative max-dt:bg-black'
+        )}
       >
         <div className="dr-layout-grid-inner dt:dr-top-141 dt:dr-mb-256 dr-mb-78">
           <TitleBlock className="dt:col-start-4 dt:col-end-10 col-span-full dt:dr-mb-40 dr-mb-56 text-teal">

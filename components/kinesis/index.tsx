@@ -1,3 +1,4 @@
+import cn from 'clsx'
 import gsap from 'gsap'
 import { useRef } from 'react'
 import { useTempus } from 'tempus/react'
@@ -39,7 +40,10 @@ export function Kinesis({
   })
 
   return (
-    <div ref={elementRef} className={className}>
+    <div
+      ref={elementRef}
+      className={cn(className, 'max-dt:transform-[unset]!')}
+    >
       {children}
     </div>
   )
