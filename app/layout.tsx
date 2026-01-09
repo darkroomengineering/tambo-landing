@@ -16,8 +16,8 @@ import { OrchestraTools } from '~/orchestra'
 import { fontsVariable } from '~/styles/fonts'
 
 const APP_NAME = AppData.name
-const APP_DEFAULT_TITLE = 'Satūs'
-const APP_TITLE_TEMPLATE = '%s - Satūs'
+const APP_DEFAULT_TITLE = 'tambo'
+const APP_TITLE_TEMPLATE = '%s'
 const APP_DESCRIPTION = AppData.description
 const APP_BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ?? 'https://localhost:3000'

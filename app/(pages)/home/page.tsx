@@ -1,4 +1,5 @@
 import { ScrollRestoration } from '~/components/scroll-restoration'
+import { generatePageMetadata } from '~/libs/metadata'
 import { Wrapper } from '../_components/wrapper'
 import Background from './_components/background'
 import { Footer } from './_sections/footer'
@@ -10,6 +11,17 @@ import { Section8 } from './_sections/section-8'
 import { Section10 } from './_sections/section-10'
 import { Section11 } from './_sections/section-11'
 import { Section12 } from './_sections/section-12'
+
+export async function generateMetadata() {
+  return generatePageMetadata({
+    title: 'tambo',
+    description: 'Build generative UI apps. No PhD required.',
+    image: { url: '/opengraph-image.jpg' },
+    type: 'website',
+    url: `/`,
+    siteName: 'tambo',
+  })
+}
 
 export default function Home() {
   return (

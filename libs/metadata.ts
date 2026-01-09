@@ -56,7 +56,7 @@ export function generatePageMetadata(
     keywords,
     image,
     url,
-    siteName = 'Satūs',
+    siteName = 'tambo',
     noIndex = false,
     type = 'website',
     publishedTime,
