@@ -111,8 +111,8 @@ export function MeetTambo() {
 
       <div className="text-center">
         <div className="dr-mb-40">
-          <h3 className="dt:typo-h3 typo-h4 dt:dr-mb-8">Bring our vision.</h3>
-          <p className="typo-p-l  text-black/70">
+          <h3 className="dt:typo-h3 typo-h4 dr-mb-8">Bring our vision.</h3>
+          <p className="dt:typo-p-l typo-p text-black/70 px-safe dt:px-0">
             Trusted by industry leaders in AI, product, and engineering.
           </p>
         </div>
