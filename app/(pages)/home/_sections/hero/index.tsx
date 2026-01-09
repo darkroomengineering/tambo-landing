@@ -271,13 +271,13 @@ export function Hero() {
       {/* <div className="dt:dr-w-480 dt:aspect-square dt:border dt:border-[red] dt:rounded-full dt:absolute dt:left-[50%] dt:translate-x-[-50%] dt:top-[50%] dt:translate-y-[-50%]" /> */}
       <Kinesis
         getIndex={() => 50}
-        className="dt:dr-w-col-8 flex flex-col dt:dr-gap-8 text-center items-center dt:relative dt:top-[-2%] z-1"
+        className="dt:dr-w-col-8 flex flex-col dt:dr-gap-8 text-center items-center relative dt:top-[-2%] z-1"
       >
         <HeroVisualMobileSVG className="mobile-only dr-w-517 dr-h-178 absolute top-0 left-[-30%]" />
         <div className="relative">
           <div
             className={cn(
-              'dt:-dr-mb-60 dt:dr-w-300 dr-w-181 aspect-square dt:scale-[0.25]',
+              'dt:-dr-mb-60 -dr-mb-20 dt:dr-w-300 dr-w-181 aspect-square dt:scale-[0.25]',
               s.video
             )}
             ref={videoRef}
@@ -367,7 +367,7 @@ export function Hero() {
         <DashedBorder className="absolute inset-0 " />
         <ArrowDownSVG className="dr-w-32 absolute left-[50%] translate-x-[-50%] dr-top-24" />
       </div>
-      <div className="mobile-only absolute bottom-0 dr-h-280 w-full  dr-mt-250">
+      <div className="mobile-only absolute -dr-bottom-100 dr-h-280 w-full  dr-mt-250">
         <Image
           src="/assets/mobile-background/hero-mobile.png"
           alt="Footer"
