@@ -31,6 +31,7 @@ export function Hero() {
   const titleRef = useRef<HTMLDivElement>(null)
   const arrowDownRef = useRef<HTMLDivElement>(null)
   const mobileArrowDownRef = useRef<HTMLDivElement>(null)
+  const visualRef = useRef<HTMLDivElement>(null)
 
   const lenis = useLenis()
 
@@ -203,7 +204,7 @@ export function Hero() {
         '<0'
       )
       .fromTo(
-        titleRef.current,
+        [titleRef.current, visualRef.current],
         {
           opacity: 0,
         },
@@ -273,7 +274,10 @@ export function Hero() {
         getIndex={() => 50}
         className="dt:dr-w-col-8 flex flex-col dt:dr-gap-8 text-center items-center relative dt:top-[-2%] z-1"
       >
-        <HeroVisualMobileSVG className="dr-w-517 dr-h-178 dt:dr-w-1035 dt:dr-h-356 absolute -dr-top-32 dt:-dr-top-96 left-[50%] translate-x-[-50%]" />
+        <HeroVisualMobileSVG
+          ref={visualRef}
+          className="dt:opacity-0 dr-w-517 dr-h-178 dt:dr-w-1035 dt:dr-h-356 absolute -dr-top-32 dt:-dr-top-96 left-[50%] translate-x-[-50%]"
+        />
         <div className="relative">
           <div
             className={cn(
