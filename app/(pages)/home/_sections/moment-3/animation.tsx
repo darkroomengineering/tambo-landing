@@ -126,11 +126,9 @@ export function Animation() {
 
     const section5Container = document.getElementById('section-5-container')
 
-    if (section5Container) {
-      section5Container.style.display =
-        isDesktop && safeZoneProgress === 1 ? 'none' : 'block'
-      container.style.display =
-        safeZoneProgress === 1 || !isDesktop ? 'block' : 'none'
+    if (safeZoneProgress === 1 && section5Container) {
+      section5Container.style.display = isDesktop ? 'none' : 'block'
+      container.style.display = 'block'
     }
 
     // MCP Features Animation

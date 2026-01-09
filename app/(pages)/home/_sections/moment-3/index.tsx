@@ -40,9 +40,7 @@ export function Moment3() {
 
         const container = document.getElementById('section-6-container')
         if (container) {
-          container.style.opacity = isDesktop
-            ? `${1 - containerExitProgress}`
-            : '1'
+          container.style.opacity = `${1 - containerExitProgress}`
         }
 
         const background = getBackground()
