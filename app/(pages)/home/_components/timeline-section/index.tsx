@@ -127,7 +127,7 @@ export function TimelineSection({
               />
             </div>
             <div className="relative dr-py-40 max-dt:mt-auto dt:mask-[linear-gradient(to_bottom,transparent_0%,black_5%)]">
-              <div className="absolute z-15 dr-w-32 dt:inset-y-0 max-dt:h-[100vw] max-dt:-rotate-90 max-dt:-dr-top-40 left-[calc(var(--safe)+32vw)]  dt:dr-left-26">
+              <div className="absolute z-15 dr-w-32 dt:inset-y-0 max-dt:h-[102vw] max-dt:-rotate-90 max-dt:-dr-top-40 left-[calc(var(--safe)+32vw)]  dt:dr-left-26">
                 <div
                   className="absolute inset-y-0 dr-left-16 w-px z-1"
                   style={{
@@ -142,6 +142,12 @@ export function TimelineSection({
                     translate: '0px -90%',
                   }}
                 />
+                <div className="dt:hidden absolute inset-0 flex flex-col justify-around items-center dr-py-16 z-10">
+                  <div className="dr-size-10 rounded-full border border-dark-teal bg-light-gray" />
+                  <div className="dr-size-10 rounded-full border border-dark-teal bg-light-gray" />
+                  <div className="dr-size-10 rounded-full border border-dark-teal bg-light-gray" />
+                  <div className="dr-size-10 rounded-full border border-dark-teal bg-light-gray" />
+                </div>
               </div>
               <div>
                 <ul
