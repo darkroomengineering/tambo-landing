@@ -219,7 +219,7 @@ export function Navigation() {
     <nav
       className={cn(
         'fixed top-0 z-100 dr-layout-grid-inner pt-gap uppercase typo-button dt:left-1/2 dt:-translate-x-1/2',
-        !hasAppeared && 'opacity-0',
+        !hasAppeared && 'dt:opacity-0',
         'transition-opacity duration-600 ease-out-expo'
       )}
       style={{

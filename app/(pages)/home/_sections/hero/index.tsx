@@ -220,6 +220,7 @@ export function Hero() {
   })
 
   useEffect(() => {
+    if (isDesktop === false) setHasAppeared(true)
     if (!isDesktop) return
 
     let timeline: gsap.core.Timeline | null = null
