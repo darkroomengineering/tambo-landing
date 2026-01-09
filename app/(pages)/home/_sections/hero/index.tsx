@@ -273,7 +273,7 @@ export function Hero() {
         getIndex={() => 50}
         className="dt:dr-w-col-8 flex flex-col dt:dr-gap-8 text-center items-center relative dt:top-[-2%] z-1"
       >
-        <HeroVisualMobileSVG className="mobile-only dr-w-517 dr-h-178 absolute -dr-top-32 left-[-30%]" />
+        <HeroVisualMobileSVG className="dr-w-517 dr-h-178 dt:dr-w-1035 dt:dr-h-356 absolute -dr-top-32 dt:-dr-top-96 left-[50%] translate-x-[-50%]" />
         <div className="relative">
           <div
             className={cn(
@@ -354,7 +354,10 @@ export function Hero() {
 
       <div
         ref={mobileArrowDownRef}
-        className="mobile-only aspect-square bg-white bottom-0 dr:dr-mt-100  rounded-full z-1 left-[50%] transform-[translate(-50%, 0%) translate(0px, 50%)] fixed"
+        className={cn(
+          s.arrowDown,
+          'mobile-only aspect-square bg-white bottom-0 dr:dr-mt-100  rounded-full z-1 left-[50%]  fixed'
+        )}
       >
         <DashedBorder className="aspect-square dr-w-104 " />
         <ArrowDownSVG className="dr-w-32 absolute left-[50%] translate-x-[-50%] dr-top-16" />
@@ -362,7 +365,10 @@ export function Hero() {
 
       <div
         ref={arrowDownRef}
-        className=" desktop-only dt:dr-w-136 dt:aspect-square bg-white dt:bottom-0 left-[50%] transform-[translate(-50%, 0%) translate(0px, 50%)] rounded-full fixed opacity-0 z-10"
+        className={cn(
+          s.arrowDown,
+          'desktop-only dt:dr-w-136 dt:aspect-square bg-white dt:bottom-0 left-[50%] rounded-full fixed opacity-0 z-10'
+        )}
       >
         <DashedBorder className="absolute inset-0 " />
         <ArrowDownSVG className="dr-w-32 absolute left-[50%] translate-x-[-50%] dr-top-24" />

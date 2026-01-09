@@ -7,3 +7,7 @@
     transform: rotate(135deg);
   }
 }
+
+.arrowDown {
+  transform: translate(-50%, 0%) translate(0px, 50%);
+}
