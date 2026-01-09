@@ -17,32 +17,32 @@ const BUTTONS = [
   {
     title: 'Generative UI Components',
     href: ' https://docs.tambo.co/concepts/components',
-    top: 10,
-    left: 14,
+    top: 15,
+    left: 33,
   },
   {
     title: 'Interactable Components',
     href: 'https://docs.tambo.co/concepts/components/interactable-components',
-    top: 80,
-    left: 80,
+    top: 20,
+    right: 12,
   },
   {
     title: 'MCP-Native',
     href: 'https://docs.tambo.co/concepts/model-context-protocol',
-    top: 85,
-    left: 20,
+    top: 30,
+    left: 10,
   },
   {
     title: 'Local Tools',
     href: 'https://docs.tambo.co/concepts/tools/adding-tools',
-    top: 10,
-    left: 80,
+    top: 45,
+    left: 25,
   },
   {
     title: 'Streaming Support',
     href: 'https://docs.tambo.co/concepts/streaming',
-    top: 25,
-    left: 90,
+    top: 60,
+    right: 90,
   },
   {
     title: 'Message History',
@@ -59,26 +59,26 @@ const BUTTONS = [
   {
     title: 'Suggested Actions',
     href: 'https://docs.tambo.co/concepts/suggestions',
-    top: 25,
-    left: 20,
+    top: 75,
+    right: 33,
   },
   {
     title: 'Tool Orchestration',
     href: 'Ahttps://docs.tambo.co/#why-tambo',
-    top: 40,
-    left: 15,
+    top: 80,
+    left: 40,
   },
   {
     title: 'Model Flexibility',
     href: ' https://docs.tambo.co/models',
-    top: 60,
-    left: 23,
+    top: 90,
+    right: 23,
   },
   {
     title: 'Component Library ',
     href: 'https://ui.tambo.co/',
-    top: 90,
-    left: 50,
+    top: 85,
+    left: 15,
   },
 ]
 
@@ -312,7 +312,11 @@ export function Section10() {
           {BUTTONS.map((button, index) => (
             <div
               className="absolute pointer-events-auto"
-              style={{ top: `${button.top}%`, left: `${button.left}%` }}
+              style={
+                button.right
+                  ? { top: `${button.top}%`, right: `${button.right}%` }
+                  : { top: `${button.top}%`, left: `${button.left}%` }
+              }
               key={button.title + index.toString()}
               ref={(node) => {
                 buttonsRefs.current[index] = node
