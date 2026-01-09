@@ -21,11 +21,12 @@ bun dev
 Required in `.env.local`:
 
 ```env
-# Sanity CMS
-NEXT_PUBLIC_SANITY_PROJECT_ID="your-project-id"
-NEXT_PUBLIC_SANITY_DATASET="production"
-NEXT_PUBLIC_SANITY_STUDIO_URL="http://localhost:3000/studio"
-SANITY_API_WRITE_TOKEN="your-write-token"
+# Demo app
+NEXT_PUBLIC_TAMBO_API_KEY="your-tambo-api-key"
+NEXT_PUBLIC_LOGIN_URL="your-login-url"
+NEXT_PUBLIC_MAPBOX_TOKEN="your-mapbox-token"
+MAPBOX_TOKEN="your-mapbox-token or API specific tokens"
+[mapbox token docs](https://docs.mapbox.com/accounts/guides/tokens/)
 
 # Base URL
 NEXT_PUBLIC_BASE_URL="https://your-domain.com"

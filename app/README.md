@@ -8,32 +8,18 @@ Next.js App Router pages, layouts, and API routes.
 app/
 ├── (pages)/               # Page routes (grouped)
 │   ├── _components/     # Shared page components
-│   │   ├── footer/       # Site footer
 │   │   ├── lenis/        # Smooth scroll provider
 │   │   ├── navigation/   # Site navigation
 │   │   ├── theme/        # Theme provider
 │   │   └── wrapper/      # Page wrapper (combines theme, lenis, webgl)
 │   ├── home/             # Homepage (/home → rewritten to /)
-│   ├── hubspot/          # HubSpot demo page
-│   ├── r3f/              # React Three Fiber demo
-│   ├── sanity/           # Sanity CMS pages
-│   │   └── [slug]/       # Dynamic article pages
-│   └── shopify/          # Shopify e-commerce pages
-│       └── account/      # Customer account
 ├── api/                  # API routes
-│   ├── draft-mode/       # Sanity draft mode toggle
-│   │   ├── enable/
-│   │   └── disable/
-│   └── revalidate/       # Webhook revalidation endpoint
-├── studio/               # Sanity Studio
-│   └── [[...tool]]/
 ├── layout.tsx            # Root layout
-├── loading.tsx           # Global loading state
 ├── error.tsx             # Error boundary
 ├── global-error.tsx      # Critical error boundary
 ├── manifest.ts           # PWA manifest
 ├── robots.ts             # Robots.txt
-└── actions.ts            # Server actions
+├── not-found.tsx         # 404 page
 ```
 
 ## Route Groups
@@ -69,20 +55,13 @@ app/
 
 ## API Routes
 
-**`/api/draft-mode/enable`**
-- Enables Sanity draft mode
-- Sets draft mode cookie
-- Redirects to preview URL
+**`/api/mapbox/`**
+- Mapbox API routes for geocoding and search
+- Requires Mapbox API key
 
-**`/api/draft-mode/disable`**
-- Disables Sanity draft mode
-- Clears draft mode cookie
-- Redirects to current page
+**`/api/weather /`**
+- Weather API route for getting weather forecast
 
-**`/api/revalidate`**
-- Webhook endpoint for content revalidation
-- Used by Sanity and Shopify
-- Requires secret parameter
 
 ## Page Components Pattern
 

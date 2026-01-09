@@ -90,9 +90,7 @@ satus/
 ├── components/             # Reusable UI components
 ├── hooks/                  # Custom React hooks
 ├── integrations/           # Third-party service integrations
-│   ├── hubspot/           # HubSpot forms integration
-│   ├── shopify/           # E-commerce functionality
-│   └── sanity/            # Headless CMS
+│   ├── tambo/             # Tambo AI integration
 ├── libs/                   # Utility functions and helpers
 ├── orchestra/              # Debug and development tools
 │   ├── grid/              # Grid overlay
@@ -139,9 +137,7 @@ satus/
 - **Debug tools** accessible with `CMD+O`
 
 ### Third-Party Integrations
-- **Sanity** - Headless CMS with visual editing
-- **Shopify** - E-commerce with cart functionality
-- **HubSpot** - Forms and marketing automation
+- **Tambo AI** - Build Generative UI apps
 
 ## Managing Integrations
 
@@ -268,17 +264,10 @@ Supports any Next.js-compatible platform: Vercel, Netlify, AWS Amplify, Google C
 - No need for manual `useMemo`, `useCallback`, or `React.memo` - compiler handles optimization automatically
 - Exception: Use `useRef` for object instantiation to prevent infinite loops
 
-**Sanity**
-- Requires draft mode routes: `/api/draft-mode/enable` and `/api/draft-mode/disable`
-- Must set `NEXT_PUBLIC_BASE_URL` for preview resolution
-
 **Orchestra**
 - Toggle debug tools with `Cmd/Ctrl + O`
 - State persists in `localStorage` and syncs across tabs
 - Automatically excluded from production builds
-
-**Shopify**
-- Use exact env var names: `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_ACCESS_TOKEN`
 
 **Next.js 16 Features**
 - Cache Components enabled (`cacheComponents: true`)

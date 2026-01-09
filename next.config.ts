@@ -91,10 +91,6 @@ const nextConfig: NextConfig = {
       '@base-ui-components/react',
       'lenis',
       'zustand',
-      '@sanity/client',
-      '@sanity/image-url',
-      '@sanity/asset-utils',
-      '@portabletext/react',
     ],
   },
   devIndicators: false,
@@ -103,15 +99,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdn.shopify.com',
-      },
-      {
-        protocol: 'https',
         hostname: 'assets.darkroom.engineering',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.sanity.io',
       },
     ],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
