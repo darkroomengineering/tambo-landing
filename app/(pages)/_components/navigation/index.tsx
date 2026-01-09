@@ -281,7 +281,7 @@ export function Navigation() {
             ))}
             <li>
               <Link
-                href="/login"
+                href={process.env.NEXT_PUBLIC_LOGIN_URL}
                 className={cn(
                   'dr-px-16 dr-h-32 rounded-full bg-mint grid place-items-center',
                   s.loginButton
