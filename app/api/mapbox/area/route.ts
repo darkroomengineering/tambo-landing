@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { fetchWithTimeout } from '~/libs/fetch-with-timeout'
 
 type BBox = { west: number; south: number; east: number; north: number }
 
@@ -37,7 +38,7 @@ type MapboxSearchResponse = {
 }
 
 export async function POST(req: Request) {
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+  const mapboxToken = process.env.MAPBOX_TOKEN
 
   if (!mapboxToken) {
     return NextResponse.json(
@@ -66,17 +67,11 @@ export async function POST(req: Request) {
 
   const url = `https://api.mapbox.com/search/searchbox/v1/forward?${params.toString()}`
 
-  // Add timeout to fetch request (15 seconds)
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 15000)
-
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
+      timeout: 15000,
       method: 'GET',
-      signal: controller.signal,
     })
-
-    clearTimeout(timeoutId)
 
     if (!response.ok) {
       const text = await response.text()
@@ -118,8 +113,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(result)
   } catch (error) {
-    clearTimeout(timeoutId)
-
     if (error instanceof Error && error.name === 'AbortError') {
       console.error('Mapbox Search Box request timeout')
       return NextResponse.json(

@@ -87,6 +87,8 @@ export function AssistantNotifications({ className }: { className: string }) {
           </ul>
         </li>
       </ul>
+
+      {/* <RandomSeatButton /> */}
     </div>
   )
 }
@@ -182,4 +184,18 @@ function formatTimeRange(dateString: string) {
       .replace(/\s/g, '')
 
   return `${format(date)} → ${format(endDate)}`
+}
+
+function RandomSeatButton() {
+  const { finishSeatSelection } = useAssitant()
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        finishSeatSelection('1A')
+      }}
+    >
+      random seat
+    </button>
+  )
 }

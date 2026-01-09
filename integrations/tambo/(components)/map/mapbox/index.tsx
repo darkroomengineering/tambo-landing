@@ -40,8 +40,8 @@ export function MapBox({
   const { selectedDemo, setMap, destination } = useAssitant()
   const lenis = useLenis()
 
-  useRectangleMapDrawing({ center })
-  useMapSearch({ center })
+  useRectangleMapDrawing()
+  useMapSearch({})
 
   // Map Initialization
   useEffect(() => {
@@ -68,10 +68,20 @@ export function MapBox({
     }
   }, [setMap])
 
+  // Separate effect for center marker (depends on center prop)
+  useEffect(() => {
+    if (!mapRef.current) return
+    const marker = new mapboxgl.Marker().setLngLat(center).addTo(mapRef.current)
+
+    return () => {
+      marker.remove()
+    }
+  }, [center])
+
   useEffect(() => {
     if (selectedDemo !== DEMOS.MAP) return
     if (!mapRef.current) return
-    mapRef.current.flyTo?.({
+    mapRef.current?.flyTo({
       center: destination.center,
       zoom: fallbackZoom,
     })
@@ -129,16 +139,6 @@ export function MapBox({
 export const EMPTY_FEATURE_COLLECTION: GeoJSON.FeatureCollection = {
   type: 'FeatureCollection',
   features: [],
-}
-
-export function isMapValid(map: mapboxgl.Map | undefined): map is mapboxgl.Map {
-  if (!map) return false
-  try {
-    // Check if the map container is still in DOM and map is loaded
-    return !!map.getContainer()?.isConnected && map.loaded()
-  } catch {
-    return false
-  }
 }
 
 export function getGeoJSONSource(

@@ -1,25 +1,14 @@
 import mapboxgl from 'mapbox-gl'
 import { useEffect, useEffectEvent, useRef } from 'react'
+import type { BBox } from '~/integrations/tambo'
 import { useAssitant } from '~/integrations/tambo'
-import {
-  EMPTY_FEATURE_COLLECTION,
-  getGeoJSONSource,
-  isMapValid,
-  useMapPanMode,
-} from './'
+import { EMPTY_FEATURE_COLLECTION, getGeoJSONSource, useMapPanMode } from './'
 
-type BBox = { west: number; south: number; east: number; north: number }
-
-export function useRectangleMapDrawing({
-  center,
-}: {
-  center: [number, number]
-}) {
+export function useRectangleMapDrawing() {
   const startRef = useRef<mapboxgl.LngLat | null>(null)
   const drawingRef = useRef(false)
-  const { setCurrentBBox } = useAssitant()
-  const { map } = useAssitant()
   const panMode = useMapPanMode()
+  const { setCurrentBBox, map } = useAssitant()
 
   const handleDrawStart = useEffectEvent((e: mapboxgl.MapMouseEvent) => {
     if (!map || e.originalEvent.button !== 0) return
@@ -70,30 +59,16 @@ export function useRectangleMapDrawing({
     }
   })
 
-  // Drawing interaction event listeners
   useEffect(() => {
-    if (!isMapValid(map)) return
+    if (!map) return
 
-    map.on('mousedown', handleDrawStart)
-    map.on('mousemove', handleDrawMove)
-    map.on('mouseup', handleDrawEnd)
-
-    return () => {
-      map.off('mousedown', handleDrawStart)
-      map.off('mousemove', handleDrawMove)
-      map.off('mouseup', handleDrawEnd)
-    }
-  }, [map])
-
-  // Map sources and layers setup
-  useEffect(() => {
-    if (!isMapValid(map)) return
-
+    // 1. Map configuration
     const attribution = new mapboxgl.AttributionControl({ compact: true })
     map.dragPan.disable()
     map.doubleClickZoom.disable()
     map.addControl(attribution)
 
+    // 2. Add sources/layers FIRST
     map.addSource('selection', {
       type: 'geojson',
       data: { type: 'FeatureCollection', features: [] },
@@ -114,23 +89,24 @@ export function useRectangleMapDrawing({
       layout: { 'line-join': 'round', 'line-cap': 'round' },
     })
 
+    // 3. THEN attach event listeners (sources are guaranteed to exist)
+    map.on('mousedown', handleDrawStart)
+    map.on('mousemove', handleDrawMove)
+    map.on('mouseup', handleDrawEnd)
+
     return () => {
+      // Remove listeners first
+      map.off('mousedown', handleDrawStart)
+      map.off('mousemove', handleDrawMove)
+      map.off('mouseup', handleDrawEnd)
+
+      // Then cleanup resources
       map.removeControl(attribution)
       if (map.getLayer('selection-line')) map.removeLayer('selection-line')
       if (map.getLayer('selection-fill')) map.removeLayer('selection-fill')
       if (map.getSource('selection')) map.removeSource('selection')
     }
   }, [map])
-
-  // Center marker
-  useEffect(() => {
-    if (!isMapValid(map)) return
-    const marker = new mapboxgl.Marker().setLngLat(center).addTo(map)
-
-    return () => {
-      marker.remove()
-    }
-  }, [map, center])
 }
 
 //UTILS

@@ -15,13 +15,6 @@ type BBox = {
   north: number
 }
 
-type MapboxFeature = {
-  place_name: string
-  center: [number, number]
-  bbox?: [number, number, number, number]
-  place_type?: string[]
-}
-
 type LocationResult = {
   name: string
   center: { lng: number; lat: number }
@@ -44,6 +37,12 @@ type AnalyzeAreaResult = {
   count: number
   names: string[]
   points_of_interest: POI[]
+}
+
+type AddToItineraryToolResult = {
+  success: boolean
+  message: string
+  addedItem: { name: string; id: string | number }
 }
 
 export type ForecastDay = {
@@ -107,24 +106,19 @@ async function analyzeArea(params: {
 export async function searchLocation(params: {
   location: string
 }): Promise<SearchLocationResult> {
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
-
-  if (!mapboxToken) {
-    throw new Error('Mapbox token is not configured')
-  }
-
   try {
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(params.location)}.json?access_token=${mapboxToken}&limit=5`
-
+    // Call geocoding API route
+    const url = `/api/mapbox/location?query=${encodeURIComponent(params.location)}`
     const res = await fetch(url)
 
     if (!res.ok) {
-      throw new Error('Failed to search for location')
+      const errorData = await res.json().catch(() => ({}))
+      throw new Error(errorData.error || 'Failed to search for location')
     }
 
     const data = await res.json()
 
-    if (!data.features || data.features.length === 0) {
+    if (!data.found) {
       return {
         found: false,
         message: `No locations found for "${params.location}"`,
@@ -132,22 +126,7 @@ export async function searchLocation(params: {
       }
     }
 
-    const results = data.features.map((feature: MapboxFeature) => ({
-      name: feature.place_name,
-      center: {
-        lng: feature.center[0],
-        lat: feature.center[1],
-      },
-      bbox: feature.bbox
-        ? {
-            west: feature.bbox[0],
-            south: feature.bbox[1],
-            east: feature.bbox[2],
-            north: feature.bbox[3],
-          }
-        : null,
-      placeType: feature.place_type?.[0] || 'place',
-    }))
+    const results = data.results as LocationResult[]
 
     // Navigate to the first result
     if (!isEmptyArray(results)) {
@@ -194,12 +173,6 @@ async function getAreaSuggestions(): Promise<{
       'Here are some suggestions for what you can search for in the selected area',
     suggestions,
   }
-}
-
-type AddToItineraryToolResult = {
-  success: boolean
-  message: string
-  addedItem: { name: string; id: string | number }
 }
 
 // Tool 4: Add a POI to the itinerary

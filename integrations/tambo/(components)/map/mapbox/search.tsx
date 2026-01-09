@@ -1,13 +1,12 @@
 import { useTamboThreadInput } from '@tambo-ai/react'
 import cn from 'clsx'
 import mapboxgl from 'mapbox-gl'
-import { useCallback, useEffect, useEffectEvent, useRef } from 'react'
+import { useCallback, useEffectEvent, useRef } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import ArrowSVG from '~/assets/svgs/arrow.svg'
 import PlusIcon from '~/assets/svgs/plus.svg'
 import { type BBox, useAssitant } from '~/integrations/tambo'
-import { isMapValid } from '.'
 import type { POI } from './'
 import { fetchWithRetry } from './api'
 import {
@@ -28,10 +27,8 @@ type MarkerWithRoot = {
 }
 
 export function useMapSearch({
-  center,
   onResult,
 }: {
-  center: [number, number]
   onResult?: (result: AreaAnalyzeResponse) => void
 }) {
   const { map, currentBBox } = useAssitant()
@@ -69,7 +66,7 @@ export function useMapSearch({
       }
 
       const result = await fetchWithRetry<AreaAnalyzeResponse>(
-        '/api/area/analyze',
+        '/api/mapbox/area',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -126,17 +123,6 @@ export function useMapSearch({
       }
     }
   )
-
-  // Map setup
-  useEffect(() => {
-    if (!isMapValid(map)) return
-
-    map.dragPan.disable()
-    map.doubleClickZoom.disable()
-
-    map.addControl(new mapboxgl.AttributionControl({ compact: true }))
-    new mapboxgl.Marker().setLngLat(center).addTo(map)
-  }, [map, center])
 
   // Listen for search events from tools
   useMapSearchListener(handleSearch)

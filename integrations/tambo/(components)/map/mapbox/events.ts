@@ -1,5 +1,5 @@
 import { useEffect, useEffectEvent } from 'react'
-import { type POI } from '~/integrations/tambo'
+import type { POI } from '~/integrations/tambo'
 
 export const MAP_SEARCH_EVENT = 'tambo:map:search'
 
