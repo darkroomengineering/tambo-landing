@@ -30,6 +30,7 @@ export function Hero() {
   const subVideoRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLDivElement>(null)
   const arrowDownRef = useRef<HTMLDivElement>(null)
+  const mobileArrowDownRef = useRef<HTMLDivElement>(null)
 
   const lenis = useLenis()
 
@@ -242,7 +243,7 @@ export function Hero() {
       if (!hasAppeared) return
 
       fromTo(
-        arrowDownRef.current,
+        [arrowDownRef.current, mobileArrowDownRef.current],
         {
           translate: 0,
         },
@@ -351,14 +352,17 @@ export function Hero() {
         </div>
       </Kinesis>
 
-      <div className="mobile-only aspect-square bg-white bottom-0 dr:dr-mt-100  rounded-full absolute z-1 translate-y-[50%]">
+      <div
+        ref={mobileArrowDownRef}
+        className="mobile-only aspect-square bg-white bottom-0 dr:dr-mt-100  rounded-full z-1 left-[50%] transform-[translate(-50%, 0%) translate(0px, 50%)] fixed"
+      >
         <DashedBorder className="aspect-square dr-w-104 " />
         <ArrowDownSVG className="dr-w-32 absolute left-[50%] translate-x-[-50%] dr-top-16" />
       </div>
 
       <div
         ref={arrowDownRef}
-        className=" desktop-only dt:dr-w-136 dt:aspect-square bg-white dt:bottom-0 dt:left-[50%] dt:translate-x-[-50%] dt:translate-y-[50%] rounded-full dt:fixed dt:opacity-0 z-10"
+        className=" desktop-only dt:dr-w-136 dt:aspect-square bg-white dt:bottom-0 left-[50%] transform-[translate(-50%, 0%) translate(0px, 50%)] rounded-full fixed opacity-0 z-10"
       >
         <DashedBorder className="absolute inset-0 " />
         <ArrowDownSVG className="dr-w-32 absolute left-[50%] translate-x-[-50%] dr-top-24" />
