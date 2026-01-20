@@ -1,17 +1,16 @@
 'use client'
 
-import { useRect, useWindowSize } from 'hamo'
-import { useContext, useRef } from 'react'
+import { useIntersectionObserver, useRect, useWindowSize } from 'hamo'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import { CTA } from '~/components/button'
 import { Image } from '~/components/image'
 import { Kinesis } from '~/components/kinesis'
 import { Video } from '~/components/video'
-import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
-import { fromTo, mapRange } from '~/libs/utils'
+import { fromTo } from '~/libs/utils'
 
 const BUTTONS = [
   {
@@ -85,7 +84,6 @@ const BUTTONS = [
 export function Section10() {
   const buttonsRefs = useRef<(HTMLDivElement | null)[]>([])
   const buttonsWrapperRef = useRef<HTMLDivElement | null>(null)
-  const { isDesktop } = useDeviceDetection()
 
   const [setRectRef, rect] = useRect()
 
@@ -94,6 +92,8 @@ export function Section10() {
   const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize()
 
   const desktopVW = useDesktopVW()
+
+  const [isVisible, setIsVisible] = useState(false)
 
   useScrollTrigger({
     rect,
@@ -160,20 +160,26 @@ export function Section10() {
     },
   })
 
-  useScrollTrigger({
-    rect,
-    start: 'top top',
-    end: 'bottom bottom',
-    steps: BUTTONS.length,
-    onProgress: ({ steps }) => {
-      for (const [index, button] of buttonsRefs.current.entries()) {
-        if (button) {
-          button.style.opacity = `${steps[index]}`
-          button.style.transform = `scale(${mapRange(0, 1, steps[index], 1.1, 1)})`
-        }
-      }
-    },
+  // Trigger animation when title block is 50% visible
+  const [setAnimationTriggerRef, intersection] = useIntersectionObserver({
+    threshold: 0.5,
   })
+
+  useEffect(() => {
+    if (intersection?.isIntersecting !== undefined) {
+      setIsVisible(intersection.isIntersecting)
+    }
+  }, [intersection?.isIntersecting])
+
+  // Staggered button animation (handles both enter and exit)
+  useEffect(() => {
+    buttonsRefs.current.forEach((button) => {
+      if (button) {
+        button.style.opacity = isVisible ? '1' : '0'
+        button.style.transform = isVisible ? 'scale(1)' : 'scale(1.1)'
+      }
+    })
+  }, [isVisible])
 
   useScrollTrigger({
     rect,
@@ -182,9 +188,9 @@ export function Section10() {
     onProgress: ({ progress, height, isActive }) => {
       if (!isActive) return
 
-      if (buttonsWrapperRef.current) {
-        buttonsWrapperRef.current.style.transform = `translateY(${-height * progress * 0.5}px)`
-      }
+      // if (buttonsWrapperRef.current) {
+      //   buttonsWrapperRef.current.style.transform = `translateY(${-height * progress * 0.5}px)`
+      // }
 
       const items = getItems()
       fromTo(
@@ -232,9 +238,9 @@ export function Section10() {
     <section
       ref={setRectRef}
       className="relative overflow-x-clip dt:dr-mb-256 max-dt:bg-white"
-      style={{
-        height: isDesktop ? `${BUTTONS.length * 500}px` : 'auto',
-      }}
+      // style={{
+      //   height: isDesktop ? `${BUTTONS.length * 500}px` : 'auto',
+      // }}
     >
       <div className="mobile-only w-full dr-h-280 relative">
         <Image
@@ -243,50 +249,58 @@ export function Section10() {
           fill
         />
       </div>
-      <div className="dt:h-screen dt:sticky dt:top-0 w-full flex flex-col items-center justify-center dt:bg-transparent bg-white ">
+      <div className="dt:h-screen w-full flex flex-col items-center justify-center dt:bg-transparent bg-white ">
         <Kinesis
           getIndex={() => 50}
           className="text-center flex flex-col items-center relative dt:-dr-top-48"
         >
-          <div className="dr-w-172 aspect-square">
-            <Video
-              autoPlay
-              fallback={
-                <Image
-                  src="/videos/Octo-Catch.png"
-                  alt="Octo Wave"
-                  unoptimized
+          <div
+            ref={setAnimationTriggerRef}
+            className="flex flex-col items-center justify-center"
+          >
+            <div className="dr-w-172 aspect-square">
+              <Video
+                autoPlay
+                fallback={
+                  <Image
+                    src="/videos/Octo-Catch.png"
+                    alt="Octo Wave"
+                    unoptimized
+                  />
+                }
+              >
+                <source
+                  src="/videos/Octo-Catch-compressed.mov"
+                  type='video/mp4; codecs="hvc1"'
                 />
-              }
-            >
-              <source
-                src="/videos/Octo-Catch-compressed.mov"
-                type='video/mp4; codecs="hvc1"'
-              />
-              <source
-                src="/videos/Octo-Catch-compressed.webm"
-                type="video/webm"
-              />
-            </Video>
-          </div>
+                <source
+                  src="/videos/Octo-Catch-compressed.webm"
+                  type="video/webm"
+                />
+              </Video>
+            </div>
 
-          <TitleBlock>
-            <TitleBlock.LeadIn>
-              {'<'} FEATURES {'>'}
-            </TitleBlock.LeadIn>
-            <TitleBlock.Title level="h2" className="dt:dr-mb-8! mb-0! typo-h1!">
-              <span className="desktop-only">
-                One SDK,
-                <br />
-                orchestrating <br /> everything
-              </span>
-              <span className="mobile-only">
-                One SDK,
-                <br />
-                orchestrating everything
-              </span>
-            </TitleBlock.Title>
-          </TitleBlock>
+            <TitleBlock>
+              <TitleBlock.LeadIn>
+                {'<'} FEATURES {'>'}
+              </TitleBlock.LeadIn>
+              <TitleBlock.Title
+                level="h2"
+                className="dt:dr-mb-8! mb-0! typo-h1!"
+              >
+                <span className="desktop-only">
+                  One SDK,
+                  <br />
+                  orchestrating <br /> everything
+                </span>
+                <span className="mobile-only">
+                  One SDK,
+                  <br />
+                  orchestrating everything
+                </span>
+              </TitleBlock.Title>
+            </TitleBlock>
+          </div>
         </Kinesis>
         <div className="w-full dr-p-24 mobile-only flex flex-col dr-gap-y-8">
           {BUTTONS.map((button, index) => (
@@ -312,11 +326,15 @@ export function Section10() {
           {BUTTONS.map((button, index) => (
             <div
               className="absolute pointer-events-auto"
-              style={
-                button.right
+              style={{
+                ...(button.right
                   ? { top: `${button.top}%`, right: `${button.right}%` }
-                  : { top: `${button.top}%`, left: `${button.left}%` }
-              }
+                  : { top: `${button.top}%`, left: `${button.left}%` }),
+                opacity: 0,
+                transform: 'scale(1.1)',
+                transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
+                transitionDelay: `${index * 150}ms`,
+              }}
               key={button.title + index.toString()}
               ref={(node) => {
                 buttonsRefs.current[index] = node
