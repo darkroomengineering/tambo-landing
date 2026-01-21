@@ -1,4 +1,5 @@
 import { ScrollRestoration } from '~/components/scroll-restoration'
+import { getGitHubStars } from '~/libs/github'
 import { generatePageMetadata } from '~/libs/metadata'
 import { Wrapper } from '../_components/wrapper'
 import Background from './_components/background'
@@ -23,7 +24,9 @@ export async function generateMetadata() {
   })
 }
 
-export default function Home() {
+export default async function Home() {
+  const githubStars = await getGitHubStars()
+
   return (
     <>
       {process.env.NODE_ENV === 'production' && (
@@ -33,6 +36,7 @@ export default function Home() {
         theme="light"
         lenis={{}}
         className="mx-auto bg-primary max-w-screen dt:max-w-[calc(var(--max-width)*1px)] overflow-x-clip"
+        githubStars={githubStars}
       >
         <Background>
           <Hero />

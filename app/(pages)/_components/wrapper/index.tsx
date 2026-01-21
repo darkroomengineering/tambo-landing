@@ -15,6 +15,7 @@ interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   theme?: ThemeName
   lenis?: boolean | LenisOptions
   webgl?: boolean | Omit<ComponentProps<typeof Canvas>, 'children'>
+  githubStars?: string
 }
 
 export function Wrapper({
@@ -23,6 +24,7 @@ export function Wrapper({
   className,
   lenis = true,
   webgl,
+  githubStars,
   ...props
 }: WrapperProps) {
   const pathname = usePathname()
@@ -36,7 +38,7 @@ export function Wrapper({
           {...(typeof webgl === 'object' && webgl)}
         />
       )}
-      <Navigation />
+      <Navigation githubStars={githubStars} />
       <main
         className={cn('relative flex flex-col grow w-full', className)}
         {...props}

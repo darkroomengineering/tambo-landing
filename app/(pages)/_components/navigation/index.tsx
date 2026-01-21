@@ -26,7 +26,11 @@ const LEFT_LINKS = [
 
 const RIGHT_LINKS = [{ href: '/blog', label: 'Blog', external: true }] as const
 
-export function Navigation() {
+interface NavigationProps {
+  githubStars?: string
+}
+
+export function Navigation({ githubStars = '2.8k' }: NavigationProps) {
   // const [isVisible, setIsVisible] = useState(true)
   // const [isHovered, setIsHovered] = useState(false)
   const isMobileNavOpened = useStore((state) => state.isMobileNavOpened)
@@ -244,7 +248,7 @@ export function Navigation() {
         >
           <GithubIcon className="dr-w-16 icon" />
         </div>
-        <span>2.8k</span>
+        <span>{githubStars}</span>
       </Link>
 
       <section className="col-span-full dt:col-start-3 dt:col-end-11 flex justify-center">
@@ -340,7 +344,7 @@ export function Navigation() {
                 <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
                   <GithubIcon className="dr-w-16 icon" />
                 </div>
-                <span>2.8k</span>
+                <span>{githubStars}</span>
               </Link>
               <Link
                 href="https://discord.com/invite/dJNvPEHth6"
