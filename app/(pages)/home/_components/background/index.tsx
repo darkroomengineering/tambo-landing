@@ -212,6 +212,12 @@ export default function Background({
               itemsRef.current[0] = node
             }}
             index={6}
+            // Values comming from older intro animation
+            style={{
+              width: 'calc(1854 / 1440 * 100vw)',
+              height: 'calc(1854 / 1440 * 100vw)',
+              transform: 'translateY(calc(-495 / 1440 * 100vw))',
+            }}
           />
           <BackgroundItem
             opacity={0.6}
@@ -220,6 +226,11 @@ export default function Background({
               itemsRef.current[1] = node
             }}
             index={12.5}
+            style={{
+              width: 'calc(1614 / 1440 * 100vw)',
+              height: 'calc(1614 / 1440 * 100vw)',
+              transform: 'translateY(calc(-405 / 1440 * 100vw))',
+            }}
           />
           <BackgroundItem
             opacity={0.8}
@@ -229,6 +240,11 @@ export default function Background({
               itemsRef.current[2] = node
             }}
             index={25}
+            style={{
+              width: 'calc(1374 / 1440 * 100vw)',
+              height: 'calc(1374 / 1440 * 100vw)',
+              transform: 'translateY(calc(-315 / 1440 * 100vw))',
+            }}
           />
           <BackgroundItem
             opacity={1}
@@ -238,6 +254,11 @@ export default function Background({
               itemsRef.current[3] = node
             }}
             index={50}
+            style={{
+              width: 'calc(1134 / 1440 * 100vw)',
+              height: 'calc(1134 / 1440 * 100vw)',
+              transform: 'translateY(calc(-225 / 1440 * 100vw))',
+            }}
           />
         </div>
         <div

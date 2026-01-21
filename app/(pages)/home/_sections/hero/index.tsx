@@ -1,11 +1,12 @@
 'use client'
 
 import cn from 'clsx'
-import gsap from 'gsap'
+// import gsap from 'gsap'
 import { useRect } from 'hamo'
 import { useLenis } from 'lenis/react'
-import { useContext, useEffect, useEffectEvent, useRef } from 'react'
-import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
+// import { useContext, useEffect, useEffectEvent, useRef } from 'react'
+import { useRef } from 'react'
+// import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { DashedBorder } from '~/app/(pages)/home/_components/dashed-border'
 import ArrowDownSVG from '~/assets/svgs/arrow-down.svg'
 import HeroVisualMobileSVG from '~/assets/svgs/hero-bg-visual-mobile.svg'
@@ -14,15 +15,15 @@ import { CTA } from '~/components/button'
 import { Image } from '~/components/image'
 import { Kinesis } from '~/components/kinesis'
 import { Video } from '~/components/video'
-import { useDeviceDetection } from '~/hooks/use-device-detection'
-import { useDesktopVW } from '~/hooks/use-device-values'
+// import { useDeviceDetection } from '~/hooks/use-device-detection'
+// import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
 import { useStore } from '~/libs/store'
 import { fromTo } from '~/libs/utils'
 import s from './hero.module.css'
 
 export function Hero() {
-  const { getItems } = useContext(BackgroundContext)
+  // const { getItems } = useContext(BackgroundContext)
 
   const [setRectRef, rect] = useRect()
 
@@ -35,12 +36,13 @@ export function Hero() {
 
   const lenis = useLenis()
 
-  const desktopVW = useDesktopVW()
+  // const desktopVW = useDesktopVW()
 
-  const setHasAppeared = useStore((state) => state.setHasAppeared)
+  // const setHasAppeared = useStore((state) => state.setHasAppeared)
 
-  const { isDesktop } = useDeviceDetection()
+  // const { isDesktop } = useDeviceDetection()
 
+  /*
   const appear = useEffectEvent(() => {
     const proxy = {
       progress1: 0,
@@ -234,6 +236,7 @@ export function Hero() {
       timeline?.kill()
     }
   }, [isDesktop, setHasAppeared])
+  */
 
   useScrollTrigger({
     rect,
@@ -276,12 +279,12 @@ export function Hero() {
       >
         <HeroVisualMobileSVG
           ref={visualRef}
-          className="dt:opacity-0 dr-w-517 dr-h-178 dt:dr-w-1035 dt:dr-h-356 absolute -dr-top-32 dt:-dr-top-96 left-[50%] translate-x-[-50%]"
+          className="dr-w-517 dr-h-178 dt:dr-w-1035 dt:dr-h-356 absolute -dr-top-32 dt:-dr-top-96 left-[50%] translate-x-[-50%]"
         />
         <div className="relative">
           <div
             className={cn(
-              'dt:-dr-mb-60 -dr-mb-20 dt:dr-w-300 dr-w-181 aspect-square dt:scale-[0.25]',
+              'dt:-dr-mb-60 -dr-mb-20 dt:dr-w-300 dr-w-181 aspect-square',
               s.video
             )}
             ref={videoRef}
@@ -309,7 +312,7 @@ export function Hero() {
             </Video>
           </div>
           <div
-            className="absolute left-[50%] translate-x-[-50%] top-full desktop-only"
+            className="absolute left-[50%] translate-x-[-50%] top-full desktop-only opacity-0"
             ref={subVideoRef}
           >
             <div className="dr-h-26 dr-mb-8">
@@ -321,7 +324,7 @@ export function Hero() {
           </div>
         </div>
         <div
-          className="dt:dr-w-col-8 flex flex-col dr-gap-8 text-center items-center dt:opacity-0 z-1"
+          className="dt:dr-w-col-8 flex flex-col dr-gap-8 text-center items-center z-1"
           ref={titleRef}
         >
           <h1 className="dt:typo-h1 typo-h3">
@@ -372,7 +375,7 @@ export function Hero() {
         ref={arrowDownRef}
         className={cn(
           s.arrowDown,
-          'desktop-only dt:dr-w-136 dt:aspect-square bg-white dt:bottom-0 left-[50%] rounded-full fixed opacity-0 z-10'
+          'desktop-only dt:dr-w-136 dt:aspect-square bg-white dt:bottom-0 left-[50%] rounded-full fixed z-10'
         )}
       >
         <DashedBorder className="absolute inset-0 " />
