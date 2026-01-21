@@ -230,17 +230,21 @@ export function Navigation() {
     >
       <Link
         href="https://github.com/tambo-ai"
-        className="desktop-only dr-size-48 rounded-full border border-dark-grey grid place-items-center bg-white/50 backdrop-blur-[30px]"
+        className={cn(
+          s.linkWrapper,
+          'desktop-only dr-size-48 dr-w-99 dr-pl-8 flex items-center dr-gap-x-8 rounded-full border border-dark-grey bg-white/50 backdrop-blur-[30px]'
+        )}
         ref={githubRef}
       >
         <div
           className={cn(
             'group dr-w-32 aspect-square grid place-items-center bg-teal rounded-full',
-            s.iconWrapper
+            s.icon
           )}
         >
           <GithubIcon className="dr-w-16 icon" />
         </div>
+        <span>2.8k</span>
       </Link>
 
       <section className="col-span-full dt:col-start-3 dt:col-end-11 flex justify-center">
@@ -329,29 +333,38 @@ export function Navigation() {
               <Link
                 href="https://github.com/tambo-ai"
                 className={cn(
-                  'rounded-full bg-mint grid place-items-center dr-h-32 dr-w-32',
+                  'rounded-full border border-dark-grey flex items-center dr-gap-x-4 dr-pl-4 dr-h-32 dr-w-79',
                   s.loginButton
                 )}
               >
-                <GithubIcon className="dr-w-16 icon" />
+                <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
+                  <GithubIcon className="dr-w-16 icon" />
+                </div>
+                <span>2.8k</span>
               </Link>
               <Link
                 href="https://discord.com/invite/dJNvPEHth6"
                 className={cn(
-                  'rounded-full bg-mint grid place-items-center dr-h-32 dr-w-32',
+                  'rounded-full border border-dark-grey flex items-center dr-gap-x-4 dr-pl-4 dr-h-32 dr-w-79',
                   s.loginButton
                 )}
               >
-                <DiscordIcon className="dr-w-16 icon" />
+                <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
+                  <DiscordIcon className="dr-w-16 icon" />
+                </div>
+                <span>0.6k</span>
               </Link>
               <Link
                 href="https://x.com/tamboai"
                 className={cn(
-                  'rounded-full bg-mint grid place-items-center dr-h-32 dr-w-32',
+                  'rounded-full border border-dark-grey flex items-center dr-gap-x-4 dr-pl-4 dr-h-32 dr-w-79',
                   s.loginButton
                 )}
               >
-                <XIcon className="dr-w-16 icon" />
+                <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
+                  <XIcon className="dr-w-16 icon" />
+                </div>
+                <span>0.6k</span>
               </Link>
             </div>
 
@@ -364,13 +377,17 @@ export function Navigation() {
 
       <Link
         href="https://discord.com/invite/dJNvPEHth6"
-        className="desktop-only col-start-12 dr-size-48 rounded-full border border-dark-grey grid place-items-center bg-white/50 backdrop-blur-[30px] justify-self-end"
+        className={cn(
+          s.linkWrapper,
+          'desktop-only col-start-12 dr-size-48 dr-w-99 dr-pr-8 flex justify-end items-center dr-gap-x-8 rounded-full border border-dark-grey bg-white/50 backdrop-blur-[30px] justify-self-end'
+        )}
         ref={discordRef}
       >
+        <span>0.6k</span>
         <div
           className={cn(
             'group dr-w-32 aspect-square grid place-items-center bg-teal rounded-full',
-            s.iconWrapper
+            s.icon
           )}
         >
           <DiscordIcon className="dr-w-16 icon" />
