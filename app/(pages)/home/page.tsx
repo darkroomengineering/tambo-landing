@@ -6,6 +6,7 @@ import { Wrapper } from '../_components/wrapper'
 import { Footer } from './_sections/footer'
 import { Hero } from './_sections/hero'
 import { HowItWorks } from './_sections/how-it-works'
+import { Investors } from './_sections/investors'
 import { MeetTambo } from './_sections/meet-tambo'
 import { Moments } from './_sections/moments'
 import { Section8 } from './_sections/section-8'
@@ -49,6 +50,7 @@ export default async function Home() {
         <HowItWorks />
         <Section11 />
         <Section12 />
+        <Investors />
         <Footer />
         {/* </Background> */}
       </Wrapper>
