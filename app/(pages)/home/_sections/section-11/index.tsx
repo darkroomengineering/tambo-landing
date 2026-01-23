@@ -1,64 +1,19 @@
 'use client'
 
 import cn from 'clsx'
-import { useIntersectionObserver } from 'hamo'
 import { useRef, useState } from 'react'
 import { SolidBackground } from '~/app/(pages)/home/_components/background'
 import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import ArrowSVG from '~/assets/svgs/arrow.svg'
 import PlusSVG from '~/assets/svgs/plus.svg'
-import { Button, CTA } from '~/components/button'
+import { Button } from '~/components/button'
 import { Image } from '~/components/image'
 import { Link } from '~/components/link'
-import { Marquee } from '~/components/marquee'
 import { Video } from '~/components/video'
 import { useDeviceDetection } from '~/hooks/use-device-detection'
-import { buttons, persons, showcaseCards } from './data'
+import { showcaseCards } from './data'
 import s from './section-11.module.css'
-
-type PersonCardProps = {
-  person: (typeof persons)[number]
-}
-
-function PersonCard({ person }: PersonCardProps) {
-  const [setIntersectionRef, intersection] = useIntersectionObserver({
-    rootMargin: '30%',
-    threshold: 0.8,
-  })
-
-  const isInViewport = intersection?.isIntersecting
-
-  return (
-    <div ref={setIntersectionRef}>
-      <Button
-        className={cn(
-          'dt:dr-w-322 dr-w-327 dt:h-fit dr-p-16 dr-rounded-20 border border-dark-teal/50 flex dr-gap-x-16 bg-black',
-          s.personCard,
-          isInViewport && s.personInViewport
-        )}
-        href={person?.url}
-      >
-        <div className="dr-w-40 dr-h-40 dr-rounded-full relative">
-          <Image src={person?.image} alt={person?.name} fill />
-        </div>
-        <div className="flex flex-col">
-          <div className="flex items-center dr-gap-x-4 w-full dr-mb-8">
-            <p className="dt:typo-p typo-p-bold text-teal">
-              {person?.name ?? ''}
-            </p>
-            <p className="typo-label-m text-dark-teal/50">
-              {person?.account ?? ''}
-            </p>
-          </div>
-          <div className="dr-max-w-234 whitespace-normal">
-            <p className="typo-p-s text-dark-teal">{person?.tweet}</p>
-          </div>
-        </div>
-      </Button>
-    </div>
-  )
-}
 
 export function Section11() {
   const { isMobile, isDesktop } = useDeviceDetection()
@@ -69,7 +24,7 @@ export function Section11() {
     <SolidBackground>
       <section
         className={cn(
-          'dt:dr-pt-141 dr-pt-120 dt:dr-pb-203 dr-pb-120 relative max-dt:bg-black'
+          'dt:dr-pt-141 dr-pt-120 dt:dr-pb-200 dr-pb-120 relative max-dt:bg-black'
         )}
       >
         <div className="dr-layout-grid-inner dt:dr-top-141 dt:dr-mb-256 dr-mb-78">
@@ -212,40 +167,6 @@ export function Section11() {
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Marquee section */}
-        <div className="text-center dr-mb-40 ">
-          <h3 className="dt:typo-h3 typo-h4 dr-mb-8 text-teal">
-            Word is spreading.
-          </h3>
-          <p className="dt:typo-p-l typo-p text-dark-teal">
-            From developers shipping with Tambo.
-          </p>
-        </div>
-
-        <Marquee
-          repeat={2}
-          speed={0.3}
-          className={cn(s.marquee, 'dt:dr-mb-40 fade-mask')}
-        >
-          <div className="flex dt:dr-gap-x-24 dr-gap-x-16 dt:dr-mr-24 dr-mr-16">
-            {persons?.map((person) => (
-              <PersonCard key={person?.name} person={person} />
-            ))}
-          </div>
-        </Marquee>
-        <div className="dr-gap-x-16 flex dt:items-center flex-col dr-gap-y-8 dt:flex-row justify-center w-full dt:-dr-mt-40 px-safe dt:px-0">
-          {buttons.map((button) => (
-            <CTA
-              key={button.text}
-              icon={button?.icon as 'github' | 'discord'}
-              href={button?.href}
-              color="black"
-            >
-              {button?.text}
-            </CTA>
-          ))}
         </div>
       </section>
     </SolidBackground>
