@@ -3,13 +3,13 @@ import { getGitHubStars } from '~/libs/github'
 import { generatePageMetadata } from '~/libs/metadata'
 import { Wrapper } from '../_components/wrapper'
 import { Community } from './_sections/comunity'
+import { Features } from './_sections/features-section'
 import { Footer } from './_sections/footer'
 import { Hero } from './_sections/hero'
 import { HowItWorks } from './_sections/how-it-works'
 import { Investors } from './_sections/investors'
 import { MeetTambo } from './_sections/meet-tambo'
 import { Moments } from './_sections/moments'
-import { Section10 } from './_sections/section-10'
 import { Section12 } from './_sections/section-12'
 import { Showcase } from './_sections/showcase'
 import { SocialProof } from './_sections/social-proof'
@@ -44,7 +44,7 @@ export default async function Home() {
         <MeetTambo />
         <SocialProof />
         <HowItWorks />
-        <Section10 />
+        <Features />
         <Section12 />
         <Investors />
         <Showcase />

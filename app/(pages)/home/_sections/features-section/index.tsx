@@ -81,7 +81,7 @@ const BUTTONS = [
   },
 ]
 
-export function Section10() {
+export function Features() {
   const buttonsRefs = useRef<(HTMLDivElement | null)[]>([])
   const buttonsWrapperRef = useRef<HTMLDivElement | null>(null)
 
@@ -280,29 +280,18 @@ export function Section10() {
               </Video>
             </div>
 
-            <TitleBlock>
-              <TitleBlock.LeadIn>
-                {'<'} FEATURES {'>'}
-              </TitleBlock.LeadIn>
-              <TitleBlock.Title
-                level="h2"
-                className="dt:dr-mb-8! mb-0! typo-h1!"
-              >
-                <span className="desktop-only">
-                  One SDK,
-                  <br />
-                  orchestrating <br /> everything
-                </span>
-                <span className="mobile-only">
-                  One SDK,
-                  <br />
-                  orchestrating everything
-                </span>
+            <TitleBlock className="dt:dr-mb-40">
+              <TitleBlock.LeadIn>FEATURES</TitleBlock.LeadIn>
+              <TitleBlock.Title level="h2" className="dt:typo-h2! typo-h1!">
+                What Tambo <br /> solves for you
               </TitleBlock.Title>
             </TitleBlock>
+            <CTA color="black" className="desktop-only">
+              Start building
+            </CTA>
           </div>
         </div>
-        <div className="w-full dr-p-24 mobile-only flex flex-col dr-gap-y-8">
+        <div className="w-full px-safe mobile-only flex flex-col dr-gap-y-8 dr-mt-56">
           {BUTTONS.map((button, index) => (
             <div className="w-full " key={button.title + index.toString()}>
               <CTA className="flex! justify-between" href={button.href}>
@@ -310,7 +299,11 @@ export function Section10() {
               </CTA>
             </div>
           ))}
+          <CTA color="black" className="mobile-only w-full dr-mt-24">
+            Start building
+          </CTA>
         </div>
+
         <div className="mobile-only w-full  dr-h-280 relative">
           <div className="absolute bottom-0 left-0 right-0 bg-light-gray dr-h-280 w-full mobile-only dr-mb-[-1]" />
           <Image
