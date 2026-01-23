@@ -1,24 +1,16 @@
-import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
-import HowItWorksSVG from '~/assets/svgs/how-it-works-desktop.svg'
-import HowItWorksMobileSVG from '~/assets/svgs/how-it-works-mobile.svg'
+import { TitleBlock } from "~/app/(pages)/home/_components/title-block";
+import HowItWorksSVG from "~/assets/svgs/how-it-works-desktop.svg";
+import HowItWorksMobileSVG from "~/assets/svgs/how-it-works-mobile.svg";
 
 export function HowItWorks() {
   return (
     <section>
       <TitleBlock className="dr-mb-56">
-        <TitleBlock.LeadIn>
-          {'<'} How It Works {'>'}
-        </TitleBlock.LeadIn>
+        <TitleBlock.LeadIn>how It Works</TitleBlock.LeadIn>
         <TitleBlock.Title level="h2" className="dt:mb-0! dr-mb-8">
-          More than a SDK.
-          <br /> A complete platform.
+          The missing layer <br className="desktop-only" /> between React and
+          LLMs
         </TitleBlock.Title>
-        <TitleBlock.Subtitle className="typo-p! dt:typo-p-l!">
-          SDK + UI components, backed by hosted API and dashboard.
-          <br className="desktop-only" />
-          Everything you need to add AI to your
-          <br className="mobile-only" /> app.
-        </TitleBlock.Subtitle>
       </TitleBlock>
       <div className="dt:dr-px-40 dr-px-8">
         <div className="dt:dr-py-94 dt:dr-px-145 dr-py-40 dr-px-16 bg-grey dr-rounded-20 flex items-center justify-center">
@@ -27,5 +19,5 @@ export function HowItWorks() {
         </div>
       </div>
     </section>
-  )
+  );
 }
