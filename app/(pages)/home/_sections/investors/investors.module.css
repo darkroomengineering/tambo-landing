@@ -18,6 +18,22 @@
       }
     }
   }
+
+  &.active {
+    @media (--mobile) {
+      background-color: color-mix(
+        in srgb,
+        var(--color-off-white) 80%,
+        transparent
+      );
+      border-color: transparent;
+      .mainContent {
+        border-style: dashed;
+        border-color: color-mix(in oklch, var(--color-forest) 50%, transparent);
+        box-shadow: 0 0 24px 8px rgba(127, 255, 195, 0.7);
+      }
+    }
+  }
 }
 
 .mainContent {
@@ -29,6 +45,24 @@
 .wrapper {
   @media (--hover) {
     &:hover {
+      .investor {
+        border-style: dashed;
+        border-color: color-mix(in oklch, var(--color-forest) 50%, transparent);
+        box-shadow: 0 0 24px 8px rgba(127, 255, 195, 0.7);
+      }
+
+      .rim {
+        opacity: 1;
+      }
+
+      .position {
+        background-color: var(--color-ghost-mint);
+      }
+    }
+  }
+
+  @media (--mobile) {
+    &:has(.investor.active) {
       .investor {
         border-style: dashed;
         border-color: color-mix(in oklch, var(--color-forest) 50%, transparent);
@@ -57,11 +91,16 @@
 
 .rim {
   position: absolute;
-  inset: calc(-1 * desktop-vw(8px));
+  inset: calc(-1 * mobile-vw(8px));
   background-color: color-mix(in srgb, var(--color-off-white) 80%, transparent);
-  border-radius: desktop-vw(28px);
+  border-radius: mobile-vw(28px);
   opacity: 0;
   pointer-events: none;
   z-index: -1;
   transition: opacity 0.3s ease;
+
+  @media (--desktop) {
+    inset: calc(-1 * desktop-vw(8px));
+    border-radius: desktop-vw(28px);
+  }
 }
