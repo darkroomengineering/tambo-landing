@@ -1,7 +1,7 @@
-import { TitleBlock } from "~/app/(pages)/home/_components/title-block";
-import HowItWorksSVG from "~/assets/svgs/how-it-works/how-it-works-diagram-desktop.svg";
-import HowItWorksMobileSVG from "~/assets/svgs/how-it-works/how-it-works-diagram-mobile.svg";
-import HowItWorksBgDektop from "~/assets/svgs/how-it-works/how-it-works-bg-desktop.svg";
+import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
+import HowItWorksBgDektop from '~/assets/svgs/how-it-works/how-it-works-bg-desktop.svg'
+import HowItWorksSVG from '~/assets/svgs/how-it-works/how-it-works-diagram-desktop.svg'
+import HowItWorksMobileSVG from '~/assets/svgs/how-it-works/how-it-works-diagram-mobile.svg'
 
 export function HowItWorks() {
   return (
@@ -21,5 +21,5 @@ export function HowItWorks() {
         </div>
       </div>
     </section>
-  );
+  )
 }

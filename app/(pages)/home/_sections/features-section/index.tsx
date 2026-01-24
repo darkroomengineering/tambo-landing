@@ -1,125 +1,125 @@
-"use client";
+'use client'
 
-import { useIntersectionObserver, useRect, useWindowSize } from "hamo";
-import { useContext, useEffect, useRef, useState } from "react";
-import { BackgroundContext } from "~/app/(pages)/home/_components/background/context";
-import { TitleBlock } from "~/app/(pages)/home/_components/title-block";
-import { CTA } from "~/components/button";
-import { Image } from "~/components/image";
+import { useIntersectionObserver, useRect, useWindowSize } from 'hamo'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
+import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
+import { CTA } from '~/components/button'
+import { Image } from '~/components/image'
 // import { Kinesis } from '~/components/kinesis'
-import { Video } from "~/components/video";
-import { useDesktopVW } from "~/hooks/use-device-values";
-import { useScrollTrigger } from "~/hooks/use-scroll-trigger";
-import { fromTo } from "~/libs/utils";
+import { Video } from '~/components/video'
+import { useDesktopVW } from '~/hooks/use-device-values'
+import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
+import { fromTo } from '~/libs/utils'
 
 const BUTTONS = [
   {
-    title: "Generative UI Components",
-    href: " https://docs.tambo.co/concepts/components",
+    title: 'Generative UI Components',
+    href: ' https://docs.tambo.co/concepts/components',
     top: 15,
     left: 33,
   },
   {
-    title: "Interactable Components",
-    href: "https://docs.tambo.co/concepts/components/interactable-components",
+    title: 'Interactable Components',
+    href: 'https://docs.tambo.co/concepts/components/interactable-components',
     top: 20,
     right: 12,
   },
   {
-    title: "MCP-Native",
-    href: "https://docs.tambo.co/concepts/model-context-protocol",
+    title: 'MCP-Native',
+    href: 'https://docs.tambo.co/concepts/model-context-protocol',
     top: 30,
     left: 10,
   },
   {
-    title: "Local Tools",
-    href: "https://docs.tambo.co/concepts/tools/adding-tools",
+    title: 'Local Tools',
+    href: 'https://docs.tambo.co/concepts/tools/adding-tools',
     top: 45,
     left: 25,
   },
   {
-    title: "Streaming Support",
-    href: "https://docs.tambo.co/concepts/streaming",
+    title: 'Streaming Support',
+    href: 'https://docs.tambo.co/concepts/streaming',
     top: 60,
     right: 90,
   },
   {
-    title: "Message History",
-    href: "https://docs.tambo.co/concepts/message-threads",
+    title: 'Message History',
+    href: 'https://docs.tambo.co/concepts/message-threads',
     top: 40,
     left: 80,
   },
   {
-    title: "State Management",
-    href: " https://docs.tambo.co/api-reference/react-hooks",
+    title: 'State Management',
+    href: ' https://docs.tambo.co/api-reference/react-hooks',
     top: 60,
     left: 85,
   },
   {
-    title: "Suggested Actions",
-    href: "https://docs.tambo.co/concepts/suggestions",
+    title: 'Suggested Actions',
+    href: 'https://docs.tambo.co/concepts/suggestions',
     top: 75,
     right: 33,
   },
   {
-    title: "Tool Orchestration",
-    href: "Ahttps://docs.tambo.co/#why-tambo",
+    title: 'Tool Orchestration',
+    href: 'Ahttps://docs.tambo.co/#why-tambo',
     top: 80,
     left: 40,
   },
   {
-    title: "Model Flexibility",
-    href: " https://docs.tambo.co/models",
+    title: 'Model Flexibility',
+    href: ' https://docs.tambo.co/models',
     top: 90,
     right: 23,
   },
   {
-    title: "Component Library ",
-    href: "https://ui.tambo.co/",
+    title: 'Component Library ',
+    href: 'https://ui.tambo.co/',
     top: 85,
     left: 15,
   },
-];
+]
 
 export function Features() {
-  const buttonsRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const buttonsWrapperRef = useRef<HTMLDivElement | null>(null);
+  const buttonsRefs = useRef<(HTMLDivElement | null)[]>([])
+  const buttonsWrapperRef = useRef<HTMLDivElement | null>(null)
 
-  const [setRectRef, rect] = useRect();
+  const [setRectRef, rect] = useRect()
 
-  const { getItems, getBackground, getElement } = useContext(BackgroundContext);
+  const { getItems, getBackground, getElement } = useContext(BackgroundContext)
 
-  const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize();
+  const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize()
 
-  const desktopVW = useDesktopVW();
+  const desktopVW = useDesktopVW()
 
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false)
 
   useScrollTrigger({
     rect,
-    start: "top center",
-    end: "top top",
+    start: 'top center',
+    end: 'top top',
     onProgress: ({ progress, isActive }) => {
-      if (!isActive) return;
+      if (!isActive) return
 
-      const backgroundElement = getElement();
+      const backgroundElement = getElement()
       if (backgroundElement) {
-        backgroundElement.style.backgroundColor = `rgba(255, 255, 255, ${1 - progress})`;
+        backgroundElement.style.backgroundColor = `rgba(255, 255, 255, ${1 - progress})`
       }
 
-      const background = getBackground();
+      const background = getBackground()
       if (progress > 0 && background) {
-        background.style.opacity = "1";
+        background.style.opacity = '1'
       }
 
-      const items = getItems();
+      const items = getItems()
       fromTo(
         items,
         {
           width: (index) =>
             desktopVW(
               windowWidth * 1.5 + (items.length - 1 - index) * 100,
-              true,
+              true
             ),
           opacity: 1,
           kinesis: 1,
@@ -134,65 +134,65 @@ export function Features() {
         },
         progress,
         {
-          ease: "easeOutSine",
+          ease: 'easeOutSine',
           render: (item, { width, opacity, kinesis, boxShadowOpacity }) => {
             // @ts-expect-error
-            const element = item?.getElement();
+            const element = item?.getElement()
             // @ts-expect-error
-            item?.setBorderRadius(`${width * 2}px`);
+            item?.setBorderRadius(`${width * 2}px`)
             // @ts-expect-error
-            item?.setKinesis(kinesis);
+            item?.setKinesis(kinesis)
 
             // @ts-expect-error
-            const boxShadow = item?.getBoxShadow();
+            const boxShadow = item?.getBoxShadow()
             if (boxShadow) {
-              boxShadow.style.opacity = `${boxShadowOpacity}`;
+              boxShadow.style.opacity = `${boxShadowOpacity}`
             }
 
             if (element instanceof HTMLElement) {
-              element.style.width = `${width}px`;
-              element.style.height = `${width}px`;
-              element.style.opacity = `${opacity}`;
+              element.style.width = `${width}px`
+              element.style.height = `${width}px`
+              element.style.opacity = `${opacity}`
             }
           },
-        },
-      );
+        }
+      )
     },
-  });
+  })
 
   // Trigger animation when title block is 50% visible
   const [setAnimationTriggerRef, intersection] = useIntersectionObserver({
     threshold: 0.5,
-  });
+  })
 
   useEffect(() => {
     if (intersection?.isIntersecting !== undefined) {
-      setIsVisible(intersection.isIntersecting);
+      setIsVisible(intersection.isIntersecting)
     }
-  }, [intersection?.isIntersecting]);
+  }, [intersection?.isIntersecting])
 
   // Staggered button animation (handles both enter and exit)
   useEffect(() => {
     buttonsRefs.current.forEach((button) => {
       if (button) {
-        button.style.opacity = isVisible ? "1" : "0";
-        button.style.transform = isVisible ? "scale(1)" : "scale(1.1)";
+        button.style.opacity = isVisible ? '1' : '0'
+        button.style.transform = isVisible ? 'scale(1)' : 'scale(1.1)'
       }
-    });
-  }, [isVisible]);
+    })
+  }, [isVisible])
 
   useScrollTrigger({
     rect,
-    start: "bottom bottom",
-    end: `${rect?.top === undefined || rect?.height === undefined ? "bottom" : rect?.top + rect?.height + windowHeight * 0.5} top`,
+    start: 'bottom bottom',
+    end: `${rect?.top === undefined || rect?.height === undefined ? 'bottom' : rect?.top + rect?.height + windowHeight * 0.5} top`,
     onProgress: ({ progress, height, isActive }) => {
-      if (!isActive) return;
+      if (!isActive) return
 
       // if (buttonsWrapperRef.current) {
       //   buttonsWrapperRef.current.style.transform = `translateY(${-height * progress * 0.5}px)`
       // }
 
-      const items = getItems();
+      const items = getItems()
       fromTo(
         items,
         {
@@ -202,9 +202,9 @@ export function Features() {
         },
         {
           y: (index) => {
-            if (index === items.length - 1) return -height;
+            if (index === items.length - 1) return -height
 
-            return -height - (items.length - index) * height * 0.15;
+            return -height - (items.length - index) * height * 0.15
             // (items.length - index) * -height
           },
           boxShadowOpacity: 1,
@@ -212,27 +212,27 @@ export function Features() {
         },
         progress,
         {
-          ease: "linear",
+          ease: 'linear',
           render: (item, { y, boxShadowOpacity, opacity }) => {
             // @ts-expect-error
-            const boxShadow = item?.getBoxShadow();
+            const boxShadow = item?.getBoxShadow()
             if (boxShadow) {
-              boxShadow.style.opacity = `${boxShadowOpacity}`;
+              boxShadow.style.opacity = `${boxShadowOpacity}`
             }
 
             // item?.setBorderRadius(`${width * 2}px`)
 
             // @ts-expect-error
-            const element = item?.getElement();
+            const element = item?.getElement()
             if (element instanceof HTMLElement) {
-              element.style.transform = `translateY(${y}px)`;
-              element.style.opacity = `${opacity}`;
+              element.style.transform = `translateY(${y}px)`
+              element.style.opacity = `${opacity}`
             }
           },
-        },
-      );
+        }
+      )
     },
-  });
+  })
 
   return (
     <section
@@ -324,13 +324,13 @@ export function Features() {
                   ? { top: `${button.top}%`, right: `${button.right}%` }
                   : { top: `${button.top}%`, left: `${button.left}%` }),
                 opacity: 0,
-                transform: "scale(1.1)",
-                transition: "opacity 0.4s ease-out, transform 0.4s ease-out",
+                transform: 'scale(1.1)',
+                transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
                 transitionDelay: `${index * 150}ms`,
               }}
               key={button.title + index.toString()}
               ref={(node) => {
-                buttonsRefs.current[index] = node;
+                buttonsRefs.current[index] = node
               }}
             >
               <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
@@ -341,5 +341,5 @@ export function Features() {
         </div>
       </div>
     </section>
-  );
+  )
 }
