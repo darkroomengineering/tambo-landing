@@ -1,36 +1,36 @@
-'use client'
+"use client";
 
-import cn from 'clsx'
-import { useIntersectionObserver } from 'hamo'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
-import { investors } from './data'
-import PartnershipSVG from './icons/partnership.svg'
-import s from './investors.module.css'
+import cn from "clsx";
+import { useIntersectionObserver } from "hamo";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { HashPattern } from "~/app/(pages)/home/_components/hash-pattern";
+import { investors } from "./data";
+import PartnershipSVG from "./icons/partnership.svg";
+import s from "./investors.module.css";
 
-type ActiveCard = 'main' | number | null
+type ActiveCard = "main" | number | null;
 
 export function Investors() {
-  const [activeCard, setActiveCard] = useState<ActiveCard>(null)
+  const [activeCard, setActiveCard] = useState<ActiveCard>(null);
 
   const handleIntersect = useCallback(
     (id: ActiveCard, isIntersecting: boolean) => {
       setActiveCard((prev) => {
-        if (isIntersecting) return id
-        if (prev === id) return null
-        return prev
-      })
+        if (isIntersecting) return id;
+        if (prev === id) return null;
+        return prev;
+      });
     },
-    []
-  )
+    [],
+  );
 
   return (
-    <section className="dt:dr-px-271 dt:dr-pb-200 dr-pb-120 px-safe">
+    <section className="dt:dr-px-271 dt:dr-pb-200 dr-pb-120 px-safe bg-white">
       <h2 className="dt:typo-h2 typo-h1 text-center dt:dr-mb-56 dr-mb-40">
         Backed by top investors and builders
       </h2>
       <MainInvestorCard
-        isActive={activeCard === 'main'}
+        isActive={activeCard === "main"}
         onIntersect={handleIntersect}
       />
       <div className="dt:grid dt:grid-cols-3 dt:dr-gap-24 flex flex-col dr-gap-16">
@@ -45,32 +45,32 @@ export function Investors() {
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 function MainInvestorCard({
   isActive,
   onIntersect,
 }: {
-  isActive: boolean
-  onIntersect: (id: ActiveCard, isIntersecting: boolean) => void
+  isActive: boolean;
+  onIntersect: (id: ActiveCard, isIntersecting: boolean) => void;
 }) {
   const [setIntersectionRef, intersection] = useIntersectionObserver({
-    rootMargin: '-45% 0px -45% 0px',
+    rootMargin: "-45% 0px -45% 0px",
     threshold: 0,
-  })
-  const prevIntersecting = useRef<boolean | undefined>(undefined)
+  });
+  const prevIntersecting = useRef<boolean | undefined>(undefined);
 
   useEffect(() => {
-    const isIntersecting = intersection?.isIntersecting
+    const isIntersecting = intersection?.isIntersecting;
     if (
       isIntersecting !== undefined &&
       isIntersecting !== prevIntersecting.current
     ) {
-      prevIntersecting.current = isIntersecting
-      onIntersect('main', isIntersecting)
+      prevIntersecting.current = isIntersecting;
+      onIntersect("main", isIntersecting);
     }
-  }, [intersection, onIntersect])
+  }, [intersection, onIntersect]);
 
   return (
     <div
@@ -78,20 +78,20 @@ function MainInvestorCard({
       className={cn(
         s.mainInvestor,
         isActive && s.active,
-        'border border-dark-grey dr-rounded-20 w-full dr-p-8 bg-white dt:dr-mb-24 dr-mb-16'
+        "border border-dark-grey dr-rounded-20 w-full dr-p-8 bg-white dt:dr-mb-24 dr-mb-16",
       )}
     >
       <div
         className={cn(
           s.mainContent,
-          'relative overflow-hidden border border-dark-grey dr-rounded-12 flex items-center justify-center bg-white'
+          "relative overflow-hidden border border-dark-grey dr-rounded-12 flex items-center justify-center bg-white",
         )}
       >
         <HashPattern className="absolute inset-0 text-dark-grey z-0" />
         <PartnershipSVG className="dt:dr-w-353 dr-w-254 relative z-1" />
       </div>
     </div>
-  )
+  );
 }
 
 function InvestorCard({
@@ -100,37 +100,37 @@ function InvestorCard({
   isActive,
   onIntersect,
 }: {
-  investor: (typeof investors)[number]
-  index: number
-  isActive: boolean
-  onIntersect: (id: ActiveCard, isIntersecting: boolean) => void
+  investor: (typeof investors)[number];
+  index: number;
+  isActive: boolean;
+  onIntersect: (id: ActiveCard, isIntersecting: boolean) => void;
 }) {
   const [setIntersectionRef, intersection] = useIntersectionObserver({
-    rootMargin: '-45% 0px -45% 0px',
+    rootMargin: "-45% 0px -45% 0px",
     threshold: 0,
-  })
-  const prevIntersecting = useRef<boolean | undefined>(undefined)
+  });
+  const prevIntersecting = useRef<boolean | undefined>(undefined);
 
   useEffect(() => {
-    const isIntersecting = intersection?.isIntersecting
+    const isIntersecting = intersection?.isIntersecting;
     if (
       isIntersecting !== undefined &&
       isIntersecting !== prevIntersecting.current
     ) {
-      prevIntersecting.current = isIntersecting
-      onIntersect(index, isIntersecting)
+      prevIntersecting.current = isIntersecting;
+      onIntersect(index, isIntersecting);
     }
-  }, [intersection, onIntersect, index])
+  }, [intersection, onIntersect, index]);
 
   return (
-    <div className={cn(s.wrapper, 'relative z-0')}>
+    <div className={cn(s.wrapper, "relative z-0")}>
       <div className={s.rim} />
       <div
         ref={setIntersectionRef}
         className={cn(
           s.investor,
           isActive && s.active,
-          'flex dr-gap-32 border border-dark-grey dr-rounded-20 dr-p-8 bg-white items-center'
+          "flex dr-gap-32 border border-dark-grey dr-rounded-20 dr-p-8 bg-white items-center",
         )}
       >
         <div className="dr-size-80 dr-rounded-12 border border-dark-grey grid place-items-center relative overflow-hidden">
@@ -142,8 +142,8 @@ function InvestorCard({
           <p className="typo-p-bold">{investor.name}</p>
           <span
             className={cn(
-              'typo-label-s dr-px-8 dr-py-4 dr-rounded-16 bg-off-white w-fit',
-              s.position
+              "typo-label-s dr-px-8 dr-py-4 dr-rounded-16 bg-off-white w-fit",
+              s.position,
             )}
           >
             {investor?.position}
@@ -151,5 +151,5 @@ function InvestorCard({
         </div>
       </div>
     </div>
-  )
+  );
 }
