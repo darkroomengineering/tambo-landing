@@ -1,7 +1,7 @@
-import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
-import HowItWorksBgDektop from '~/assets/svgs/how-it-works/how-it-works-bg-desktop.svg'
-import HowItWorksSVG from '~/assets/svgs/how-it-works/how-it-works-diagram-desktop.svg'
-import HowItWorksMobileSVG from '~/assets/svgs/how-it-works/how-it-works-diagram-mobile.svg'
+import { TitleBlock } from "~/app/(pages)/home/_components/title-block";
+import HowItWorksSVG from "~/assets/svgs/how-it-works/how-it-works-diagram-desktop.svg";
+import { Image } from "~/components/image";
+import HowItWorksMobileSVG from "~/assets/svgs/how-it-works/how-it-works-diagram-mobile.svg";
 
 export function HowItWorks() {
   return (
@@ -14,12 +14,16 @@ export function HowItWorks() {
         </TitleBlock.Title>
       </TitleBlock>
       <div className="dt:dr-px-8 dr-px-8">
-        <div className="dt:dr-py-94 dr-py-40 dr-px-16 dr-rounded-20 flex items-center justify-center relative w-full h-full">
-          <HowItWorksBgDektop className="w-full h-full absolute" />
+        <div className="dt:dr-py-94 dr-py-40 dr-px-16 dr-rounded-20 flex overflow-hidden items-center justify-center relative w-full h-full">
+          <Image
+            src={"/assets/how-it-works/how-it-works-bg-desktop.png"}
+            alt="how it works background"
+            fill
+          />
           <HowItWorksSVG className="desktop-only dr-w-1044 dr-h-444 relative" />
-          <HowItWorksMobileSVG className="mobile-only dr-w-full dr-h-662" />
+          <HowItWorksMobileSVG className="mobile-only relative" />
         </div>
       </div>
     </section>
-  )
+  );
 }
