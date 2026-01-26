@@ -13,7 +13,7 @@ import { mapRange } from '~/libs/utils'
 import { banner, pricingCards } from './data'
 import s from './section-12.module.css'
 
-export function Section12() {
+export function Pricing() {
   const [setRectRef, rect] = useRect()
 
   const { getSolidBackground } = useContext(BackgroundContext)

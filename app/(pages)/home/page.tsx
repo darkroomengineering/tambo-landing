@@ -9,7 +9,7 @@ import { Hero } from './_sections/hero'
 import { HowItWorks } from './_sections/how-it-works'
 import { Investors } from './_sections/investors'
 import { MeetTambo } from './_sections/meet-tambo'
-import { Section12 } from './_sections/section-12'
+import { Pricing } from './_sections/pricing'
 import { Showcase } from './_sections/showcase'
 import { SocialProof } from './_sections/social-proof'
 import { TamboSteps } from './_sections/tambo-steps'
@@ -45,7 +45,7 @@ export default async function Home() {
         <SocialProof />
         <HowItWorks />
         <Features />
-        <Section12 />
+        <Pricing />
         <Investors />
         <Showcase />
         <Community />
