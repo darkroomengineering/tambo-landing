@@ -68,52 +68,47 @@ export function TimelineSection({
   const hasPlayed = useRef(false)
   const timelineRef = useRef<gsap.core.Timeline | null>(null)
 
-  const STEP_DURATION = 1 // 1 second per step
+  // Duration in seconds for each step (index 0 = step 1, etc.)
+  const STEP_DURATIONS = [0, 2, 2, 2, 2]
+
+  const animateStep = useCallback(
+    (step: number) => {
+      setMessagesVisible(step)
+
+      if (whiteLineRef.current) {
+        const progress = (100 / STEPS) * step
+        whiteLineRef.current.style.translate = `0 -${Math.max(100 - progress * 0.82, 8)}%`
+      }
+
+      const steps = Array.from({ length: STEPS }, (_, i) => (i < step ? 1 : 0))
+      for (const callback of callbacks.current) {
+        callback({ progress: step / STEPS, steps, currentStep: step })
+      }
+
+      if (messagesRef.current && !isDesktop) {
+        const offset =
+          (-messagesRef.current.scrollWidth / 4) *
+          Math.min(3, Math.max(0, step - 1))
+        messagesRef.current.style.transform = `translateX(${offset}px)`
+      }
+    },
+    [isDesktop]
+  )
 
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries
-        if (entry.isIntersecting && !hasPlayed.current) {
-          hasPlayed.current = true
+      ([entry]) => {
+        if (!entry.isIntersecting || hasPlayed.current) return
+        hasPlayed.current = true
 
-          // Create GSAP timeline
-          const tl = gsap.timeline()
-          timelineRef.current = tl
+        const tl = gsap.timeline()
+        timelineRef.current = tl
 
-          // Animate through each step
-          for (let step = 1; step <= STEPS; step++) {
-            tl.call(
-              () => {
-                setMessagesVisible(step)
-
-                // Update white line progress
-                if (whiteLineRef.current) {
-                  const lineProgress = (100 / STEPS) * step
-                  const mappedLineProgress = 100 - lineProgress * 0.82
-                  whiteLineRef.current.style.translate = `0 -${Math.max(mappedLineProgress, 8)}%`
-                }
-
-                // Call registered callbacks
-                const steps = Array.from({ length: STEPS }, (_, i) =>
-                  i < step ? 1 : 0
-                )
-                for (const callback of callbacks.current) {
-                  callback({ progress: step / STEPS, steps, currentStep: step })
-                }
-
-                // Mobile horizontal scroll
-                if (messagesRef.current && !isDesktop) {
-                  messagesRef.current.style.transform = `translateX(${(-messagesRef.current.scrollWidth / 4) * Math.min(3, Math.max(0, step - 1))}px)`
-                }
-              },
-              [],
-              step === 1 ? 0 : `+=${STEP_DURATION}`
-            )
-          }
+        for (let step = 1; step <= STEPS; step++) {
+          tl.call(() => animateStep(step), [], `+=${STEP_DURATIONS[step - 1]}`)
         }
       },
       { threshold: 0.3 }
@@ -125,7 +120,7 @@ export function TimelineSection({
       observer.disconnect()
       timelineRef.current?.kill()
     }
-  }, [isDesktop])
+  }, [animateStep])
 
   return (
     <TimelineSectionContext.Provider value={{ callbacks, addCallback }}>
@@ -142,13 +137,6 @@ export function TimelineSection({
               <h3 className="relative typo-h1 dt:typo-h2 text-center dt:text-left z-10">
                 {title}
               </h3>
-              <div
-                className="hidden dt:block absolute -dr-inset-y-12 dr-left-40 dr-w-4"
-                style={{
-                  background:
-                    'linear-gradient(to bottom, transparent 0%, #E5F0ED 10%, #E5F0ED 90%, transparent 97%)',
-                }}
-              />
             </div>
             <div className="relative dr-py-40 max-dt:mt-auto dt:mask-[linear-gradient(to_bottom,transparent_0%,black_5%)]">
               <div className="absolute z-15 dr-w-32 dt:inset-y-0 max-dt:h-[102vw] max-dt:-dr-mt-6 max-dt:-rotate-90 max-dt:-dr-top-40 left-[calc(var(--safe)+32vw)]  dt:dr-left-26">
@@ -161,7 +149,7 @@ export function TimelineSection({
                 />
                 <div
                   ref={whiteLineRef}
-                  className="dr-w-9 h-[110%] bg-white rounded-full shadow-xs mx-auto"
+                  className="dr-w-9 h-[110%] bg-white rounded-full shadow-xs mx-auto transition-[translate] duration-500 ease-out"
                   style={{
                     translate: '0px -90%',
                   }}
@@ -173,28 +161,30 @@ export function TimelineSection({
                   <div className="dr-size-10 rounded-full border border-dark-teal bg-light-gray" />
                 </div>
               </div>
-              <div>
-                <ul
-                  ref={messagesRef}
-                  className="flex dt:flex-col dr-gap-4 dt:items-start transition-transform duration-300 ease-gleasing"
-                >
-                  {messages.map((message, idx) => {
-                    const isLast = idx === messages.length - 1
-                    const isActive =
-                      idx === messagesVisible - 1 ||
-                      (isLast && messagesVisible >= messages.length)
-                    return (
-                      <TimelineItem
-                        key={message.id}
-                        message={message}
-                        isActive={isActive}
-                        idx={idx}
-                      />
-                    )
-                  })}
-                </ul>
-              </div>
+
+              {/* Left side */}
+
+              <ul
+                ref={messagesRef}
+                className="flex dt:flex-col dr-gap-4 dt:items-start transition-transform duration-300 ease-gleasing"
+              >
+                {messages.map((message, idx) => {
+                  const isLast = idx === messages.length - 1
+                  const isActive =
+                    idx === messagesVisible - 1 ||
+                    (isLast && messagesVisible >= messages.length)
+                  return (
+                    <TimelineItem
+                      key={message.id}
+                      message={message}
+                      isActive={isActive}
+                      idx={idx}
+                    />
+                  )
+                })}
+              </ul>
             </div>
+
             <div
               className={cn(
                 'hidden dt:block absolute inset-y-0 dr-left-82 w-px -z-1',
@@ -226,6 +216,8 @@ export function TimelineSection({
               </span>
             </CTA>
           </div>
+          {/* Right side */}
+
           <div
             className={cn(
               'col-start-6 col-end-12 max-dt:col-span-full flex items-center justify-center',
@@ -299,7 +291,7 @@ function TimelineItem({
   return (
     <li
       ref={liRef}
-      className="relative dr-w-328 shrink-0 dt:w-auto dr-h-84 dr-p-8 flex dr-gap-4 dr-rounded-20"
+      className="relative dr-w-328 shrink-0 dt:w-auto dt:dr-max-w-393 dt:dr-h-85 dr-p-8 flex dr-gap-4 dr-rounded-20"
     >
       <div className="absolute inset-0 border border-dark-grey dr-rounded-20 bg-off-white" />
       <div className="relative z-30 h-full aspect-53/66 dt:aspect-square grid place-items-center">
@@ -338,12 +330,7 @@ function TimelineItem({
       </div>
       <div className="relative z-10 dr-p-4">
         <div className="flex justify-between typo-label-s text-black/70 dr-mb-8">
-          <p>
-            {'<'}
-            {message.tag}
-            {'>'}
-          </p>
-          <p>{'< >'}</p>
+          <p>{message.tag}</p>
         </div>
         <p className="typo-p text-black">{message.message}</p>
       </div>

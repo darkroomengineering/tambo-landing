@@ -272,7 +272,7 @@ export function Moment1() {
       id="moment-1"
       messages={messages}
       href="https://docs.tambo.co/concepts/components"
-      title="AI-generated interfaces, powered by your own components."
+      title="Generative UI, powered by your components."
       // zIndex={10}
       proxyChildren={
         <div

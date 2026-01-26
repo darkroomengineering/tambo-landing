@@ -15,7 +15,7 @@ export const messages = [
     id: 'tambo-renders',
     tag: 'tambo',
     message:
-      'Tambo renders your actual <SeatMap> component, with your styling and your logic.',
+      'Tambo’s agent renders your <SeatMap>, with your styling and logic.',
     video: 'Octo-File',
   },
   {
@@ -33,13 +33,8 @@ export const messages = [
   {
     id: 'no-rebuilds',
     tag: 'benefit',
-    message: (
-      <>
-        Your components stay intact, AI just learns
-        <br className="hidden dt:block" />
-        to use them. No rebuilds, no generic UI.
-      </>
-    ),
+    message:
+      'Same components, new capabilities. Ship AI features without rebuilding.',
     video: 'TODO: MISSING VIDEO',
   },
 ]
