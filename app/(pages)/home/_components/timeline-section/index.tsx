@@ -199,7 +199,7 @@ export function TimelineSection({
               snippet
               className="bg-black! text-teal border-teal w-full dt:w-auto"
               href={href}
-              wrapperClassName="w-fit"
+              wrapperClassName="dt:w-fit"
             >
               START BUILDING
               <span className="typo-code-snippet dr-pt-12 block">
@@ -286,7 +286,7 @@ function TimelineItem({
   return (
     <li
       ref={liRef}
-      className="relative dr-w-328 shrink-0 dt:w-auto dt:dr-max-w-393 dt:dr-h-85 dr-p-8 flex dr-gap-4 dr-rounded-20"
+      className="relative dr-w-328 shrink-0 dt:w-auto dt:dr-max-w-393 dr-h-85 dr-p-8 flex dr-gap-4 dr-rounded-20"
     >
       <div className="absolute inset-0 border border-dark-grey dr-rounded-20 bg-off-white" />
       <div className="relative z-30 h-full aspect-53/66 dt:aspect-square grid place-items-center">
