@@ -282,10 +282,7 @@ export function TamboSteps() {
       }
       proxyPosition="end"
     >
-      <RiveWrapper
-        src="/assets/rives/moment-1_loop_1.riv"
-        stateMachine="MainStateMachine"
-      />
+      <RiveWrapper src="/assets/rives/moment-1_loop_1.riv" />
       {/* <Animation /> */}
     </TimelineSection>
   )

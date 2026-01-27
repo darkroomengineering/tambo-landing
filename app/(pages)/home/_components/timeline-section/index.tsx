@@ -69,7 +69,7 @@ export function TimelineSection({
   const timelineRef = useRef<gsap.core.Timeline | null>(null)
 
   // Duration in seconds for each step (index 0 = step 1, etc.)
-  const STEP_DURATIONS = [0, 2, 2, 2, 2]
+  const STEP_DURATIONS = [2.5, 4.5, 6, 2, 1.5]
 
   const animateStep = useCallback(
     (step: number) => {
@@ -101,17 +101,30 @@ export function TimelineSection({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting || hasPlayed.current) return
-        hasPlayed.current = true
+        if (entry.isIntersecting) {
+          if (!hasPlayed.current) {
+            hasPlayed.current = true
 
-        const tl = gsap.timeline()
-        timelineRef.current = tl
+            const tl = gsap.timeline({ repeat: -1 })
+            timelineRef.current = tl
 
-        for (let step = 1; step <= STEPS; step++) {
-          tl.call(() => animateStep(step), [], `+=${STEP_DURATIONS[step - 1]}`)
+            tl.call(() => animateStep(0), [], 0)
+
+            for (let step = 1; step <= STEPS; step++) {
+              tl.call(
+                () => animateStep(step),
+                [],
+                `+=${STEP_DURATIONS[step - 1]}`
+              )
+            }
+          } else {
+            timelineRef.current?.resume()
+          }
+        } else {
+          timelineRef.current?.pause()
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     )
 
     observer.observe(section)
@@ -218,9 +231,7 @@ export function TimelineSection({
           </div>
           {/* Right side */}
 
-          <div className={cn('absolute w-full h-full', s.dynamicScale)}>
-            {children}
-          </div>
+          <div className={cn('absolute w-full h-full')}>{children}</div>
         </div>
         {proxyChildren && (
           <div
