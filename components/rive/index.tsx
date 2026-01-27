@@ -1,7 +1,9 @@
 'use client'
 
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
-import { useEffect, useRef } from 'react'
+import cn from 'clsx'
+import { useIntersectionObserver } from 'hamo'
+import { useEffect } from 'react'
 
 interface RiveWrapperProps {
   className?: string
@@ -9,7 +11,9 @@ interface RiveWrapperProps {
 }
 
 export function RiveWrapper({ src, className }: RiveWrapperProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const [setRef, intersection] = useIntersectionObserver({
+    threshold: 0.3,
+  })
 
   const { RiveComponent, rive } = useRive({
     src,
@@ -23,29 +27,15 @@ export function RiveWrapper({ src, className }: RiveWrapperProps) {
   })
 
   useEffect(() => {
-    const wrapper = wrapperRef.current
-    if (!(wrapper && rive)) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          rive.play()
-        } else {
-          rive.pause()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    observer.observe(wrapper)
-
-    return () => {
-      observer.disconnect()
+    if (intersection?.isIntersecting) {
+      rive?.play()
+    } else {
+      rive?.pause()
     }
-  }, [rive])
+  }, [intersection, rive])
 
   return (
-    <div ref={wrapperRef} className={className}>
+    <div ref={setRef} className={cn('relative size-full', className)}>
       <div className="absolute inset-0">
         <RiveComponent className="size-full" />
       </div>

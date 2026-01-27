@@ -1,6 +1,7 @@
 'use client'
 import cn from 'clsx'
 import gsap from 'gsap'
+import { useIntersectionObserver } from 'hamo'
 import {
   createContext,
   type RefObject,
@@ -56,7 +57,9 @@ export function TimelineSection({
   proxyPosition?: 'start' | 'end'
   href?: string
 }) {
-  const sectionRef = useRef<HTMLElement>(null)
+  const [setIntersectionRef, intersection] = useIntersectionObserver({
+    threshold: 0.3,
+  })
   const [messagesVisible, setMessagesVisible] = useState(0)
   const whiteLineRef = useRef<HTMLDivElement>(null)
   const callbacks = useRef<TimelineCallback[]>([])
@@ -69,7 +72,7 @@ export function TimelineSection({
   const timelineRef = useRef<gsap.core.Timeline | null>(null)
 
   // Duration in seconds for each step (index 0 = step 1, etc.)
-  const STEP_DURATIONS = [2.5, 4.5, 6, 2, 1.5]
+  const STEP_DURATIONS = [2.5, 4.5, 6, 2, 2]
 
   const animateStep = useCallback(
     (step: number) => {
@@ -96,52 +99,38 @@ export function TimelineSection({
   )
 
   useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
+    if (intersection?.isIntersecting) {
+      if (!hasPlayed.current) {
+        hasPlayed.current = true
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          if (!hasPlayed.current) {
-            hasPlayed.current = true
+        const tl = gsap.timeline({ repeat: -1 })
+        timelineRef.current = tl
 
-            const tl = gsap.timeline({ repeat: -1 })
-            timelineRef.current = tl
+        tl.call(() => animateStep(0), [], 0)
 
-            tl.call(() => animateStep(0), [], 0)
-
-            for (let step = 1; step <= STEPS; step++) {
-              tl.call(
-                () => animateStep(step),
-                [],
-                `+=${STEP_DURATIONS[step - 1]}`
-              )
-            }
-          } else {
-            timelineRef.current?.resume()
-          }
-        } else {
-          timelineRef.current?.pause()
+        for (let step = 1; step <= STEPS; step++) {
+          tl.call(() => animateStep(step), [], `+=${STEP_DURATIONS[step - 1]}`)
         }
-      },
-      { threshold: 0.1 }
-    )
+      } else {
+        timelineRef.current?.resume()
+      }
+    } else {
+      timelineRef.current?.pause()
+    }
+  }, [intersection, animateStep])
 
-    observer.observe(section)
-
+  useEffect(() => {
     return () => {
-      observer.disconnect()
       timelineRef.current?.kill()
     }
-  }, [animateStep])
+  }, [])
 
   return (
     <TimelineSectionContext.Provider value={{ callbacks, addCallback }}>
       <section
         id={id}
-        className="content-max-width"
         ref={(node) => {
-          sectionRef.current = node
+          setIntersectionRef(node)
           ref?.(node)
         }}
       >
@@ -273,11 +262,12 @@ function TimelineItem({
   useEffect(() => {
     if (!(iconRef.current && liRef.current)) return
 
-    const activeColor = idx === 1 ? colors['light-pink'] : colors['ghost-mint']
+    const activeColor =
+      idx === 1 || idx === 2 ? colors['light-pink'] : colors['ghost-mint']
     const activeBorderColor =
-      idx === 1 ? colors['dark-pink'] : colors['dark-grey']
+      idx === 1 || idx === 2 ? colors['dark-pink'] : colors['dark-grey']
     const activeBoxShadow =
-      idx === 1
+      idx === 1 || idx === 2
         ? '0 0 16px 0 rgba(255, 196, 235, 0.70)'
         : '0 0 16px 0 rgba(127, 255, 195, 0.70)'
 
