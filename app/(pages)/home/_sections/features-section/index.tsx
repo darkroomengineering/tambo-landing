@@ -236,7 +236,7 @@ export function Features() {
   return (
     <section
       ref={setRectRef}
-      className="relative overflow-x-clip dt:dr-py-400 bg-white flex "
+      className="relative overflow-x-clip dt:dr-py-400 bg-white flex flex-col items-center justify-center"
       // style={{
       //   height: isDesktop ? `${BUTTONS.length * 500}px` : 'auto',
       // }}
@@ -304,7 +304,7 @@ export function Features() {
         </div>
 
         <div className="mobile-only w-full  dr-h-280 relative">
-          <div className="absolute bottom-0 left-0 right-0 bg-light-gray dr-h-280 w-full mobile-only dr-mb-[-1]" />
+          <div className="absolute  bottom-0 left-0 right-0 bg-light-gray dr-h-280 w-full mobile-only dr-mb-[-1]" />
           <Image
             src="/assets/mobile-background/section-10Bottom.png"
             alt="Section 10 Background"

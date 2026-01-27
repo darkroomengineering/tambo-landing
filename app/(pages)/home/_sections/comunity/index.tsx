@@ -15,9 +15,9 @@ type ActiveCard = number | null
 
 export function Community() {
   return (
-    <section className="dt:dr-pt-132 dt:dr-pb-200 dr-pb-120 dt:dr-px-155">
-      <div className="flex flex-col items-center dr-mb-56 px-safe dt:dr-px-0">
-        <TitleBlock className="dt:col-start-4 dt:col-end-10 col-span-full dr-mb-56">
+    <section className="dt:dr-pt-132 dt:dr-pb-200 dr-pb-120 dt:dr-px-155 content-max-width">
+      <div className="flex flex-col items-center dr-mb-56 px-safe dt:dr-px-0 mx-auto">
+        <TitleBlock className="dt:col-start-4 dt:col-end-10 col-span-full dr-mb-56 ">
           <TitleBlock.Title
             level="h2"
             className="dr-mb-8! dt:typo-h2! typo-h1!"

@@ -211,7 +211,7 @@ export function Footer() {
   return (
     <section ref={setRectRef} className="overflow-clip relative bg-white">
       <div
-        className="relative flex flex-col items-center justify-center dt:h-screen"
+        className="relative flex flex-col items-center justify-center dt:h-screen content-max-width"
         ref={innerRef}
       >
         <div className="mobile-only dr-h-280 w-full relative dr-mt-250">

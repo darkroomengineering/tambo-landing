@@ -139,6 +139,7 @@ export function TimelineSection({
     <TimelineSectionContext.Provider value={{ callbacks, addCallback }}>
       <section
         id={id}
+        className="content-max-width"
         ref={(node) => {
           sectionRef.current = node
           ref?.(node)

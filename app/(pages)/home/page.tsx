@@ -36,7 +36,7 @@ export default async function Home() {
       <Wrapper
         theme="light"
         lenis={{}}
-        className="mx-auto bg-primary max-w-screen dt:max-w-[calc(var(--max-width)*1px)] overflow-x-clip"
+        className="mx-auto bg-primary max-w-screen overflow-x-clip"
         githubStars={githubStars}
       >
         <Hero />

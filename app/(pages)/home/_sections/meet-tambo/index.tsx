@@ -10,7 +10,7 @@ import s from './meet-tambo.module.css'
 
 export function MeetTambo() {
   return (
-    <section className="dt:dr-pt-106 dr-pt-120 dt:dr-pb-220 dr-pb-120">
+    <section className="content-max-width dt:dr-pt-106 dr-pt-120 dt:dr-pb-220 dr-pb-120">
       <div className="dr-layout-grid">
         <div className="dt:col-start-1 dt:col-end-5 col-span-full dr-mb-56 dt:dr-mb-0">
           <TitleBlock className="dt:items-start dr-mb-40">

@@ -23,7 +23,9 @@ export function Showcase() {
   return (
     <SolidBackground>
       <section
-        className={cn('dt:dr-pt-141 dr-pt-200 dt:dr-pb-200 dr-pb-120 relative')}
+        className={cn(
+          'dt:dr-pt-141 dr-pt-200 dt:dr-pb-200 dr-pb-120 relative content-max-width'
+        )}
       >
         <div className="dr-layout-grid-inner">
           <TitleBlock className="dt:col-start-4 dt:col-end-10 col-span-full dr-mb-56">

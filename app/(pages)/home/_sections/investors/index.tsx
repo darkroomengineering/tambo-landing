@@ -25,24 +25,26 @@ export function Investors() {
   )
 
   return (
-    <section className="dt:dr-px-271 dt:dr-pb-200 dr-pb-120 px-safe bg-white">
-      <h2 className="dt:typo-h2 typo-h1 text-center dt:dr-mb-56 dr-mb-40">
-        Backed by top investors and builders
-      </h2>
-      <MainInvestorCard
-        isActive={activeCard === 'main'}
-        onIntersect={handleIntersect}
-      />
-      <div className="dt:grid dt:grid-cols-3 dt:dr-gap-24 flex flex-col dr-gap-16">
-        {investors.map((investor, index) => (
-          <InvestorCard
-            key={investor?.name}
-            investor={investor}
-            index={index}
-            isActive={activeCard === index}
-            onIntersect={handleIntersect}
-          />
-        ))}
+    <section className="dt:dr-px-271 dt:dr-pb-200 dr-pb-120 px-safe bg-white ">
+      <div className="dt:dr-max-w-900 mx-auto">
+        <h2 className="dt:typo-h2 typo-h1 text-center dt:dr-mb-56 dr-mb-40">
+          Backed by top investors and builders
+        </h2>
+        <MainInvestorCard
+          isActive={activeCard === 'main'}
+          onIntersect={handleIntersect}
+        />
+        <div className="dt:grid dt:grid-cols-3 dt:dr-gap-24 flex flex-col dr-gap-16 ">
+          {investors.map((investor, index) => (
+            <InvestorCard
+              key={investor?.name}
+              investor={investor}
+              index={index}
+              isActive={activeCard === index}
+              onIntersect={handleIntersect}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )

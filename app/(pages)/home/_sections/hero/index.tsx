@@ -54,19 +54,19 @@ export function Hero() {
       ref={setRectRef}
       className={cn(
         s.wrapper,
-        'relative dt:dr-p-40 dt:dr-pt-92 dr-p-24 dr-pt-90'
+        'relative dt:dr-p-40 dt:dr-pt-92 dr-p-24 dr-pt-90 dr-mb-10'
       )}
     >
       <LinesBg
         className={
-          'absolute inset-0 w-full dr-h-900 dr-rounded-bl-60 dr-rounded-br-60'
+          'absolute top-0 left-1/2 -translate-x-1/2 w-screen dr-h-900 dr-rounded-bl-60 dr-rounded-br-60'
         }
       />
 
       <div
         className={cn(
           s.inner,
-          'flex dt:flex-row flex-col-reverse dt:dr-h-764 dr-p-24 items-center justify-center bg-white dr-rounded-20 overflow-hidden relative'
+          'content-max-width mx-auto flex dt:flex-row flex-col-reverse dt:dr-h-764 dr-p-24 items-center justify-center bg-white dr-rounded-20 overflow-hidden relative'
         )}
       >
         <div

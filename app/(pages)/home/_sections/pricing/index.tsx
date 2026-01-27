@@ -51,10 +51,7 @@ export function Pricing() {
       className="dt:dr-pt-65 dr-pt-120 dr-pb-120 dt:dr-pb-137 bg-white"
       ref={setRectRef}
     >
-      <div
-        style={{ maxWidth: `calc(var(--max-width) * 1px)` }}
-        className="mx-auto dr-layout-grid-inner relative"
-      >
+      <div className="mx-auto dr-layout-grid-inner relative content-max-width">
         <TitleBlock className="dt:col-start-4 dt:col-end-10 dr-mb-56 col-span-full">
           <TitleBlock.LeadIn>PRICING</TitleBlock.LeadIn>
           <TitleBlock.Title level="h2" className="dr-mb-0!">
