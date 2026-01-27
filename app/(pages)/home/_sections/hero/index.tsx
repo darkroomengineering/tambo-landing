@@ -9,12 +9,8 @@ import { useRef } from 'react'
 // import { BackgroundContext } from '~/app/(pages)/home/_components/background/context'
 import { DashedBorder } from '~/app/(pages)/home/_components/dashed-border'
 import ArrowDownSVG from '~/assets/svgs/arrow-down.svg'
-import HeroVisualMobileSVG from '~/assets/svgs/hero-bg-visual-mobile.svg'
-import TamboLetters from '~/assets/svgs/tambo-letters.svg'
 import { CTA } from '~/components/button'
 import { Image } from '~/components/image'
-import { Kinesis } from '~/components/kinesis'
-import { Video } from '~/components/video'
 // import { useDeviceDetection } from '~/hooks/use-device-detection'
 // import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
@@ -270,95 +266,39 @@ export function Hero() {
   return (
     <section
       ref={setRectRef}
-      className="flex flex-col items-center justify-center h-screen relative dt:px-0 max-dt:bg-white"
+      className="flex dt:flex-row flex-col-reverse items-center justify-center h-screen relative dt:px-0 bg-white"
     >
-      {/* <div className="dt:dr-w-480 dt:aspect-square dt:border dt:border-[red] dt:rounded-full dt:absolute dt:left-[50%] dt:translate-x-[-50%] dt:top-[50%] dt:translate-y-[-50%]" /> */}
-      <Kinesis
-        getIndex={() => 50}
-        className="dt:dr-w-col-8 flex flex-col dt:dr-gap-8 text-center items-center relative dt:top-[-2%] z-1"
+      <div
+        className="dt:dr-w-col-4 flex  flex-col dr-gap-16 text-center items-start z-1 columns-1"
+        ref={titleRef}
       >
-        <HeroVisualMobileSVG
-          ref={visualRef}
-          className="dr-w-517 dr-h-178 dt:dr-w-1035 dt:dr-h-356 absolute -dr-top-32 dt:-dr-top-96 left-[50%] translate-x-[-50%]"
-        />
-        <div className="relative">
-          <div
-            className={cn(
-              'dt:-dr-mb-60 -dr-mb-20 dt:dr-w-300 dr-w-181 aspect-square',
-              s.video
-            )}
-            ref={videoRef}
+        <h1 className="dt:typo-h1 typo-h3 dt:text-start">
+          Build agents
+          <br className="mobile-only" /> that <br className="desktop-only" />{' '}
+          speak your UI
+        </h1>
+        <p className=" typo-p text-black/70 dt:dr-w-322 dr-w-263 dt:text-start ">
+          An open-source toolkit for adding agents <br /> to your React app.
+          Connect your existing components—Tambo handles streaming, state
+          management, and MCP.
+        </p>
+        <div className="dr-mt-24">
+          <CTA
+            snippet
+            href="https://docs.tambo.co/"
+            snippetEyebrow="NPM"
+            className="bg-black! text-teal border-teal"
           >
-            <Video
-              autoPlay
-              priority
-              fallback={
-                <Image
-                  src="/videos/Octo-Juggle.png"
-                  alt="Octo Juggle"
-                  unoptimized
-                  preload
-                />
-              }
-            >
-              <source
-                src="/videos/Octo-Juggle-compressed.mov"
-                type='video/mp4; codecs="hvc1"'
-              />
-              <source
-                src="/videos/Octo-Juggle-compressed.webm"
-                type="video/webm"
-              />
-            </Video>
-          </div>
-          <div
-            className="absolute left-[50%] translate-x-[-50%] top-full desktop-only opacity-0"
-            ref={subVideoRef}
-          >
-            <div className="dr-h-26 dr-mb-8">
-              <TamboLetters className="h-full" />
-            </div>
-            <div className="whitespace-nowrap typo-surtitle">
-              {'< REACT SDK >'}
-            </div>
-          </div>
+            get started for free
+            <span className="typo-code-snippet">
+              <span className="text-white">npm create tambo-app</span>
+            </span>
+          </CTA>
         </div>
-        <div
-          className="dt:dr-w-col-8 flex flex-col dr-gap-8 text-center items-center z-1"
-          ref={titleRef}
-        >
-          <h1 className="dt:typo-h1 typo-h3">
-            Build generative UI apps.
-            <br />
-            No PhD required.
-          </h1>
-          <p className="dt:typo-p-l typo-p text-black/70 ">
-            Tambo is the full-stack solution handling{' '}
-            <br className="mobile-only" /> AI orchestration,
-            <br className="desktop-only" />
-            so you don't have to.
-          </p>
-          <div className="flex dt:flex-row flex-col dt:dr-gap-16 dr-gap-12 dt:dr-mt-40 dr-mt-24 place-items-center">
-            <CTA
-              snippet
-              href="https://docs.tambo.co/"
-              snippetEyebrow="NPM"
-              className="bg-black! text-teal border-teal"
-            >
-              START BUILDING
-              <span className="typo-code-snippet">
-                <span className="text-white">npm create tambo-app</span>
-              </span>
-            </CTA>
-            <CTA
-              className={cn(s.arrowCTA, 'desktop-only')}
-              onClick={() => lenis?.scrollTo('#demo', { lerp: 0.2 })}
-            >
-              Try Live Demo
-            </CTA>
-          </div>
-        </div>
-      </Kinesis>
+      </div>
+      <div className="dt:dr-h-771 dt:dr-w-860 dr-h-262 dr-w-326 relative dt:dr-mt-120 dt:-dr-mr-80">
+        <Image src="/assets/hero/hero-right-image.png" alt="Footer" fill />
+      </div>
 
       <div
         ref={mobileArrowDownRef}
@@ -380,13 +320,6 @@ export function Hero() {
       >
         <DashedBorder className="absolute inset-0 " />
         <ArrowDownSVG className="dr-w-32 absolute left-[50%] translate-x-[-50%] dr-top-24" />
-      </div>
-      <div className="mobile-only absolute -dr-bottom-100 dr-h-280 w-full  dr-mt-250">
-        <Image
-          src="/assets/mobile-background/hero-mobile.png"
-          alt="Footer"
-          fill
-        />
       </div>
     </section>
   )
