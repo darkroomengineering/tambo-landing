@@ -18,7 +18,7 @@ import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { colors } from '~/styles/colors'
 import CursorClickIcon from './cursor-click.svg'
 import SealCheckIcon from './seal-check.svg'
-import s from './timeline-section.module.css'
+// import s from './timeline-section.module.css'
 
 export const TimelineSectionContext = createContext<{
   callbacks: RefObject<TimelineCallback[]>
@@ -44,8 +44,6 @@ export function TimelineSection({
   title,
   children,
   ref,
-  proxyChildren,
-  proxyPosition = 'start',
   href,
 }: {
   id: string
@@ -78,9 +76,10 @@ export function TimelineSection({
     (step: number) => {
       setMessagesVisible(step)
 
+      const scaleValue = (step / STEPS) * 0.92
+
       if (whiteLineRef.current) {
-        const progress = (100 / STEPS) * step
-        whiteLineRef.current.style.translate = `0 -${Math.max(100 - progress * 0.82, 8)}%`
+        whiteLineRef.current.style.transform = `scaleY(${scaleValue})`
       }
 
       const steps = Array.from({ length: STEPS }, (_, i) => (i < step ? 1 : 0))
@@ -133,6 +132,7 @@ export function TimelineSection({
           setIntersectionRef(node)
           ref?.(node)
         }}
+        className="content-max-width"
       >
         <div className="dr-layout-grid-inner dt:h-screen dt:dr-max-h-900 relative">
           <div className="col-span-4 flex flex-col dr-pt-80 dt:dr-pt-112 max-dt:dr-pb-16 max-dt:h-screen z-1">
@@ -141,10 +141,10 @@ export function TimelineSection({
                 {title}
               </h3>
             </div>
-            <div className="relative dr-py-40 max-dt:mt-auto dt:mask-[linear-gradient(to_bottom,transparent_0%,black_5%)]">
+            <div className="relative dr-py-40 max-dt:mt-auto ">
               <div className="absolute z-15 dr-w-32 dt:inset-y-0 max-dt:h-[102vw] max-dt:-dr-mt-6 max-dt:-rotate-90 max-dt:-dr-top-40 left-[calc(var(--safe)+32vw)]  dt:dr-left-26">
                 <div
-                  className="absolute inset-y-0 dr-left-16 w-px z-1"
+                  className="absolute inset-y-0 dr-left-16 w-px z-1 dt:mask-[linear-gradient(to_bottom,transparent_0%,black_5%)]"
                   style={{
                     background:
                       'repeating-linear-gradient(0deg,#80C1A2 0 8px,#0000 0 14px)',
@@ -152,9 +152,9 @@ export function TimelineSection({
                 />
                 <div
                   ref={whiteLineRef}
-                  className="dr-w-9 h-[110%] bg-white rounded-full shadow-xs mx-auto transition-[translate] duration-500 ease-out"
+                  className="dr-w-9 h-full bg-white rounded-full shadow-xs mx-auto transition-transform duration-500 ease-out origin-top dt:mask-[linear-gradient(to_bottom,transparent_0%,black_20%)]"
                   style={{
-                    translate: '0px -90%',
+                    transform: 'scaleY(0)',
                   }}
                 />
                 <div className="dt:hidden absolute inset-0 flex flex-col justify-around items-center dr-py-16 z-10">
@@ -188,16 +188,6 @@ export function TimelineSection({
               </ul>
             </div>
 
-            <div
-              className={cn(
-                'hidden dt:block absolute inset-y-0 dr-left-82 w-px -z-1',
-                id === 'moment-1' && 'dr-top-120 dr-bottom-378'
-              )}
-              style={{
-                background:
-                  'repeating-linear-gradient(0deg,#80C1A2 0 8px,#0000 0 14px)',
-              }}
-            />
             <CTA
               snippet
               className="bg-black! text-teal border-teal w-full dt:w-auto"
@@ -223,24 +213,6 @@ export function TimelineSection({
 
           <div className={cn('absolute w-full h-full')}>{children}</div>
         </div>
-        {proxyChildren && (
-          <div
-            className={cn(
-              'absolute h-svh left-0 right-0 dr-layout-grid-inner pointer-events-none',
-              proxyPosition === 'start' ? 'top-0' : 'bottom-0'
-            )}
-          >
-            <div
-              data-proxy-children
-              className={cn(
-                'absolute dt:relative col-start-6 col-end-12 max-dt:col-span-full flex items-center justify-center',
-                s.dynamicScale
-              )}
-            >
-              {proxyChildren}
-            </div>
-          </div>
-        )}
       </section>
     </TimelineSectionContext.Provider>
   )
