@@ -23,9 +23,9 @@ export const messages = [
     tag: 'tambo',
     message: (
       <>
-        Tambo is aware of any interaction
+        Tambo updates state
         <br />
-        with the component.
+        when users interact.
       </>
     ),
     video: 'Octo-Search',

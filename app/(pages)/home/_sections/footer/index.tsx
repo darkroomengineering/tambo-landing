@@ -231,11 +231,10 @@ export function Footer() {
 
           <TitleBlock>
             <TitleBlock.Title level="h2" className="dr-mb-8! typo-h1!">
-              Ready to get started?
+              Start for free
             </TitleBlock.Title>
             <TitleBlock.Subtitle className="typo-p! dt:typo-p-l!">
-              Ship an ai assistant with generative UI{' '}
-              <br className="mobile-only" /> in minutes.
+              Your first agent is only minutes away.
             </TitleBlock.Subtitle>
             <div className="flex dr-gap-8 dr-mt-40 dt:flex-row flex-col">
               <CTA
@@ -251,9 +250,9 @@ export function Footer() {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 className="w-full"
-                href="https://ui.tambo.co/"
+                href="https://cal.com/michaelmagan/chat?duration=30"
               >
-                components
+                contact us
               </CTA>
             </div>
           </TitleBlock>

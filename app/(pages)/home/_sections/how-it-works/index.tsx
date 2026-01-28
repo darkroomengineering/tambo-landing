@@ -1,6 +1,7 @@
 import { TitleBlock } from '~/app/(pages)/home/_components/title-block'
 import HowItWorksSVG from '~/assets/svgs/how-it-works/how-it-works-diagram-desktop.svg'
 import HowItWorksMobileSVG from '~/assets/svgs/how-it-works/how-it-works-diagram-mobile.svg'
+import { CTA } from '~/components/button'
 import { Image } from '~/components/image'
 
 export function HowItWorks() {
@@ -12,6 +13,12 @@ export function HowItWorks() {
           The missing layer <br className="desktop-only" /> between React and
           LLMs
         </TitleBlock.Title>
+        <CTA
+          href="https://docs.tambo.co"
+          className="w-fit mx-auto dt:dr-mt-40 dr-mt-32"
+        >
+          learn more
+        </CTA>
       </TitleBlock>
       <div className="content-max-width dr-px-16 dr-py-56 dt:dr-py-0 dr-rounded-20 flex overflow-hidden items-center justify-center relative w-full h-full">
         <Image

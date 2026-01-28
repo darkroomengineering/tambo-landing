@@ -55,9 +55,7 @@ export function Pricing() {
         <TitleBlock className="dt:col-start-4 dt:col-end-10 dr-mb-56 col-span-full">
           <TitleBlock.LeadIn>PRICING</TitleBlock.LeadIn>
           <TitleBlock.Title level="h2" className="dr-mb-0!">
-            Simple pricing <br className="desktop-only" /> from{' '}
-            <br className="mobile-only" />
-            hobbyists to enterprise
+            Free to start, <br className="mobile-only" /> simple to scale
           </TitleBlock.Title>
         </TitleBlock>
         <div className="dt:col-start-2 dt:col-end-12 col-span-full">

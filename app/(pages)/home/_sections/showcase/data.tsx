@@ -8,7 +8,7 @@ export const showcaseCards = [
     image: '/assets/showcases/showcase-1.png',
   },
   {
-    title: 'Strudel LM',
+    title: 'Strudel AI',
     paragraph:
       'Strudel lets you code music patterns live. You layer drums, melodies, and synths in real time, making complex electronic music using code.',
     user: '@akinloluwami',
