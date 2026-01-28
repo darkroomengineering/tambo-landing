@@ -23,12 +23,13 @@ export function SocialProof() {
   )
 
   return (
-    <section className=" dt:dr-px-155 px-safe dt:dr-py-200 dr-py-120 bg-white">
-      <h2 className="dt:typo-h2 typo-h1 text-center dr-mb-56">
+    <section className="dt:dr-py-200 dr-py-120 bg-white">
+      <h2 className="dt:typo-h2 typo-h1 text-center dr-mb-56 px-safe">
         Product engineers love Tambo
       </h2>
       {/* Social Proof */}
-      <div className="dt:grid dt:grid-cols-3 dt:dr-gap-24 flex flex-col dr-gap-16 content-max-width">
+
+      <div className="dt:grid dt:grid-cols-3 dt:dr-gap-24 flex flex-col dr-gap-16  content-max-width dt:dr-px-155 px-safe">
         {socials?.map((social, index) => (
           <SocialCard
             key={social?.author + index?.toString()}
