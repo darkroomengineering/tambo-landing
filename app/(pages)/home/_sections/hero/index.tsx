@@ -59,7 +59,7 @@ export function Hero() {
     >
       <LinesBg
         className={
-          'absolute top-0 left-1/2 -translate-x-1/2 w-screen dr-h-900 dr-rounded-bl-60 dr-rounded-br-60'
+          'absolute top-0 left-1/2 -translate-x-1/2 w-screen h-screen dr-rounded-bl-60 dr-rounded-br-60'
         }
       />
 
