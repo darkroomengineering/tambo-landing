@@ -236,8 +236,7 @@ function TimelineItem({
 
     const activeColor =
       idx === 1 || idx === 2 ? colors['light-pink'] : colors['ghost-mint']
-    const activeBorderColor =
-      idx === 1 || idx === 2 ? colors['dark-pink'] : colors['dark-grey']
+    const activeBorderColor = idx === 1 || idx === 2 ? colors.pink : colors.teal
     const activeBoxShadow =
       idx === 1 || idx === 2
         ? '0 0 16px 0 rgba(255, 196, 235, 0.70)'
@@ -252,6 +251,8 @@ function TimelineItem({
 
     gsap.to(liRef.current, {
       boxShadow: isActive ? activeBoxShadow : 'none',
+      borderColor: isActive ? activeBorderColor : colors['dark-grey'],
+      backgroundColor: isActive ? colors.white : colors['off-white'],
       duration: 0.35,
       ease: 'power2.inOut',
     })
@@ -260,9 +261,9 @@ function TimelineItem({
   return (
     <li
       ref={liRef}
-      className="relative dr-w-328 shrink-0 dt:w-auto dt:dr-max-w-393 dr-h-85 dr-p-8 flex dr-gap-4 dr-rounded-20"
+      className="relative dr-w-328 shrink-0 dt:w-auto dt:dr-max-w-393 dr-h-85 dr-p-8 flex dr-gap-4 dr-rounded-20 bg-off-white border border-dark-grey"
     >
-      <div className="absolute inset-0 border border-dark-grey dr-rounded-20 bg-off-white" />
+      {/* <div className="absolute inset-0 border border-dark-grey dr-rounded-20 bg-off-white" /> */}
       <div className="relative z-30 h-full aspect-53/66 dt:aspect-square grid place-items-center">
         <div
           ref={iconRef}
