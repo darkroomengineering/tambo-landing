@@ -54,12 +54,12 @@ export function Hero() {
       ref={setRectRef}
       className={cn(
         s.wrapper,
-        'relative dt:dr-p-40 dt:dr-pt-92 dr-p-24 dr-pt-90 dr-mb-10'
+        'relative dt:dr-p-40 dt:dr-pt-92 dr-p-24 dr-pt-90 dr-mb-10 dt:dr-mb-0 bg-white section-rounded-bottom section-shadow-bottom overflow-hidden'
       )}
     >
       <LinesBg
         className={
-          'absolute top-0 left-1/2 -translate-x-1/2 w-screen h-screen dr-rounded-bl-60 dr-rounded-br-60'
+          'absolute top-0 dr-inset-24 left-1/2 -translate-x-1/2 dt:w-screen dt:h-screen h-full section-rounded-bottom'
         }
       />
 
