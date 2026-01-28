@@ -78,7 +78,7 @@ export function Hero() {
             <br className="mobile-only" /> that <br className="desktop-only" />{' '}
             speak your UI
           </h1>
-          <p className=" typo-p text-black/70 dt:dr-w-322 dr-w-263 dt:text-start">
+          <p className=" typo-p text-black/50 dt:dr-w-322 dr-w-263 dt:text-start">
             An open-source toolkit for adding agents <br /> to your React app.
             Connect your existing components—Tambo handles streaming, state
             management, and MCP.

@@ -25,7 +25,7 @@ export function MeetTambo() {
               <br />
               in a weekend
             </TitleBlock.Title>
-            <TitleBlock.Subtitle className="text-black/70 dt:text-left dr-w-180 dt:dr-w-350">
+            <TitleBlock.Subtitle className="dt:text-left dr-w-180 dt:dr-w-350">
               Everything you need to add AI to your React app.
             </TitleBlock.Subtitle>
           </TitleBlock>

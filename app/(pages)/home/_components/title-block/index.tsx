@@ -25,7 +25,7 @@ function TitleBlockLeadIn({
   return (
     <p
       className={cn(
-        'typo-label-m dt:typo-surtitle uppercase dr-mb-24 text-black/70',
+        'typo-label-m dt:typo-surtitle uppercase dr-mb-24 text-black/50',
         className
       )}
       {...props}
@@ -57,7 +57,7 @@ function TitleBlockSubtitle({
   ...props
 }: ComponentProps<'p'>) {
   return (
-    <p className={cn('typo-p text-center', className)} {...props}>
+    <p className={cn('typo-p text-center text-black/50', className)} {...props}>
       {children}
     </p>
   )

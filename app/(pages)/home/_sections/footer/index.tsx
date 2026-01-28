@@ -233,7 +233,7 @@ export function Footer() {
             <TitleBlock.Title level="h2" className="dr-mb-8! typo-h1!">
               Ready to get started?
             </TitleBlock.Title>
-            <TitleBlock.Subtitle className="typo-p! dt:typo-p-l! text-black/70">
+            <TitleBlock.Subtitle className="typo-p! dt:typo-p-l!">
               Ship an ai assistant with generative UI{' '}
               <br className="mobile-only" /> in minutes.
             </TitleBlock.Subtitle>
