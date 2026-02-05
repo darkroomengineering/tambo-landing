@@ -8,10 +8,10 @@ import {
   useEffect,
   useState,
 } from 'react'
+import { useAddToItineraryListener as _useAddToItineraryListener } from './(components)/map/mapbox/events'
 import { seatComponent } from './(components)/seat-selector/schema'
 import { DEFAULT_DESTINATION, DEMOS, MAPBOX_ENABLED } from './constants'
 import { type ForecastDay, getCurrentDate, mapTools } from './tools'
-import { useAddToItineraryListener as _useAddToItineraryListener } from './(components)/map/mapbox/events'
 
 // Mapbox event listener - only used when Mapbox is enabled
 const useAddToItineraryListener = MAPBOX_ENABLED

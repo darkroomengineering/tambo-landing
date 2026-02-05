@@ -95,13 +95,7 @@ const sentient = localFont({
   variable: '--next-font-sentient',
   preload: true,
   adjustFontFallback: 'Arial',
-  fallback: [
-    'Georgia',
-    'Cambria',
-    'Times New Roman',
-    'Times',
-    'serif',
-  ],
+  fallback: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
 })
 
 const fonts = [mono, geist, geistMono, sentient]
