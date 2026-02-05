@@ -179,7 +179,11 @@ export function Navigation({
               }}
               className="flex dr-gap-4"
               aria-expanded={isMobileNavOpened}
-              aria-label={isMobileNavOpened ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-label={
+                isMobileNavOpened
+                  ? 'Close navigation menu'
+                  : 'Open navigation menu'
+              }
             >
               {isMobileNavOpened ? 'Close' : 'Menu'}
               {isMobileNavOpened ? (
