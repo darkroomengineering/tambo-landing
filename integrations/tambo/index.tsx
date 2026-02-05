@@ -100,7 +100,7 @@ const AssistantContext = createContext<{
   setCurrentBBox: () => {},
   setDestination: () => {},
   setWeather: () => {},
-  switchToDemoThread: (demo: Demo) => {},
+  switchToDemoThread: (_demo: Demo) => {},
   finishSeatSelection: () => {},
 })
 

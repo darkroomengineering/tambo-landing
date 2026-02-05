@@ -93,6 +93,7 @@ export const ScrollableMessageContainer = React.forwardRef<
         return () => clearTimeout(timeoutId)
       }
     }
+    return undefined
   }, [messagesContent, generationStage, shouldAutoscroll])
 
   const [setRect, rect] = useRect()

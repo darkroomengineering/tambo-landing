@@ -39,6 +39,9 @@ export function Dropdown({
     <div className={cn('relative w-full', className)}>
       <button
         type="button"
+        role="combobox"
+        aria-expanded={isOpened}
+        aria-haspopup="listbox"
         className={cn(
           'relative flex items-center justify-between w-full dr-py-16 dr-px-20 dt:dr-py-18 dt:dr-px-24 bg-white border border-dark-grey dr-rounded-12 dt:dr-rounded-16 font-[system-ui] dr-text-15 dt:dr-text-15 leading-[1.6] transition-all duration-300 ease-out-cubic cursor-pointer hover:border-teal',
           isOpened && 'border-teal! shadow-[0_0_0_4px_rgba(127,255,195,0.1)]',
@@ -81,6 +84,8 @@ export function Dropdown({
             {options.map((value, i) => (
               <button
                 type="button"
+                role="option"
+                aria-selected={selected === i}
                 className="block text-black dr-py-12 dr-px-16 dt:dr-py-12 dt:dr-px-16 text-left whitespace-nowrap w-full dr-rounded-8 dt:dr-rounded-8 bg-transparent transition-all duration-200 ease-out-cubic font-[system-ui] dr-text-15 dt:dr-text-15 cursor-pointer hover:bg-teal hover:text-black"
                 onClick={() => {
                   setSelected(i)

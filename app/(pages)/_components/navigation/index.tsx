@@ -178,6 +178,8 @@ export function Navigation({
                 setIsMobileNavOpened(!isMobileNavOpened)
               }}
               className="flex dr-gap-4"
+              aria-expanded={isMobileNavOpened}
+              aria-label={isMobileNavOpened ? 'Close navigation menu' : 'Open navigation menu'}
             >
               {isMobileNavOpened ? 'Close' : 'Menu'}
               {isMobileNavOpened ? (
@@ -215,6 +217,7 @@ export function Navigation({
                   s.loginButton
                 )}
                 onClick={() => setIsMobileNavOpened(false)}
+                aria-label={`GitHub - ${githubStars} stars`}
               >
                 <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
                   <GithubIcon className="dr-w-16 icon" />
@@ -228,6 +231,7 @@ export function Navigation({
                   s.loginButton
                 )}
                 onClick={() => setIsMobileNavOpened(false)}
+                aria-label={`Discord - ${discordMembers} members`}
               >
                 <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
                   <DiscordIcon className="dr-w-16 icon" />
@@ -241,6 +245,7 @@ export function Navigation({
                   s.loginButton
                 )}
                 onClick={() => setIsMobileNavOpened(false)}
+                aria-label="X (Twitter) - 1.6k followers"
               >
                 <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
                   <XIcon className="dr-w-16 icon" />
@@ -281,7 +286,7 @@ export function Navigation({
 
       <div
         className={cn(
-          'mobile-only h-dvh w-full  absolute inset -z-1 bg-ghost-mint/80 opacity-0 transition-opacity duration-300 ease-in-out pointer-events-none',
+          'mobile-only h-dvh w-full absolute inset-0 -z-1 bg-ghost-mint/80 opacity-0 transition-opacity duration-300 ease-in-out pointer-events-none',
           isMobileNavOpened && 'opacity-100'
         )}
       >

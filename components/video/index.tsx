@@ -35,7 +35,7 @@ export function Video({
           setIntersectionRef(node)
           videoRef.current = node
         }}
-        onTimeUpdate={(e) => {
+        onTimeUpdate={() => {
           setIsPlaying(true)
         }}
         style={{

@@ -8,7 +8,7 @@ import Image from 'next/image'
 import * as React from 'react'
 import { useState } from 'react'
 import { Streamdown } from 'streamdown'
-// import { Check, ChevronDown, ExternalLink, Loader2, X } from 'lucide-react'
+import { ChevronDown, ExternalLink } from 'lucide-react'
 import { markdownComponents } from '@/components/tambo/markdown-components'
 import {
   checkHasContent,
@@ -35,6 +35,7 @@ const messageVariants = cva('flex', {
         '[&>div>div:first-child]:transition-all',
         '[&>div>div:first-child]:duration-200',
       ].join(' '),
+      compact: '',
     },
   },
   defaultVariants: {
@@ -342,7 +343,7 @@ function getToolStatusMessage(
  */
 const ToolcallInfo = React.forwardRef<HTMLDivElement, ToolcallInfoProps>(
   ({ className, markdown = true, ...props }, ref) => {
-    const [isExpanded, setIsExpanded] = useState(false)
+    const [isExpanded, _setIsExpanded] = useState(false)
     const { message, isLoading } = useMessageContext()
     const { thread } = useTambo()
     const toolDetailsId = React.useId()
@@ -578,6 +579,7 @@ const ReasoningInfo = React.forwardRef<HTMLDivElement, ReasoningInfoProps>(
           return () => clearTimeout(timeoutId)
         }
       }
+      return undefined
     }, [message.reasoning, isExpanded, isLoading])
 
     // Only show if there's reasoning data

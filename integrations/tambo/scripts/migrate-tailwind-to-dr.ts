@@ -172,7 +172,7 @@ function processFileContent(content: string): string {
   // Match className={`...`} (template literals - just the static parts)
   result = result.replace(
     /className=\{`([^`]+)`\}/g,
-    (match, classes: string) => {
+    (_match, classes: string) => {
       // Only process the static text parts, preserve ${} expressions
       const converted = classes.replace(/([^${}]+)/g, (staticPart: string) =>
         processClassString(staticPart)

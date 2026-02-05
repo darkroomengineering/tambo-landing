@@ -86,7 +86,7 @@ const ThreadHistory = React.forwardRef<HTMLDivElement, ThreadHistoryProps>(
       isLoading,
       error,
       refetch,
-    } = useTamboThreadList({ contextKey })
+    } = useTamboThreadList()
 
     const {
       switchCurrentThread,
@@ -420,6 +420,7 @@ const ThreadHistoryList = React.forwardRef<
       }, 100)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [editingThread])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

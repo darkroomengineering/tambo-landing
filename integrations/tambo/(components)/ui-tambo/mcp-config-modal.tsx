@@ -88,6 +88,7 @@ export const McpConfigModal = ({
         return () => clearTimeout(timer)
       }
     }
+    return undefined
   }, [mcpServers])
 
   const addServer = (e: React.FormEvent) => {

@@ -108,7 +108,7 @@ export function Showcase() {
                     )}
                     ref={(el) => {
                       if (el) {
-                        contentRefs.current.push(el)
+                        contentRefs.current[i] = el
                       }
                     }}
                   >

@@ -3,6 +3,7 @@
 import type { Suggestion } from '@tambo-ai/react'
 import type * as React from 'react'
 import type { messageVariants } from '@/components/tambo/message'
+import type { VariantProps } from '@/lib/utils'
 import {
   MessageInput,
   MessageInputError,
@@ -41,7 +42,6 @@ import { useMergeRefs } from '@/lib/thread-hooks'
 export interface MessageThreadFullProps
   extends React.HTMLAttributes<HTMLDivElement> {
   contextKey?: string
-  // TODO: fix this
   variant?: VariantProps<typeof messageVariants>['variant']
   showHistory?: boolean
   showFileInput?: boolean

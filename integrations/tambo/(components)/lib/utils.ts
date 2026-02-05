@@ -30,5 +30,5 @@ export function cva<V extends VariantConfig>(
 export type VariantProps<T extends (...args: any[]) => any> = T extends (
   props: infer P
 ) => any
-  ? P
+  ? NonNullable<P>
   : never
