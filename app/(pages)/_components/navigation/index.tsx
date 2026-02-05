@@ -81,6 +81,7 @@ export function Navigation({
     >
       <Link
         href={siteConfig.links.discord}
+        aria-label="Join our Discord community"
         className={cn(
           s.linkWrapper,
           'desktop-only dr-size-48 dr-w-99 dr-pl-8 flex items-center dr-gap-x-8 rounded-full border border-dark-grey bg-white/50 backdrop-blur-[30px]'
@@ -177,6 +178,12 @@ export function Navigation({
                 setIsMobileNavOpened(!isMobileNavOpened)
               }}
               className="flex dr-gap-4"
+              aria-expanded={isMobileNavOpened}
+              aria-label={
+                isMobileNavOpened
+                  ? 'Close navigation menu'
+                  : 'Open navigation menu'
+              }
             >
               {isMobileNavOpened ? 'Close' : 'Menu'}
               {isMobileNavOpened ? (
@@ -214,6 +221,7 @@ export function Navigation({
                   s.loginButton
                 )}
                 onClick={() => setIsMobileNavOpened(false)}
+                aria-label={`GitHub - ${githubStars} stars`}
               >
                 <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
                   <GithubIcon className="dr-w-16 icon" />
@@ -227,6 +235,7 @@ export function Navigation({
                   s.loginButton
                 )}
                 onClick={() => setIsMobileNavOpened(false)}
+                aria-label={`Discord - ${discordMembers} members`}
               >
                 <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
                   <DiscordIcon className="dr-w-16 icon" />
@@ -240,6 +249,7 @@ export function Navigation({
                   s.loginButton
                 )}
                 onClick={() => setIsMobileNavOpened(false)}
+                aria-label="X (Twitter) - 1.6k followers"
               >
                 <div className="dr-size-24 bg-mint grid place-items-center rounded-full">
                   <XIcon className="dr-w-16 icon" />
@@ -260,6 +270,7 @@ export function Navigation({
       </section>
       <Link
         href={siteConfig.links.github}
+        aria-label="Star us on GitHub"
         className={cn(
           s.linkWrapper,
           'desktop-only col-start-12 dr-size-48 dr-w-99 dr-pr-8 flex justify-end items-center dr-gap-x-8 rounded-full border border-dark-grey bg-white/50 backdrop-blur-[30px] justify-self-end'
@@ -279,7 +290,7 @@ export function Navigation({
 
       <div
         className={cn(
-          'mobile-only h-screen w-full  absolute inset -z-1 bg-ghost-mint/80 opacity-0 transition-opacity duration-300 ease-in-out pointer-events-none',
+          'mobile-only h-dvh w-full absolute inset-0 -z-1 bg-ghost-mint/80 opacity-0 transition-opacity duration-300 ease-in-out pointer-events-none',
           isMobileNavOpened && 'opacity-100'
         )}
       >

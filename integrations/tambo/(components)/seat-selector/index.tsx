@@ -1,6 +1,6 @@
 import { useTamboContextHelpers, useTamboThread } from '@tambo-ai/react'
 import { useEffect } from 'react'
-import { useAssitant } from '~/integrations/tambo'
+import { useAssistant } from '~/integrations/tambo'
 import { DEMOS } from '~/integrations/tambo/constants'
 import { MessageThreadFull } from '../ui-tambo/message-thread-full'
 import { seatExampleContext } from './schema'
@@ -11,7 +11,7 @@ const introMessages = {
 }
 
 export function SeatAssistant() {
-  const { selectedDemo } = useAssitant()
+  const { selectedDemo } = useAssistant()
   const { addContextHelper, removeContextHelper } = useTamboContextHelpers()
   const { thread, addThreadMessage } = useTamboThread()
 

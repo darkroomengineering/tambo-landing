@@ -119,11 +119,11 @@ export function Footer() {
   return (
     <section
       ref={setRectRef}
-      className=" relative bg-white dt:bg-transparent dt:h-screen"
+      className=" relative bg-white dt:bg-transparent dt:h-dvh"
     >
       <div className="dt:absolute dt:bottom-0 dt:left-0 dt:right-0 dt:top-[-100vh]">
         <div
-          className="dt:h-screen dt:sticky dt:top-0 dt:left-0 dt:right-0 max-dt:transform-[unset]!"
+          className="dt:h-dvh dt:sticky dt:top-0 dt:left-0 dt:right-0 max-dt:transform-[unset]!"
           ref={stickyRef}
         >
           <div
@@ -137,11 +137,11 @@ export function Footer() {
           >
             <Background
               ref={backgroundRef}
-              className="sticky top-0 h-screen left-0 right-0 bg-white"
+              className="sticky top-0 h-dvh left-0 right-0 bg-white"
             />
           </div>
           <div
-            className="relative flex flex-col items-center justify-center dt:h-screen "
+            className="relative flex flex-col items-center justify-center dt:h-dvh "
             ref={innerRef}
           >
             <div className="mobile-only dr-h-280 w-full relative ">

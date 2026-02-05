@@ -59,7 +59,7 @@ export function BackgroundItem({
   return (
     <div
       className={cn(
-        'absolute rounded-full left-[50%]top-[50%] desktop-only',
+        'absolute rounded-full left-[50%] top-[50%] desktop-only',
         s.item
       )}
       style={style}

@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   poweredByHeader: false,
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   productionBrowserSourceMaps:
     process.env.SOURCE_MAPS === 'true' && typeof Bun === 'undefined',

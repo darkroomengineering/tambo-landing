@@ -16,7 +16,7 @@ import { fontsVariable } from '~/styles/fonts'
 
 const APP_NAME = AppData.name
 const APP_DEFAULT_TITLE = 'Tambo'
-const APP_TITLE_TEMPLATE = '%s'
+const APP_TITLE_TEMPLATE = '%s | Tambo'
 const APP_DESCRIPTION = AppData.description
 const APP_BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ?? 'https://localhost:3000'

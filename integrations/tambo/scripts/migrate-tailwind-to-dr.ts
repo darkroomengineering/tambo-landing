@@ -172,7 +172,7 @@ function processFileContent(content: string): string {
   // Match className={`...`} (template literals - just the static parts)
   result = result.replace(
     /className=\{`([^`]+)`\}/g,
-    (match, classes: string) => {
+    (_match, classes: string) => {
       // Only process the static text parts, preserve ${} expressions
       const converted = classes.replace(/([^${}]+)/g, (staticPart: string) =>
         processClassString(staticPart)
@@ -184,7 +184,7 @@ function processFileContent(content: string): string {
   // Match cn(...) and cva(...) calls - process string arguments
   result = result.replace(
     /\b(cn|cva)\(\s*(['"`])([^'"`]+)\2/g,
-    (match, fn: string, quote: string, classes: string) => {
+    (_match, fn: string, quote: string, classes: string) => {
       const converted = processClassString(classes)
       return `${fn}(${quote}${converted}${quote}`
     }

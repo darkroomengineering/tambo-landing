@@ -3,7 +3,8 @@
 import { XIcon } from 'lucide-react'
 import { Collapsible } from 'radix-ui'
 import * as React from 'react'
-import type { messageVariants, VariantProps } from '@/components/tambo/message'
+import type { messageVariants } from '@/components/tambo/message'
+import type { VariantProps } from '@/lib/utils'
 import {
   MessageInput,
   MessageInputError,

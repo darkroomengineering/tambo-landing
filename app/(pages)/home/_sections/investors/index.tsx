@@ -94,7 +94,7 @@ function MainInvestorCard({
           <Image
             block
             src="/images/TheGeneralPartnership_Logo.svg"
-            alt="Partnership"
+            alt="The General Partnership"
             className="relative z-1 min-w-full"
           />
         </div>

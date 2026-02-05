@@ -26,7 +26,7 @@ const Showcase = dynamic(() =>
   import('./_sections/showcase').then((mod) => mod.Showcase)
 )
 const Community = dynamic(() =>
-  import('./_sections/comunity').then((mod) => mod.Community)
+  import('./_sections/community').then((mod) => mod.Community)
 )
 const Footer = dynamic(() =>
   import('./_sections/footer').then((mod) => mod.Footer)

@@ -219,7 +219,6 @@ const MessageInputInternal = React.forwardRef<
 
       try {
         await submit({
-          contextKey,
           streamResponse: true,
         })
         setValue('')
@@ -614,7 +613,7 @@ const MessageInputMcpConfigButton = React.forwardRef<
     className?: string
   }
 >(({ className, ...props }, ref) => {
-  const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const [_isModalOpen, setIsModalOpen] = React.useState(false)
 
   const buttonClasses = cn(
     'dr-w-20 dr-h-20 dr-rounded-8 border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',

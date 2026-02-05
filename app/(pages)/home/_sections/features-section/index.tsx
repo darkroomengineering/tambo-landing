@@ -1,5 +1,6 @@
 'use client'
 
+import cn from 'clsx'
 import { useIntersectionObserver, useRect, useWindowSize } from 'hamo'
 import { useEffect, useRef } from 'react'
 import { useLenisSnap } from '~/app/(pages)/_components/lenis/snap'
@@ -13,7 +14,6 @@ import { Video } from '~/components/video'
 import { useDeviceDetection } from '~/hooks/use-device-detection'
 import { useDesktopVW } from '~/hooks/use-device-values'
 import { useScrollTrigger } from '~/hooks/use-scroll-trigger'
-import { cn } from '~/integrations/tambo/(components)/lib/utils'
 import { siteConfig } from '~/libs/config'
 import { fromTo } from '~/libs/utils'
 import s from './features.module.css'
@@ -75,7 +75,7 @@ const BUTTONS = [
   },
   {
     title: 'Model Flexibility',
-    href: ' https://docs.tambo.co/models',
+    href: 'https://docs.tambo.co/models',
     top: 90,
     right: 23,
   },
@@ -241,7 +241,7 @@ export function Features() {
         >
           <Background
             ref={backgroundRef}
-            className="sticky top-0 h-screen left-0 right-0 bg-white visibility-hidden"
+            className="sticky top-0 h-dvh left-0 right-0 bg-white visibility-hidden"
           />
         </div>
         <div className="mobile-only w-full dr-h-280 relative">
@@ -251,7 +251,7 @@ export function Features() {
             fill
           />
         </div>
-        <div className="dt:h-screen w-full flex flex-col items-center justify-center dt:bg-transparent bg-white ">
+        <div className="dt:h-dvh w-full flex flex-col items-center justify-center dt:bg-transparent bg-white ">
           <div className="text-center flex flex-col items-center relative dt:-dr-top-48">
             <div
               ref={setAnimationTriggerRef}

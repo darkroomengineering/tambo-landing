@@ -5,7 +5,7 @@ import { useLenis } from 'lenis/react'
 import mapboxgl from 'mapbox-gl'
 import { useEffect, useRef, useState } from 'react'
 import InfoSVG from '~/assets/svgs/info.svg'
-import { useAssitant } from '~/integrations/tambo'
+import { useAssistant } from '~/integrations/tambo'
 import { DEFAULT_DESTINATION, DEMOS } from '~/integrations/tambo/constants'
 import { useRectangleMapDrawing } from './drawing'
 import s from './map.module.css'
@@ -37,7 +37,7 @@ export function MapBox({
 }: Props) {
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const containerRef = useRef<HTMLDivElement | null>(null)
-  const { selectedDemo, setMap, destination } = useAssitant()
+  const { selectedDemo, setMap, destination } = useAssistant()
   const lenis = useLenis()
 
   useRectangleMapDrawing()
@@ -151,7 +151,7 @@ export function getGeoJSONSource(
 // HOOKS
 export function useMapPanMode() {
   const [panMode, setPanMode] = useState(false)
-  const { map } = useAssitant()
+  const { map } = useAssistant()
 
   useEffect(() => {
     function onKeyChange(enabled: boolean) {

@@ -1,7 +1,7 @@
 import { ArrowUp } from 'lucide-react'
 import type * as React from 'react'
 import PlaneSVG from '~/assets/svgs/plane.svg'
-import { useAssitant } from '~/integrations/tambo'
+import { useAssistant } from '~/integrations/tambo'
 import { DEMOS } from '~/integrations/tambo/constants'
 import { getWeather, searchLocation } from '~/integrations/tambo/tools'
 import { useMapNavigationListener } from '../map/mapbox/events'
@@ -10,7 +10,7 @@ const demo = DEMOS.INTRO
 
 export function IntroAssistant() {
   const { selectedDemo, setDestination, setSelectedDemo, setWeather } =
-    useAssitant()
+    useAssistant()
 
   useMapNavigationListener((params) => {
     setDestination({

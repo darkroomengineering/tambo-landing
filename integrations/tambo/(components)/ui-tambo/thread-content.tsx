@@ -1,7 +1,7 @@
 'use client'
 
 import { type TamboThreadMessage, useTambo } from '@tambo-ai/react'
-import type { VariantProps } from 'class-variance-authority'
+import type { VariantProps } from '@/lib/utils'
 import * as React from 'react'
 import {
   Message,

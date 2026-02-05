@@ -12,12 +12,12 @@ import {
   Sun,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useAssitant } from '~/integrations/tambo'
+import { useAssistant } from '~/integrations/tambo'
 import { isEmptyArray } from '~/libs/utils'
 import { DEMOS } from '../constants'
 
 export function AssistantNotifications({ className }: { className: string }) {
-  const { selectedDemo, choosedSeat, itinerary, destination } = useAssitant()
+  const { selectedDemo, chosenSeat, itinerary, destination } = useAssistant()
 
   return (
     <div
@@ -45,14 +45,14 @@ export function AssistantNotifications({ className }: { className: string }) {
         <li
           className={cn(
             'transition-opacity duration-200 ease-in-out starting:opacity-0',
-            isEmptyArray(choosedSeat) && 'hidden'
+            isEmptyArray(chosenSeat) && 'hidden'
           )}
         >
           <span className="block typo-label-s opacity-50">
             {'<'}Flight seats{'>'}
           </span>{' '}
           <span className="typo-label-s">
-            {!isEmptyArray(choosedSeat) ? choosedSeat.join(', ') : 'None'}
+            {!isEmptyArray(chosenSeat) ? chosenSeat.join(', ') : 'None'}
           </span>
         </li>
         <li
@@ -94,7 +94,7 @@ export function AssistantNotifications({ className }: { className: string }) {
 }
 
 export function WeatherWidget() {
-  const { weather } = useAssitant()
+  const { weather } = useAssistant()
   const [currentTime, setCurrentTime] = useState<string | null>(null)
 
   const timezone = weather?.timezone
@@ -184,18 +184,4 @@ function formatTimeRange(dateString: string) {
       .replace(/\s/g, '')
 
   return `${format(date)} → ${format(endDate)}`
-}
-
-function RandomSeatButton() {
-  const { finishSeatSelection } = useAssitant()
-  return (
-    <button
-      type="button"
-      onClick={() => {
-        finishSeatSelection('1A')
-      }}
-    >
-      random seat
-    </button>
-  )
 }

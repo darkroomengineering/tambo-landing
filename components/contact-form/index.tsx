@@ -286,7 +286,7 @@ export function ContactForm() {
           type="submit"
           disabled={status === 'loading'}
           className={cn(
-            'typo-button w-full dr-py-18 dr-px-20 dt:dr-py-20 dt:dr-px-24 bg-teal text-black border border-dark-grey dr-rounded-12 dt:dr-rounded-16 font-semibold uppercase tracking-[0.05em] cursor-pointer transition-all duration-300 ease-out-cubic relative hover:bg-mint hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(127,255,195,0.3)] hover:border-teal active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed text-left',
+            'typo-button w-full dr-py-18 dr-px-20 dt:dr-py-20 dt:dr-px-24 bg-teal text-black border border-dark-grey dr-rounded-12 dt:dr-rounded-16 font-semibold uppercase tracking-[0.05em] cursor-pointer transition-all duration-300 ease-out-cubic relative hover:bg-mint hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(127,255,195,0.3)] hover:border-teal active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed text-center',
             status === 'loading' && 'pointer-events-none'
           )}
         >

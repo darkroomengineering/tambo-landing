@@ -65,7 +65,7 @@ export function Hero() {
     >
       <LinesBg
         className={
-          'absolute desktop-only top-0 dr-inset-24 left-1/2 -translate-x-1/2 dt:w-screen dt:h-screen h-full section-rounded-bottom'
+          'absolute desktop-only top-0 dr-inset-24 left-1/2 -translate-x-1/2 dt:w-screen dt:h-dvh h-full section-rounded-bottom'
         }
       />
       <MobileLinesBg

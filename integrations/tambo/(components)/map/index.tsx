@@ -4,7 +4,7 @@ import {
   withInteractable,
 } from '@tambo-ai/react'
 import { useEffect } from 'react'
-import { useAssitant } from '~/integrations/tambo'
+import { useAssistant } from '~/integrations/tambo'
 import { MapBox } from '~/integrations/tambo/(components)/map/mapbox'
 import { DEMOS } from '~/integrations/tambo/constants'
 import { MessageThreadCollapsible } from '../ui-tambo/message-thread-collapsible'
@@ -41,7 +41,7 @@ export const InterctableMap = withInteractable(MapComponent, {
 
 export function MapAssistant() {
   const { destination, selectedDemo, weather, currentBBox, itinerary } =
-    useAssitant()
+    useAssistant()
   const { addContextHelper, removeContextHelper } = useTamboContextHelpers()
   const { thread, addThreadMessage } = useTamboThread()
 

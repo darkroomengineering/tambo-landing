@@ -103,7 +103,7 @@ export function generateSeats(totalRows = TOTAL_ROWS, seed = 42): SeatProps[] {
         taken: seededRandom(seatIndex++) < takenProbability,
         price,
         position: COLUMN_POSITIONS[column],
-        emergencyExit: EMERGENCY_EXIT_ROWS.includes(row),
+        emergencyExit: (EMERGENCY_EXIT_ROWS as readonly number[]).includes(row),
       })
     }
   }
