@@ -184,7 +184,7 @@ function processFileContent(content: string): string {
   // Match cn(...) and cva(...) calls - process string arguments
   result = result.replace(
     /\b(cn|cva)\(\s*(['"`])([^'"`]+)\2/g,
-    (match, fn: string, quote: string, classes: string) => {
+    (_match, fn: string, quote: string, classes: string) => {
       const converted = processClassString(classes)
       return `${fn}(${quote}${converted}${quote}`
     }

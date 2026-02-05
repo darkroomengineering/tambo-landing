@@ -34,7 +34,7 @@ export async function getPosts(): Promise<BlogPost[]> {
     route: '/blog/posts',
   })
 
-  const posts = (directories as PageMapItem[])
+  const posts = (directories as unknown as PageMapItem[])
     .filter(
       (
         item
