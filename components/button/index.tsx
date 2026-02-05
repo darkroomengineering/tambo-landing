@@ -56,6 +56,7 @@ export function Button({
   return (
     <button
       ref={ref}
+      type="button"
       className={baseClassName}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}

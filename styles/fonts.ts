@@ -40,12 +40,14 @@ const geist = localFont({
   preload: true,
   adjustFontFallback: 'Arial',
   fallback: [
-    'ui-monospace',
-    'SFMono-Regular',
-    'Consolas',
-    'Liberation Mono',
-    'Menlo',
-    'monospace',
+    'system-ui',
+    '-apple-system',
+    'BlinkMacSystemFont',
+    'Segoe UI',
+    'Roboto',
+    'Helvetica Neue',
+    'Arial',
+    'sans-serif',
   ],
 })
 
@@ -94,12 +96,11 @@ const sentient = localFont({
   preload: true,
   adjustFontFallback: 'Arial',
   fallback: [
-    'ui-monospace',
-    'SFMono-Regular',
-    'Consolas',
-    'Liberation Mono',
-    'Menlo',
-    'monospace',
+    'Georgia',
+    'Cambria',
+    'Times New Roman',
+    'Times',
+    'serif',
   ],
 })
 

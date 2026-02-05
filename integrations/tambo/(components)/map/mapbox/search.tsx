@@ -6,7 +6,7 @@ import { createRoot, type Root } from 'react-dom/client'
 import { HashPattern } from '~/app/(pages)/home/_components/hash-pattern'
 import ArrowSVG from '~/assets/svgs/arrow.svg'
 import PlusIcon from '~/assets/svgs/plus.svg'
-import { type BBox, useAssitant } from '~/integrations/tambo'
+import { type BBox, useAssistant } from '~/integrations/tambo'
 import type { POI } from './'
 import { fetchWithRetry } from './api'
 import {
@@ -31,7 +31,7 @@ export function useMapSearch({
 }: {
   onResult?: (result: AreaAnalyzeResponse) => void
 }) {
-  const { map, currentBBox } = useAssitant()
+  const { map, currentBBox } = useAssistant()
   const markersRef = useRef<MarkerWithRoot[]>([])
   const { setValue } = useTamboThreadInput()
 

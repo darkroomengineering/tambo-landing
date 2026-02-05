@@ -11,11 +11,11 @@ import {
 import { seatComponent } from './(components)/seat-selector/schema'
 import { DEFAULT_DESTINATION, DEMOS, MAPBOX_ENABLED } from './constants'
 import { type ForecastDay, getCurrentDate, mapTools } from './tools'
+import { useAddToItineraryListener as _useAddToItineraryListener } from './(components)/map/mapbox/events'
 
 // Mapbox event listener - only used when Mapbox is enabled
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const useAddToItineraryListener = MAPBOX_ENABLED
-  ? require('./(components)/map/mapbox/events').useAddToItineraryListener
+  ? _useAddToItineraryListener
   : (_callback: unknown) => undefined
 
 const components = [...seatComponent]
@@ -73,7 +73,7 @@ const AssistantContext = createContext<{
   setThreads: React.Dispatch<React.SetStateAction<Threads>>
   setDestination: React.Dispatch<React.SetStateAction<Destination>>
   // Seat
-  choosedSeat: string[]
+  chosenSeat: string[]
   finishSeatSelection: (seat: string) => void
   // Map
   map: mapboxgl.Map | undefined
@@ -89,7 +89,7 @@ const AssistantContext = createContext<{
   weather: null,
   selectedDemo: DEMOS.SEAT,
   threads: [null, null],
-  choosedSeat: [],
+  chosenSeat: [],
   map: undefined,
   itinerary: [] as itineraryItem[],
   addToItinerary: () => {},
@@ -110,7 +110,7 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
   const [weather, setWeather] = useState<WeatherResult | null>(null)
   const [selectedDemo, setSelectedDemo] = useState<Demo>(DEMOS.INTRO)
   const [threads, setThreads] = useState<Threads>([null, null])
-  const [choosedSeat, setChoosedSeat] = useState<string[]>([])
+  const [chosenSeat, setChosenSeat] = useState<string[]>([])
   const [map, setMap] = useState<mapboxgl.Map | undefined>(undefined)
   const [currentBBox, setCurrentBBox] = useState<BBox | null>(null)
   const [itinerary, setItinerary] = useState<itineraryItem[]>([])
@@ -155,7 +155,7 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
     (seat: string) => {
       setSelectedDemo(DEMOS.MAP)
       switchToDemoThread(DEMOS.MAP)
-      setChoosedSeat([seat])
+      setChosenSeat([seat])
     },
     [switchToDemoThread]
   )
@@ -189,7 +189,7 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
         weather,
         selectedDemo,
         threads,
-        choosedSeat,
+        chosenSeat,
         map,
         itinerary,
         addToItinerary,
@@ -209,7 +209,7 @@ function AssistantProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-export const useAssitant = () => {
+export const useAssistant = () => {
   const context = useContext(AssistantContext)
   if (!context) {
     throw new Error('useAssistant must be used within a AssistantProvider')

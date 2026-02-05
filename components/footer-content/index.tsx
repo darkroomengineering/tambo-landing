@@ -13,18 +13,21 @@ export function FooterContent() {
       <div className="mobile-only flex dr-gap-12 dr-mb-32 justify-center">
         <Link
           href={siteConfig.links.github}
+          aria-label="GitHub"
           className="dr-size-32 rounded-full bg-grey grid place-items-center"
         >
           <GithubSVG className="dr-w-16 dr-h-16" />
         </Link>
         <Link
           href={siteConfig.links.discord}
+          aria-label="Discord"
           className="dr-size-32 rounded-full bg-grey grid place-items-center"
         >
           <DiscordSVG className="dr-w-16 dr-h-16" />
         </Link>
         <Link
           href={siteConfig.links.twitter}
+          aria-label="X (Twitter)"
           className="dr-size-32 rounded-full bg-grey grid place-items-center"
         >
           <XSVG className="dr-w-16 dr-h-16" />
@@ -49,6 +52,7 @@ export function FooterContent() {
         </div>
         <Link
           href={siteConfig.links.twitter}
+          aria-label="X (Twitter)"
           className="col-span-2 justify-self-end link desktop-only"
         >
           <XSVG className="dr-w-16 dr-h-16" />

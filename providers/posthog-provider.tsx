@@ -1,11 +1,9 @@
 'use client'
 
-import posthog from 'posthog-js'
-import { PostHogProvider } from 'posthog-js/react'
+// PostHog is initialized via dynamic import() in instrumentation-client.ts
+// No components use usePostHog() hooks, so the PostHogProvider context wrapper
+// is not needed. This avoids pulling posthog-js (~29MB) into the initial client bundle.
 
 export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
-  if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) {
-    return <>{children}</>
-  }
-  return <PostHogProvider client={posthog}>{children}</PostHogProvider>
+  return <>{children}</>
 }

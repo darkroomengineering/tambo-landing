@@ -144,7 +144,7 @@ This shows how the assistant uses different contexts and tools across the demo:
 | Layer | Hook | Purpose |
 |-------|------|---------|
 | Tambo Thread | `useTamboThread()` | AI conversation, messages, thread switching |
-| App Context | `useAssitant()` | App-specific state (destination, map, itinerary) |
+| App Context | `useAssistant()` | App-specific state (destination, map, itinerary) |
 
 ### AssistantContext (Custom)
 
@@ -175,7 +175,7 @@ const AssistantContext = createContext<{
   switchToDemoThread: (demo: Demo) => void
   
   // Seat selector
-  choosedSeat: string[]
+  chosenSeat: string[]
   finishSeatSelection: (seat: string) => void
 }>({...})
 ```
@@ -253,7 +253,7 @@ Defined in [`(components)/map/mapbox/events.ts`](./(components)/map/mapbox/event
 
 ```
 integrations/tambo/
-├── index.tsx              # TamboIntegration, AssistantProvider, useAssitant
+├── index.tsx              # TamboIntegration, AssistantProvider, useAssistant
 ├── tools.ts               # Tool definitions and async functions
 ├── constants.ts           # Demo configs, default values
 ├── ARCHITECTURE.md        # This file
@@ -280,7 +280,7 @@ integrations/tambo/
 
 | Hook | Location | Purpose |
 |------|----------|---------|
-| `useAssitant()` | `index.tsx` | App-wide state context |
+| `useAssistant()` | `index.tsx` | App-wide state context |
 | `useMapSearchListener()` | `events.ts` | Listen for search events |
 | `useMapNavigationListener()` | `events.ts` | Listen for navigation events |
 | `useAddToItineraryListener()` | `events.ts` | Listen for itinerary events |

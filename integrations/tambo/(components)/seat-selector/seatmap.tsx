@@ -3,7 +3,7 @@
 import { useTamboComponentState } from '@tambo-ai/react'
 import cn from 'clsx'
 import { useCallback, useEffect, useState } from 'react'
-import { useAssitant } from '~/integrations/tambo'
+import { useAssistant } from '~/integrations/tambo'
 import { SEAT_MAP_CONFIG } from '~/integrations/tambo/constants'
 import { isEmptyArray } from '~/libs/utils'
 import type { SeatMapProps } from './schema'
@@ -251,7 +251,7 @@ function Actionables({
   selectedSeats: string[]
   maxSelections: number
 }) {
-  const { finishSeatSelection } = useAssitant()
+  const { finishSeatSelection } = useAssistant()
 
   return (
     <div className={cn('flex dt:dr-gap-12 dr-gap-8 justify-center', className)}>

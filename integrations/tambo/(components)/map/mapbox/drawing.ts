@@ -1,14 +1,14 @@
 import mapboxgl from 'mapbox-gl'
 import { useEffect, useEffectEvent, useRef } from 'react'
 import type { BBox } from '~/integrations/tambo'
-import { useAssitant } from '~/integrations/tambo'
+import { useAssistant } from '~/integrations/tambo'
 import { EMPTY_FEATURE_COLLECTION, getGeoJSONSource, useMapPanMode } from './'
 
 export function useRectangleMapDrawing() {
   const startRef = useRef<mapboxgl.LngLat | null>(null)
   const drawingRef = useRef(false)
   const panMode = useMapPanMode()
-  const { setCurrentBBox, map } = useAssitant()
+  const { setCurrentBBox, map } = useAssistant()
 
   const handleDrawStart = useEffectEvent((e: mapboxgl.MapMouseEvent) => {
     if (!map || e.originalEvent.button !== 0) return

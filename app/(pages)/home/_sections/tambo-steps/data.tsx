@@ -9,7 +9,7 @@ export const messages = [
         “What seats are available?”
       </>
     ),
-    video: 'TODO: MISSING VIDEO',
+    video: '',
   },
   {
     id: 'tambo-renders',
@@ -35,6 +35,6 @@ export const messages = [
     tag: 'benefit',
     message:
       'Same components, new capabilities. Ship AI features without rebuilding.',
-    video: 'TODO: MISSING VIDEO',
+    video: '',
   },
 ]
